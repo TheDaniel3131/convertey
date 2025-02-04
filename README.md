@@ -7,7 +7,6 @@
 ## ✨ Features  
 ✅ **Fast & Secure:** Convert files efficiently while keeping them safe.  
 ✅ **Multi-Format Support:** Supports popular formats like PDF, DOCX, PNG, JPG, and more.  
-✅ **Cloud-Based:** Convert files directly from your browser without needing to install software.  
 ✅ **Modern UI:** Sleek and user-friendly interface with Next.js.  
 ✅ **Open Source:** Built by the community for the community.  
 
@@ -29,3 +28,20 @@ Ensure you have the following installed:
 git clone https://github.com/CosmoCrafters/cosmo-converter.git
 cd cosmo-converter
 npm install
+```
+
+### Running the Project
+bash
+Copy
+Edit
+npm run dev
+The app will be available at http://localhost:3000
+
+🛠️ Contributing
+We welcome contributions! Please follow these steps:
+
+Fork the repository
+Create a new branch (feature/your-feature)
+Commit your changes (git commit -m "Add new feature")
+Push to your branch (git push origin feature/your-feature)
+Open a Pull Request
