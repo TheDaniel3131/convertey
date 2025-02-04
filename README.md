@@ -1,34 +1,31 @@
-# Cosmo-Converter 🚀
+# 🌌 Cosmo-Converter  
 
-Welcome to **Cosmo-Converter**, a powerful and easy-to-use file conversion tool developed by **CosmoCrafters**. This project is designed to simplify the process of converting files between various formats, making it a versatile tool for all your file conversion needs.
+**Cosmo-Converter** is a powerful and user-friendly file conversion tool built with **Next.js**. It allows users to convert files between multiple formats with speed, security, and ease.  
 
----
+🚀 Developed by **CosmoCrafters**, this tool is designed to handle a variety of file types, including **documents, images, and more**.  
 
-## About Cosmo-Converter
+## ✨ Features  
+✅ **Fast & Secure:** Convert files efficiently while keeping them safe.  
+✅ **Multi-Format Support:** Supports popular formats like PDF, DOCX, PNG, JPG, and more.  
+✅ **Cloud-Based:** Convert files directly from your browser without needing to install software.  
+✅ **Modern UI:** Sleek and user-friendly interface with Next.js.  
+✅ **Open Source:** Built by the community for the community.  
 
-Cosmo-Converter is an open-source project aimed at providing a seamless file conversion experience. Whether you're converting documents, images, audio, or other file types, Cosmo-Converter has got you covered.
+## 🔧 Tech Stack  
+- **Frontend:** Next.js (React)  
+- **Backend:** (TBD - e.g., Node.js, Express, or Supabase)  
+- **Storage:** (TBD - e.g., Firebase, AWS S3, or Supabase Storage)  
+- **Deployment:** Vercel  
 
----
+## 🚀 Getting Started  
 
-## Features ✨
+### Prerequisites  
+Ensure you have the following installed:  
+- Node.js (Latest LTS version)  
+- npm or yarn  
 
-- **Multi-format Support**: Convert files between a wide range of formats.
-- **User-Friendly**: Simple and intuitive interface for effortless conversions.
-- **Lightweight**: Fast and efficient, without unnecessary bloat.
-- **Open Source**: Fully open-source, allowing for community contributions and customization.
-
----
-
-## Getting Started 🛠️
-
-To get started with Cosmo-Converter, follow these steps:
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/CosmoCrafters/cosmo-converter.git
-   cd cosmo-converter
-Install Dependencies:
-(Dependencies will be added once the tech stack is finalized.)
-
-Run the Application:
-(Instructions for running the app will be added once the stack is decided.)
+### Installation  
+```bash
+git clone https://github.com/CosmoCrafters/cosmo-converter.git
+cd cosmo-converter
+npm install
