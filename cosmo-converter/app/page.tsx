@@ -5,10 +5,23 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Rocket, FileUp, Zap, Globe, Sun, Moon, ChevronRight, Menu } from "lucide-react"
 import Link from "next/link"
+import type React from "react" // Import React
+
+interface FeatureCardProps {
+  icon: React.ReactNode
+  title: string
+  description: string
+}
+
+interface NavLinkProps {
+  href: string
+  children: React.ReactNode
+  className?: string
+}
 
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(true)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [darkMode, setDarkMode] = useState<boolean>(true)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
 
   useEffect(() => {
     if (darkMode) {
@@ -30,10 +43,9 @@ export default function Home() {
             CosmoCrafters
           </Link>
           <div className="hidden md:flex space-x-6 items-center">
-            <NavLink href="#features">Features</NavLink>
-            <NavLink href="#demo">Try It</NavLink>
-            <NavLink href="#about">About</NavLink>
-            <NavLink href="#contact">Contact</NavLink>
+            <NavLink href="/">Home</NavLink>
+            <NavLink href="/about">About</NavLink>
+            <NavLink href="/contact">Contact</NavLink>
             <Button
               variant="outline"
               size="icon"
@@ -67,16 +79,13 @@ export default function Home() {
         </nav>
         {mobileMenuOpen && (
           <div className="md:hidden bg-white dark:bg-black bg-opacity-90 dark:bg-opacity-90 backdrop-blur-md py-2">
-            <NavLink href="#features" className="block py-2 px-4">
-              Features
+            <NavLink href="/" className="block py-2 px-4">
+              Home
             </NavLink>
-            <NavLink href="#demo" className="block py-2 px-4">
-              Try It
-            </NavLink>
-            <NavLink href="#about" className="block py-2 px-4">
+            <NavLink href="/about" className="block py-2 px-4">
               About
             </NavLink>
-            <NavLink href="#contact" className="block py-2 px-4">
+            <NavLink href="/contact" className="block py-2 px-4">
               Contact
             </NavLink>
           </div>
@@ -254,23 +263,19 @@ export default function Home() {
   )
 }
 
-interface FeatureCardProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
 function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
     <div className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg p-6 rounded-lg text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-      <div className="mb-4 transform transition-transform duration-300 hover:scale-110">{icon}</div>
+      <div className="mb-4 transform transition-transform duration-300 hover:scale-110 flex justify-center items-center">
+        {icon}
+      </div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-gray-600 dark:text-gray-400">{description}</p>
     </div>
   )
 }
 
-function NavLink({ href, children, className = "" }: { href: string; children: React.ReactNode; className?: string }) {
+function NavLink({ href, children, className = "" }: NavLinkProps) {
   return (
     <Link
       href={href}
