@@ -1,3 +1,5 @@
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +17,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
       <div className="stars"></div>
+      <Header />
       <main className="container mx-auto px-4 py-16 relative z-10">
         <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
           Contact Us
@@ -101,6 +104,7 @@ export default function ContactPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
