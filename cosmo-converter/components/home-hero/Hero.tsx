@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export default function Hero() {
   return (
     /* Hero Section */
-    <section className="py-48 text-center gap-4">
+    <section className="py-44 text-center gap-4">
       <h1 className="text-7xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600">
         Welcome To CosmoConverter
       </h1>

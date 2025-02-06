@@ -21,7 +21,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="#features"
+                  href="/features"
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
                 >
                   Features
@@ -29,7 +29,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#demo"
+                  href="/demo"
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
                 >
                   Try It
@@ -37,7 +37,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#about"
+                  href="/about"
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
                 >
                   About
@@ -45,7 +45,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#contact"
+                  href="/contact"
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
                 >
                   Contact
@@ -82,7 +82,7 @@ export default function Footer() {
             </h3>
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://github.com/CosmoCrafters"
                 className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
               >
                 <svg
@@ -99,7 +99,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://github.com/CosmoCrafters"
                 className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
               >
                 <svg
@@ -112,7 +112,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://github.com/CosmoCrafters"
                 className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
               >
                 <svg
