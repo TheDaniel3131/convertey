@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Rocket, FileUp, Zap, Globe, Sun, Moon, ChevronRight, Menu } from "lucide-react"
+import { Rocket, FileUp, Zap, Globe, Sun, Moon, Menu } from "lucide-react"
 import Link from "next/link"
 import type React from "react" // Import React
 
@@ -131,18 +130,28 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Demo Section */}
-        <section
-          id="demo"
-          className="py-16 bg-gradient-to-r from-purple-900 to-blue-900 rounded-lg shadow-2xl overflow-hidden relative"
-        >
-          <div className="absolute inset-0 opacity-50 bg-[url('/placeholder.svg?height=400&width=800')] bg-cover bg-center"></div>
-          <div className="max-w-3xl mx-auto px-4 relative">
-            <h2 className="text-3xl font-bold mb-8 text-center text-white">Initiate Conversion Sequence</h2>
-            <div className="flex flex-col md:flex-row gap-4">
-              <Input type="file" className="flex-grow bg-white/10 border-0 text-white placeholder-gray-300" />
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-full">
-                Convert <ChevronRight className="ml-2 h-5 w-5" />
+        {/* Call to Action Section */}
+        <section className="py-16 text-center">
+          <div className="max-w-3xl mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+              Ready to Transform Your Files?
+            </h2>
+            <p className="text-xl mb-8 text-gray-600 dark:text-gray-400">
+              Join Cosmo Converter today and experience the future of file conversion across the digital universe.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-full"
+              >
+                Sign Up Now
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full border-purple-500 text-purple-500 hover:bg-purple-100 dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-900"
+              >
+                Learn More
               </Button>
             </div>
           </div>
