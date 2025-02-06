@@ -5,6 +5,7 @@ import Hero from "@/components/home-hero/Hero";
 import Features from "@/components/home-features/Features";
 import Footer from "@/components/footer/Footer";
 import C2A from "@/components/call-to-action/C2A";
+import FileConverterWrapper from "@/components/file-converter/FileConverterWrapper";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         <Hero />
         <Features />
         <C2A />
+        <FileConverterWrapper />
       </main>
       <Footer />
     </div>

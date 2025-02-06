@@ -17,7 +17,7 @@ export default function Header() {
   }, [darkMode]);
 
   return (
-    <header className="bg-transparent backdrop-blur-md dark:bg-opacity-20 shadow-md relative z-20">
+    <header className="bg-transparent backdrop-blur-md dark:bg-opacity-33 shadow-md z-20 sticky top-0">
       <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="ml-2">
           <Link

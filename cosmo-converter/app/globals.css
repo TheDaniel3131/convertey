@@ -23,7 +23,7 @@
   background-size: 200px 200px;
   animation: zoom 10s infinite;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.1s ease-in-out;
 }
 
 .dark .stars {
