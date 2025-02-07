@@ -34,7 +34,7 @@ jobs:
           if [ -d ".github/workflows" ]; then
             git rm -rf .github/workflows
             git commit -m "Remove .github/workflows directory"
-            git push origin main
+            git push --force mirror main:main
           else
             echo ".github/workflows directory does not exist, skipping removal"
           fi
