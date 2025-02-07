@@ -22,3 +22,7 @@ jobs:
           git remote -v # List remotes
           git branch -a # List all branches
           git status # Check the status
+          git fetch personal
+          git checkout main
+          git merge personal/main
+          git push "https://TheDaniel3131:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git" main
