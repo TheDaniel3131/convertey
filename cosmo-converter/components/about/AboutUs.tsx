@@ -49,7 +49,7 @@ export default function AboutUs() {
               passionate developers and designers who believed in the power of
               seamless data transformation. Today, we&apos;re proud to serve
               millions of users across the galaxy, constantly pushing the
-              boundaries of what&apos;s possible in file conversion technology.
+              boundaries of what&apos;s possible in file conversion technology!
             </p>
           </CardContent>
         </Card>
