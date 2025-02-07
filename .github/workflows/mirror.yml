@@ -21,8 +21,12 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Mirror repository
         run: |
-          REPO_URL="https://TheDaniel3131:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
-          git remote add mirror "$REPO_URL"
-          git push origin main || echo "Push failed due to conflicts. Manual intervention may be required."
+          git remote add mirror git@github.com:TheDaniel3131/cosmo-converter.git
+          git push origin main
