@@ -45,7 +45,7 @@ export default function AboutUs() {
           <CardContent className="p-6">
             <h2 className="text-2xl font-semibold mb-4">Our Journey</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Founded in 2023, CosmoCrafters started as a small team of
+              Founded in 2025, CosmoCrafters started as a small team of
               passionate developers and designers who believed in the power of
               seamless data transformation. Today, we&apos;re proud to serve
               millions of users across the galaxy, constantly pushing the
