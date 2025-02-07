@@ -1,3 +1,4 @@
 # Github Workflows
 .github/workflows
 .github/workflows/*
+.github/workflows/**/*
