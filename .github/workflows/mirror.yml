@@ -22,6 +22,3 @@ jobs:
           git remote -v # List remotes
           git branch -a # List all branches
           git status # Check the status
-      - name: Mirror to personal repo
-        run: |
-          git push --mirror personal
