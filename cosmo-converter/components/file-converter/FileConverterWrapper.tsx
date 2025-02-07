@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Rocket } from "lucide-react";
 import FileUpload from "@/components/file-upload/FileUpload";
-import { downloadFile } from "@/lib/utils";
+import { downloadFile } from "@/lib/utils/utils";
 
 export default function FileConverterWrapper() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 
 export default function C2A() {
   return (
-    /* Call to Action Section */
     <section className="py-16 text-center">
       <div className="max-w-3xl mx-auto px-4">
         <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">

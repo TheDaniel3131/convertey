@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Menu, User } from "lucide-react";
 import Link from "next/link";
-import type { NavLinkProps } from "@/types/interfaces";
+import NavLink from "@/components/elements/header/NavLinks";
 
 export default function Header() {
   const [darkMode, setDarkMode] = useState(true);
@@ -110,16 +110,5 @@ export default function Header() {
         </div>
       )}
     </header>
-  );
-}
-
-function NavLink({ href, children, className = "" }: NavLinkProps) {
-  return (
-    <Link
-      href={href}
-      className={`text-gray-700 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400 ${className}`}
-    >
-      {children}
-    </Link>
   );
 }

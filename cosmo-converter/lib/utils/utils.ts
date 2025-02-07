@@ -11,7 +11,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Export function to trigger file download
+// Export function to trigger file download (FileConverterWrapper.tsx)
 export const downloadFile = (
   data: Buffer,
   filename: string,
