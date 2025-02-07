@@ -1,6 +1,6 @@
 # 🌌 Cosmo-Converter
 
-**Cosmo-Converter** is a modern, powerful and user-friendly file conversion tool built with **Next.js**. It allows users to convert files between multiple formats with speed, security, and ease.
+**Cosmo-Converter** is a modern, powerful and user-friendly online file conversion tools built with **Next.js**. It allows users to convert files between multiple formats with speed, security, and ease.
 
 🚀 Developed by **CosmoCrafters**, this tool is designed to handle a variety of file types, including **documents, images, and more**.
 
