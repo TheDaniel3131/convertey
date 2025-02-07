@@ -15,7 +15,6 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  icons: ["/favicon.ico"],
   title: "Online File Converter | CosmoConverter",
   description:
     "Effortlessly convert with any file formats including documents, images, presentations, archives, audio, and video files with CosmoConverter. Experience seamless and provided free file conversion from us.",
