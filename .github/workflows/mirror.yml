@@ -23,6 +23,6 @@ jobs:
 
       - name: Mirror repository
         run: |
-          REPO_URL="https://TheDaniel3131:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
+          REPO_URL="https://x-access-token:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
           git remote add mirror "$REPO_URL"
-          git push --force mirror main:main
+          git push --force "$REPO_URL" main:main
