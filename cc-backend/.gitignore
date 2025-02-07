@@ -67,5 +67,6 @@ pnpm-lock.yaml
 # Docker
 docker-compose.override.yml
 
-# Github Workflow
+# Github Workflows
+.github/workflows
 .github/workflows/*

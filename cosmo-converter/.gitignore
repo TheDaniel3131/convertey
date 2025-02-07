@@ -40,5 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Github Workflow
+# Github Workflows
+.github/workflows
 .github/workflows/*
