@@ -194,10 +194,10 @@ export default function ToS() {
             <p className="text-gray-600 dark:text-gray-300">
               Email:{" "}
               <a
-                href="mailto:legal@cosmocrafters.com"
+                href="mailto:official.cosmocrafters@gmail.com"
                 className="text-purple-500 hover:text-purple-600"
               >
-                legal@cosmocrafters.com
+                official.cosmocrafters@gmail.com
               </a>
               <br />
               Address: 123 Starship Avenue, Nebula City, CC 90210

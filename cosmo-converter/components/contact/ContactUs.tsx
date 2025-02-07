@@ -63,7 +63,10 @@ export default function ContactUs() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <ContactInfo icon={<Mail />} text="support@cosmocrafters.com" />
+                <ContactInfo
+                  icon={<Mail />}
+                  text="official.cosmocrafters@gmail.com"
+                />
                 <ContactInfo icon={<Phone />} text="+1 (888) COSMOS-00" />
                 <ContactInfo
                   icon={<MapPin />}
