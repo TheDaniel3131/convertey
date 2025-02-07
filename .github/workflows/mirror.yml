@@ -26,7 +26,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Mirror repository
+      - name: Remove .github/workflows from history
         run: |
+          git clone --no-checkout . temp-repo
+          cd temp-repo
+          git filter-repo --path .github/workflows --invert-paths
           git remote add mirror git@github.com:TheDaniel3131/cosmo-converter.git
           git push --force mirror main:main
