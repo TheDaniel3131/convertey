@@ -18,4 +18,5 @@ jobs:
 
       - name: Add remote
         run: |
-          git remote add personal "https://TheDaniel3131:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
+          git remote add personal "https://x-access-token:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
+"
