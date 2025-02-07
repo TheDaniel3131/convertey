@@ -16,7 +16,6 @@ jobs:
         with:
           fetch-depth: 0  # Needed to push all branches and tags
 
-      - name: Mirror to personal repo
+      - name: Add remote
         run: |
-          git remote add personal "https://${{ github.actor }}:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
-          git push --mirror personal
+          git remote add personal "https://TheDaniel3131:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
