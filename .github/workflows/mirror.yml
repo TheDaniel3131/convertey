@@ -26,24 +26,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Ensure .gitignore exists and contains .github/workflows
-        run: |
-          git remote add mirror git@github.com:TheDaniel3131/cosmo-converter.git
-          git fetch mirror
-          git checkout mirror/main
-          if [ ! -f ".gitignore" ]; then
-            echo ".gitignore file does not exist, creating one"
-            touch .gitignore
-          fi
-          if ! grep -q ".github/workflows" .gitignore; then
-            echo ".github/workflows >> .gitignore"
-            echo ".github/workflows" >> .gitignore
-            git add .gitignore
-            git commit -m "Add .github/workflows to .gitignore"
-            git push origin main
-          fi
-
-      - name: Remove .github/workflows (if exists)
+      - name: Remove .github/workflows (if exists) and push
         run: |
           git remote add mirror git@github.com:TheDaniel3131/cosmo-converter.git
           git fetch mirror
@@ -51,7 +34,8 @@ jobs:
           if [ -d ".github/workflows" ]; then
             git rm -rf .github/workflows
             git commit -m "Remove .github/workflows directory"
-            git push origin main
+            git push --force mirror main:main
           else
             echo ".github/workflows directory does not exist, skipping removal"
+            git push --force mirror main:main
           fi
