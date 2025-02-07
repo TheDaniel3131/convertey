@@ -19,4 +19,9 @@ jobs:
       - name: Add remote
         run: |
           git remote add personal "https://x-access-token:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
-"
+          git remote -v # List remotes
+          git branch -a # List all branches
+          git status # Check the status
+      - name: Mirror to personal repo
+        run: |
+          git push --mirror personal
