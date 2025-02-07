@@ -2,7 +2,9 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import type { Metadata } from "next";
 import { cookiesMetadata } from "@/app/metadata/cookies";
-import Cookies from "@/components/cookies/CookiesPolicy";
+import dynamic from "next/dynamic";
+
+const Cookies = dynamic(() => import("@/components/cookies/CookiesPolicy"));
 
 export const metadata: Metadata = cookiesMetadata;
 

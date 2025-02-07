@@ -1,8 +1,12 @@
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import type { Metadata } from "next";
-import PrivacyPolicy from "@/components/privacy/PrivacyPolicy";
 import { privacyPolicyMetadata } from "@/app/metadata/privacy-policy";
+import dynamic from "next/dynamic";
+
+const PrivacyPolicy = dynamic(
+  () => import("@/components/privacy/PrivacyPolicy")
+);
 
 export const metadata: Metadata = privacyPolicyMetadata;
 

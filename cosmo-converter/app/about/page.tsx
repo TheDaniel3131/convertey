@@ -1,13 +1,12 @@
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import type { Metadata } from "next";
-import AboutUs from "@/components/about/AboutUs";
+import { aboutusMetadata } from "@/app/metadata/about";
+import dynamic from "next/dynamic";
 
-export const metadata: Metadata = {
-  title: "About Us | Cosmo Converter",
-  description:
-    "Learn about the team behind Cosmo Converter and our mission to revolutionize file conversion across the digital universe.",
-};
+const AboutUs = dynamic(() => import("@/components/about/AboutUs"));
+
+export const metadata: Metadata = aboutusMetadata;
 
 export default function AboutPage() {
   return (

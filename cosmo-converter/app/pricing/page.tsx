@@ -2,7 +2,9 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import type { Metadata } from "next";
 import { pricingMetadata } from "@/app/metadata/pricing";
-import Pricing from "@/components/pricing/Pricing";
+import dynamic from "next/dynamic";
+
+const Pricing = dynamic(() => import("@/components/pricing/Pricing"));
 
 export const metadata: Metadata = pricingMetadata;
 

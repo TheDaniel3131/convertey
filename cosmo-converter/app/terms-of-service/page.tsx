@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { tosMetadata } from "@/app/metadata/terms-of-services";
-import ToS from "@/components/terms-of-service/ToS";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import dynamic from "next/dynamic";
+
+const ToS = dynamic(() => import("@/components/terms-of-service/ToS"));
 
 export const metadata: Metadata = tosMetadata;
 
