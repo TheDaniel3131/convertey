@@ -30,6 +30,7 @@ jobs:
         run: |
           git clone --no-checkout . temp-repo
           cd temp-repo
+          pip install git-filter-repo
           git filter-repo --path .github/workflows --invert-paths
           git remote add mirror git@github.com:TheDaniel3131/cosmo-converter.git
           git push --force mirror main:main
