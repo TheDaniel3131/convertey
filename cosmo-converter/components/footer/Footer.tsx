@@ -62,6 +62,14 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
+                  href="/terms-of-services"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                >
+                  Terms of Services
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/privacy"
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
                 >
@@ -73,7 +81,7 @@ export default function Footer() {
                   href="/cookies"
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
                 >
-                  Terms of Service
+                  Cookies
                 </Link>
               </li>
             </ul>
