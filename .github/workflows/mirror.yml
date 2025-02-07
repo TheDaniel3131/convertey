@@ -21,17 +21,14 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
-      - name: Clean repository
-        run: |
-          git add .
-          git commit -m "Commit all changes before filtering" || true
-          git branch -D main || true
-          git checkout --orphan main
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Mirror repository
+      - name: Remove .github/workflows from history & mirror repo
         run: |
-          REPO_URL="git@github.com:TheDaniel3131/cosmo-converter.git"
-          git clone --bare $REPO_URL temp-repo
+          git clone --no-local --no-checkout . temp-repo
           cd temp-repo
           pip install git-filter-repo
           git filter-repo --force --path .github/workflows --invert-paths
