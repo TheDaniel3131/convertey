@@ -28,7 +28,7 @@ jobs:
 
       - name: Remove .github/workflows from history
         run: |
-          git clone --no-checkout . temp-repo
+          git clone --no-local --no-checkout . temp-repo
           cd temp-repo
           pip install git-filter-repo
           git filter-repo --path .github/workflows --invert-paths
