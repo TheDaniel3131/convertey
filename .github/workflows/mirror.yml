@@ -21,8 +21,10 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
-      - name: Mirror repository
+      - name: Create archive
+        run: git archive --format tar.gz --output archive.tar.gz HEAD:./ .github/workflows
+
+      - name: Push to personal repo
         run: |
-          REPO_URL="https://TheDaniel3131:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
-          git remote add mirror "$REPO_URL"
-          git push --force mirror `git ls-tree -r HEAD --name-only | grep -v '^.github/workflows/'` main:main
+          git remote add mirror "https://TheDaniel3131:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
+          git push --force mirror main:main
