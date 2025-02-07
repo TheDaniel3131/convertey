@@ -1,0 +1,19 @@
+name: Mirror to Private Repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Needed to push all branches and tags
+
+      - name: Mirror to personal repo
+        run: |
+          git remote add personal "https://${{ github.actor }}:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
+          git push --mirror personal
