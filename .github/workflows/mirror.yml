@@ -14,12 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Needed to push all branches and tags
+          fetch-depth: 0
 
-      - name: Add remote
+      - name: Mirror to personal repo
         run: |
           git remote add personal "https://TheDaniel3131:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git"
           git remote -v # List remotes
           git branch -a # List all branches
           git status # Check the status
 
+          # Fetch, Checkout, Merge, and Push
+          git fetch personal
+          git checkout main || git checkout -b main # Create main if it doesn't exist
+          git merge personal/main -m "Merge from personal/main" || echo "Merge conflict!"
+          git push "https://TheDaniel3131:${{ secrets.PERSONAL_REPO_TOKEN }}@github.com/TheDaniel3131/cosmo-converter.git" main
