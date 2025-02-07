@@ -3,15 +3,17 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-transparent backdrop-blur-md dark:bg-opacity-20 py-12 mt-16 relative z-10">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="container mx-auto px-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
             <h3 className="text-lg font-semibold mb-4 text-purple-600 dark:text-purple-400">
               About Us
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              CosmoCrafters is revolutionizing file conversion with our
-              cutting-edge Cosmo Converter technology.
+              At CosmoCrafters, we are dedicated to providing the most efficient
+              and user-friendly file conversion experience. CosmoCrafters
+              ensures your files are converted quickly and accurately every time
+              users use our services.
             </p>
           </div>
           <div>
@@ -78,7 +80,7 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4 text-purple-600 dark:text-purple-400">
-              Connect
+              Connect With Us
             </h3>
             <div className="flex space-x-4">
               <a
