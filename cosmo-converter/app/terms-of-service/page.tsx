@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { tosMetadata } from "../metadata/terms-of-services";
+import { tosMetadata } from "@/app/metadata/terms-of-services";
 import ToS from "@/components/terms-of-service/ToS";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
