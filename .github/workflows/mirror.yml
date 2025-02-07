@@ -1,9 +1,12 @@
-name: Mirror to Private Repo
+name: Mirror to Personal Repo
 
 on:
   push:
     branches:
       - main
+
+permissions:
+  contents: write
 
 jobs:
   mirror:
