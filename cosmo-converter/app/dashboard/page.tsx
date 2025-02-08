@@ -1,8 +1,21 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileUp, Clock, CheckCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Dashboard() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return null; // The LoadingTransition component will handle the loading state
+  }
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Welcome back, User!</h1>

@@ -103,10 +103,9 @@ export default function Header() {
                 ? "/cosmoconverter-home-light.png"
                 : "/cosmoconverter-home-dark.png"
             }
-            alt="CosmoConverter Icon"
+            alt="CosmoConverter Logo"
             width={250}
             height={250}
-            className=""
           />
         </Link>
         <div className="hidden md:flex space-x-5 items-center font-semibold">
