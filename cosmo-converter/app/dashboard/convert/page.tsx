@@ -18,11 +18,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FileUp, ArrowRight } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { FileUp, ArrowRight, Settings } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function ConvertPage() {
   const [file, setFile] = useState<File | null>(null);
   const [outputFormat, setOutputFormat] = useState("");
+  const [quality, setQuality] = useState(80);
+  const [preserveMetadata, setPreserveMetadata] = useState(true);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -32,7 +42,10 @@ export default function ConvertPage() {
 
   const handleConvert = () => {
     // Implement conversion logic here
-    console.log("Converting", file, "to", outputFormat);
+    console.log("Converting", file, "to", outputFormat, "with options:", {
+      quality,
+      preserveMetadata,
+    });
   };
 
   return (
@@ -63,6 +76,44 @@ export default function ConvertPage() {
                 </SelectContent>
               </Select>
             </div>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="advanced-options">
+                <AccordionTrigger>
+                  <div className="flex items-center">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Advanced Options
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <Label htmlFor="quality">Quality</Label>
+                      <div className="flex items-center space-x-2">
+                        <Slider
+                          id="quality"
+                          min={0}
+                          max={100}
+                          step={1}
+                          value={[quality]}
+                          onValueChange={(value) => setQuality(value[0])}
+                        />
+                        <span>{quality}%</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="preserve-metadata"
+                        checked={preserveMetadata}
+                        onCheckedChange={setPreserveMetadata}
+                      />
+                      <Label htmlFor="preserve-metadata">
+                        Preserve Metadata
+                      </Label>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </CardContent>
         <CardFooter>

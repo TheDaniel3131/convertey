@@ -1,21 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Home, FileUp, History, Settings, LogOut, Menu } from "lucide-react";
+import {
+  Home,
+  FileUp,
+  History,
+  Settings,
+  LogOut,
+  Menu,
+  BarChart,
+  X,
+} from "lucide-react";
 
 const navItems = [
   { icon: Home, label: "Dashboard", href: "/dashboard" },
   { icon: FileUp, label: "Convert", href: "/dashboard/convert" },
   { icon: History, label: "History", href: "/dashboard/history" },
+  { icon: BarChart, label: "Analytics", href: "/dashboard/analytics" },
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ];
 
-export default function DashboardSidebar() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+export default function SideBar() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
+
+  // Close sidebar when route changes (for mobile)
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, []);
+
+  // Close sidebar when screen size becomes larger
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsSidebarOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <>
@@ -27,20 +53,35 @@ export default function DashboardSidebar() {
       >
         <Menu />
       </Button>
+      <div
+        className={`
+        fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-opacity duration-300 ease-in-out
+        ${isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}
+      `}
+        onClick={() => setIsSidebarOpen(false)}
+      />
       <aside
         className={`
-        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        fixed left-0 top-0 z-40 h-screen w-64 
+        fixed left-0 top-0 z-50 h-screen w-64 
         bg-white dark:bg-gray-800 
-        transition-transform duration-300 ease-in-out
-        md:translate-x-0
+        transform transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        md:translate-x-0 md:static md:h-screen
       `}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-center h-20 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between h-20 px-4 border-b border-gray-200 dark:border-gray-700">
             <h1 className="text-2xl font-bold text-purple-600 dark:text-purple-400">
               Cosmo Converter
             </h1>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              <X />
+            </Button>
           </div>
           <nav className="flex-1 overflow-y-auto py-4">
             <ul className="space-y-2 px-4">
