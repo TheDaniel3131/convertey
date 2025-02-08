@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sun, Moon, Menu, User } from "lucide-react";
 import Link from "next/link";
 import NavLink from "@/components/elements/header/NavLinks";
-import { createSupabaseClient } from "@/lib/utils/supabase/client"; 
+import { createSupabaseClient } from "@/lib/utils/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Header() {
@@ -16,7 +16,7 @@ export default function Header() {
   const [supabase] = useState(() => {
     const client = createSupabaseClient();
     if (!client) {
-      console.error('Failed to create Supabase client');
+      console.error("Failed to create Supabase client");
       return null;
     }
     return client;
@@ -38,24 +38,28 @@ export default function Header() {
     // Check if this is a verification callback
     const handleEmailVerification = async () => {
       // Check for email verification parameters
-      const isVerification = searchParams?.get('type') === 'email_confirmation';
-      
+      const isVerification = searchParams?.get("type") === "email_confirmation";
+
       if (isVerification) {
         // Get current user
-        const { data: { user } } = await supabase.auth.getUser();
-        
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
         if (user) {
           // Sign out the user
           await supabase.auth.signOut();
           // Redirect to login
-          router.push('/login');
+          router.push("/login");
         }
       }
     };
 
     // Check user authentication status
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setUser(user);
     };
 
@@ -66,14 +70,14 @@ export default function Header() {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         // Handle email verification event
-        if (event === 'SIGNED_IN' && session?.user.email_confirmed_at) {
+        if (event === "SIGNED_IN" && session?.user.email_confirmed_at) {
           // Sign out the user
           await supabase.auth.signOut();
           // Redirect to login
-          router.push('/login');
+          router.push("/login");
           return;
         }
-        
+
         setUser(session?.user ?? null);
       }
     );
@@ -86,7 +90,7 @@ export default function Header() {
   const handleSignOut = async () => {
     if (!supabase) return;
     await supabase.auth.signOut();
-    router.push('/');
+    router.push("/");
   };
 
   return (
@@ -105,7 +109,7 @@ export default function Header() {
             className=""
           />
         </Link>
-        <div className="hidden md:flex space-x-6 items-center font-semibold">
+        <div className="hidden md:flex space-x-5 items-center font-semibold">
           <NavLink href="/">Home</NavLink>
           <NavLink href="/about">About</NavLink>
           <NavLink href="/pricing">Pricing</NavLink>
@@ -129,7 +133,7 @@ export default function Header() {
                 variant="outline"
                 size="icon"
                 aria-label="Profile"
-                onClick={() => router.push('/profile')}
+                onClick={() => router.push("/profile")}
                 className="rounded-full bg-transparent border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400"
               >
                 <User className="h-5 w-5" />
@@ -146,15 +150,15 @@ export default function Header() {
             <>
               <Button
                 variant="outline"
-                onClick={() => router.push('/login')}
-                className="rounded-full border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400"
+                onClick={() => router.push("/login")}
+                className="rounded-full border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400 px-7 py-3"
               >
                 Login
               </Button>
               <Button
                 variant="default"
-                onClick={() => router.push('/signup')}
-                className="rounded-full bg-purple-600 text-white hover:bg-purple-700"
+                onClick={() => router.push("/signup")}
+                className="rounded-full bg-purple-600 text-white hover:bg-purple-700 px-6 py-3"
               >
                 Sign Up
               </Button>
@@ -205,8 +209,8 @@ export default function Header() {
               <NavLink href="/profile" className="block py-2 px-4">
                 Profile
               </NavLink>
-              <button 
-                onClick={handleSignOut} 
+              <button
+                onClick={handleSignOut}
                 className="block py-2 px-4 w-full text-left hover:bg-gray-100"
               >
                 Sign Out
