@@ -6,18 +6,19 @@ import Features from "@/components/home-features/Features";
 import Footer from "@/components/footer/Footer";
 import C2A from "@/components/call-to-action/C2A";
 import FileConverterWrapper from "@/components/file-converter/FileConverterWrapper";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense } from "react";
+// import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
+  // useEffect(() => {
+  //   setIsLoading(false);
+  // }, []);
 
-  if (isLoading) {
-    return null; // The LoadingTransition component will handle the loading state
-  }
+  // if (isLoading) {
+  //   return null; // The LoadingTransition component will handle the loading state
+  // }
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">

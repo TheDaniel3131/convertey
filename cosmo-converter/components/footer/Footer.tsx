@@ -92,7 +92,7 @@ export default function Footer() {
             </h3>
             <div className="flex space-x-4">
               <a
-                href="https://github.com/CosmoCrafters"
+                href="https://facebook.com/CosmoCrafters"
                 className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
               >
                 <svg
@@ -109,7 +109,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://github.com/CosmoCrafters"
+                href="https://x.com/_CosmoCrafters_"
                 className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
               >
                 <svg
