@@ -23,40 +23,64 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);  // Fix this line
   const router = useRouter();
   const supabase = createSupabaseClient();
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
+    setIsLoading(true);
+  
     if (!supabase) {
       setError("Supabase client not initialized");
+      setIsLoading(false);
       return;
     }
-
+  
     try {
+      console.log("Attempting login..."); // Debug log
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: email.trim(),
+        password
       });
-
+  
       if (error) {
-        setError(error.message);
+        console.error("Login error:", error); // Debug log
+        if (error.message === "Invalid login credentials") {
+          setError("Invalid email or password. Please try again.");
+        } else {
+          setError(error.message);
+        }
+        setIsLoading(false);
         return;
       }
-
+  
       if (data.user) {
-        console.log("Login successful, user:", data.user);
-        // Store remember me preference in local storage
-        localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
-        router.push("/dashboard");
+        console.log("Login successful, redirecting..."); // Debug log
+        localStorage.setItem('rememberMe', JSON.stringify(rememberMe));
+        
+        // Try both methods of navigation
+        try {
+          await router.push("/dashboard");
+          // As a fallback, use window.location
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 1000);
+        } catch (navigationError) {
+          console.error("Navigation error:", navigationError);
+          // If router.push fails, force navigation
+          window.location.href = "/dashboard";
+        }
       } else {
-        console.log("No user data returned");
+        console.log("No user data returned"); // Debug log
+        setError("Login successful but no user data returned");
       }
     } catch (err) {
+      console.error("Unexpected error:", err);
       setError("An unexpected error occurred");
-      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -141,8 +165,9 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <Button
+            <Button
                 type="submit"
+                disabled={isLoading}
                 className="group relative flex w-full justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white py-2 px-4 text-sm font-medium"
               >
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -151,7 +176,7 @@ export default function LoginPage() {
                     aria-hidden="true"
                   />
                 </span>
-                Sign in
+                {isLoading ? "Signing in..." : "Sign in"}
               </Button>
             </div>
           </form>
