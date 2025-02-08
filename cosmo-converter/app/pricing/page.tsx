@@ -3,6 +3,7 @@ import Footer from "@/components/footer/Footer";
 import type { Metadata } from "next";
 import { pricingMetadata } from "@/app/metadata/pricing";
 import dynamic from "next/dynamic";
+import React, { Suspense } from "react";
 
 const Pricing = dynamic(() => import("@/components/pricing/Pricing"));
 
@@ -12,7 +13,9 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
       <div className="stars"></div>
-      <Header />
+      <Suspense fallback={<p>Loading header...</p>}>
+        <Header />
+      </Suspense>
       <Pricing />
       <Footer />
     </div>

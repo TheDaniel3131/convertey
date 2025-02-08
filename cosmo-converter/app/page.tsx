@@ -6,6 +6,7 @@ import Features from "@/components/home-features/Features";
 import Footer from "@/components/footer/Footer";
 import C2A from "@/components/call-to-action/C2A";
 import FileConverterWrapper from "@/components/file-converter/FileConverterWrapper";
+import React, { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -14,7 +15,9 @@ export default function Home() {
     transition-colors duration-300"
     >
       <div className="stars"></div>
-      <Header />
+      <Suspense fallback={<p>Loading header...</p>}>
+        <Header />
+      </Suspense>
       <main className="container mx-auto px-4 relative z-10">
         <Hero />
         <Features />
