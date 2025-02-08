@@ -1,55 +1,64 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Rocket } from "lucide-react"
-import { createSupabaseClient } from "@/lib/utils/supabase/client"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Rocket } from "lucide-react";
+import { createSupabaseClient } from "@/lib/utils/supabase/client";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [rememberMe, setRememberMe] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
-  const supabase = createSupabaseClient()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const supabase = createSupabaseClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
     if (!supabase) {
-      setError("Supabase client not initialized")
-      return
+      setError("Supabase client not initialized");
+      return;
     }
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
-      })
+        password,
+      });
 
       if (error) {
-        setError(error.message)
-        return
+        setError(error.message);
+        return;
       }
 
       if (data.user) {
+        console.log("Login successful, user:", data.user);
         // Store remember me preference in local storage
-        localStorage.setItem('rememberMe', JSON.stringify(rememberMe))
-        router.push("/dashboard")
+        localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
+        router.push("/dashboard");
+      } else {
+        console.log("No user data returned");
       }
     } catch (err) {
-      setError("An unexpected error occurred")
-      console.error(err)
+      setError("An unexpected error occurred");
+      console.error(err);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -71,9 +80,7 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           {error && (
-            <div className="text-red-500 text-center mb-4">
-              {error}
-            </div>
+            <div className="text-red-500 text-center mb-4">{error}</div>
           )}
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4 rounded-md shadow-sm">
@@ -113,7 +120,7 @@ export default function LoginPage() {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <Checkbox 
+                <Checkbox
                   id="remember-me"
                   checked={rememberMe}
                   onCheckedChange={(checked) => setRememberMe(!!checked)}
@@ -124,7 +131,10 @@ export default function LoginPage() {
                 </Label>
               </div>
               <div className="text-sm">
-                <Link href="/forgot-password" className="font-medium text-purple-400 hover:text-purple-300">
+                <Link
+                  href="/forgot-password"
+                  className="font-medium text-purple-400 hover:text-purple-300"
+                >
                   Forgot your password?
                 </Link>
               </div>
@@ -136,7 +146,10 @@ export default function LoginPage() {
                 className="group relative flex w-full justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white py-2 px-4 text-sm font-medium"
               >
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Rocket className="h-5 w-5 text-purple-300 group-hover:text-purple-200" aria-hidden="true" />
+                  <Rocket
+                    className="h-5 w-5 text-purple-300 group-hover:text-purple-200"
+                    aria-hidden="true"
+                  />
                 </span>
                 Sign in
               </Button>
@@ -146,12 +159,15 @@ export default function LoginPage() {
         <CardFooter className="flex flex-col space-y-2 text-sm text-center">
           <p>
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="font-medium text-purple-400 hover:text-purple-300">
+            <Link
+              href="/signup"
+              className="font-medium text-purple-400 hover:text-purple-300"
+            >
               Sign up
             </Link>
           </p>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
