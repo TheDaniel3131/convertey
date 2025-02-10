@@ -1,13 +1,11 @@
-// app/api/convert/file/route.ts
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import sharp from "sharp";
 
-// Helper to convert image using Sharp
 async function convertImage(
   fileBuffer: Buffer,
   format: string,
-  options = { quality: 90 }
-) {
+  options: { quality?: number } = { quality: 90 }
+): Promise<Buffer> {
   const sharpInstance = sharp(fileBuffer);
 
   switch (format) {
@@ -23,9 +21,9 @@ async function convertImage(
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const { fileData, fileType, format } = await req.json();
+    const { fileData, fileType, format } = await request.json();
 
     if (!fileData || !fileType || !format) {
       return NextResponse.json(
@@ -34,11 +32,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // Convert base64 to buffer
     const fileBuffer = Buffer.from(fileData, "base64");
     let convertedBuffer: Buffer;
 
-    // Handle image conversions
     if (fileType.startsWith("image/")) {
       try {
         convertedBuffer = await convertImage(fileBuffer, format);
@@ -50,18 +46,14 @@ export async function POST(req: Request) {
         );
       }
     } else {
-      // For now, return an error for non-image conversions
       return NextResponse.json(
         { error: "Currently only image conversions are supported" },
         { status: 400 }
       );
     }
 
-    // Convert back to base64 for response
-    const convertedData = convertedBuffer.toString("base64");
-
     return NextResponse.json({
-      convertedData,
+      convertedData: convertedBuffer.toString("base64"),
       fileName: `converted.${format}`,
     });
   } catch (error) {

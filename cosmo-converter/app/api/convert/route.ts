@@ -1,56 +1,56 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse, NextRequest } from "next/server";
 import sharp from "sharp";
 import { PDFDocument } from "pdf-lib";
 
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "4mb", // Adjust the size limit as needed
+      sizeLimit: "4mb",
     },
   },
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "POST") {
-    try {
-      const { fileData, fileType, format } = req.body;
+export async function POST(request: NextRequest) {
+  try {
+    const { fileData, fileType, format } = await request.json();
 
-      if (!fileData) {
-        return res.status(400).json({ error: "No file data provided" });
-      }
-
-      const buffer = Buffer.from(fileData, "base64");
-
-      let convertedData: Buffer;
-
-      if (fileType.startsWith("image/")) {
-        convertedData = await convertImage(buffer, format);
-      } else if (fileType === "application/pdf") {
-        convertedData = await convertPDF(buffer);
-      } else {
-        return res.status(400).json({ error: "Unsupported file type" });
-      }
-
-      const base64ConvertedData = convertedData.toString("base64");
-
-      res.status(200).json({ convertedData: base64ConvertedData });
-    } catch (error) {
-      console.error("Error during file conversion:", error);
-      res.status(500).json({ error: "File conversion failed" });
+    if (!fileData) {
+      return NextResponse.json(
+        { error: "No file data provided" },
+        { status: 400 }
+      );
     }
-  } else {
-    res.status(405).json({ error: "Method not allowed" });
+
+    const buffer = Buffer.from(fileData, "base64");
+    let convertedData: Buffer;
+
+    if (fileType.startsWith("image/")) {
+      convertedData = await convertImage(buffer, format);
+    } else if (fileType === "application/pdf") {
+      convertedData = await convertPDF(buffer);
+    } else {
+      return NextResponse.json(
+        { error: "Unsupported file type" },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({
+      convertedData: convertedData.toString("base64"),
+    });
+  } catch (error) {
+    console.error("Error during file conversion:", error);
+    return NextResponse.json(
+      { error: "File conversion failed" },
+      { status: 500 }
+    );
   }
 }
 
 const convertImage = async (inputBuffer: Buffer, format: string) => {
-  const outputBuffer = await sharp(inputBuffer)
+  return await sharp(inputBuffer)
     .toFormat(format as keyof sharp.FormatEnum | sharp.AvailableFormatInfo)
     .toBuffer();
-  return outputBuffer;
 };
 
 const convertPDF = async (inputBuffer: Buffer) => {
@@ -58,3 +58,6 @@ const convertPDF = async (inputBuffer: Buffer) => {
   const pdfBytes = await pdfDoc.save();
   return Buffer.from(pdfBytes);
 };
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
