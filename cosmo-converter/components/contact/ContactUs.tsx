@@ -41,10 +41,6 @@ export default function ContactUs() {
         setName("");
         setEmail("");
         setMessage("");
-        setName("");
-        setEmail("");
-        setMessage("");
-        toast.success("Message sent successfully!");
         setStatus("success");
       } else {
         const errorMessage = `Error sending message: ${
@@ -66,7 +62,7 @@ export default function ContactUs() {
   };
 
   return (
-    <main className="container mx-auto px-4 py-16 relative z-10">
+    <main className="container mx-auto px-4 py-16 relative z-10 overflow-y">
       <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
         Contact Us
       </h1>

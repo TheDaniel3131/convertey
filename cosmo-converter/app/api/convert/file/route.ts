@@ -27,7 +27,8 @@ export async function POST(request: NextRequest) {
         fileName: `converted.${format}`,
       });
     } else if (
-      fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      fileType ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
       fileType === "application/msword"
     ) {
       // Word to PDF conversion
@@ -39,14 +40,16 @@ export async function POST(request: NextRequest) {
       }
 
       // Extract text from docx
-      const { value: text } = await mammoth.extractRawText({ buffer: fileBuffer });
+      const { value: text } = await mammoth.extractRawText({
+        buffer: fileBuffer,
+      });
 
       // Create PDF using pdf-lib
       const pdfDoc = await PDFDocument.create();
       const page = pdfDoc.addPage();
       const { width, height } = page.getSize();
       const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      
+
       page.drawText(text, {
         x: 50,
         y: height - 100,
@@ -60,7 +63,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         convertedData: Buffer.from(pdfBytes).toString("base64"),
-        fileName: `${fileName.split('.')[0]}.pdf`,
+        fileName: `${fileName.split(".")[0]}.pdf`,
       });
     }
 
@@ -70,10 +73,13 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Conversion error:", error);
-    return NextResponse.json({ 
-      error: error instanceof Error ? error.message : "Conversion failed",
-      details: error 
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : "Conversion failed",
+        details: error,
+      },
+      { status: 500 }
+    );
   }
 }
 
