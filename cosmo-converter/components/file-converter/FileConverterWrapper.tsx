@@ -8,74 +8,94 @@ import { downloadFile } from "@/lib/utils/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Define all possible conversion formats
-type ConversionFormat = 'png' | 'jpg' | 'pdf' | 'webp' | 'docx' | 'xlsx' | 'pptx' | 'txt' | 'md' | 'csv' | 'epub';
+type ConversionFormat =
+  | "png"
+  | "jpg"
+  | "pdf"
+  | "webp"
+  | "docx"
+  | "xlsx"
+  | "pptx"
+  | "txt"
+  | "md"
+  | "csv"
+  | "epub";
 
 // Define conversion possibilities for each input type
 const CONVERSION_MAP: Record<string, ConversionFormat[]> = {
   // Images
-  'image/jpeg': ['png', 'webp', 'pdf'],
-  'image/png': ['jpg', 'webp', 'pdf'],
-  'image/gif': ['png', 'jpg', 'webp'],
-  'image/webp': ['png', 'jpg', 'pdf'],
-  
+  "image/jpeg": ["png", "webp", "pdf"],
+  "image/png": ["jpg", "webp", "pdf"],
+  "image/gif": ["png", "jpg", "webp"],
+  "image/webp": ["png", "jpg", "pdf"],
+
   // Documents
-  'application/pdf': ['docx', 'txt', 'png', 'jpg'],
-  'application/msword': ['pdf', 'docx', 'txt'],
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['pdf', 'txt', 'md'],
-  
+  "application/pdf": ["docx", "txt", "png", "jpg"],
+  "application/msword": ["pdf", "docx", "txt"],
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+    "pdf",
+    "txt",
+    "md",
+  ],
+
   // Spreadsheets
-  'application/vnd.ms-excel': ['xlsx', 'csv', 'pdf'],
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['csv', 'pdf'],
-  'text/csv': ['xlsx', 'pdf'],
-  
+  "application/vnd.ms-excel": ["xlsx", "csv", "pdf"],
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+    "csv",
+    "pdf",
+  ],
+  "text/csv": ["xlsx", "pdf"],
+
   // Presentations
-  'application/vnd.ms-powerpoint': ['pptx', 'pdf'],
-  'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['pdf'],
-  
+  "application/vnd.ms-powerpoint": ["pptx", "pdf"],
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation": [
+    "pdf",
+  ],
+
   // Text
-  'text/plain': ['pdf', 'docx', 'md'],
-  'text/markdown': ['pdf', 'docx', 'txt'],
-  
+  "text/plain": ["pdf", "docx", "md"],
+  "text/markdown": ["pdf", "docx", "txt"],
+
   // Others
-  'application/rtf': ['pdf', 'docx', 'txt'],
-  'application/epub+zip': ['pdf', 'txt']
+  "application/rtf": ["pdf", "docx", "txt"],
+  "application/epub+zip": ["pdf", "txt"],
 };
 
 // MIME types for downloads
 const MIME_TYPES: Record<ConversionFormat, string> = {
-  'png': 'image/png',
-  'jpg': 'image/jpeg',
-  'pdf': 'application/pdf',
-  'webp': 'image/webp',
-  'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  'txt': 'text/plain',
-  'md': 'text/markdown',
-  'csv': 'text/csv',
-  'epub': 'application/epub+zip'
+  png: "image/png",
+  jpg: "image/jpeg",
+  pdf: "application/pdf",
+  webp: "image/webp",
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  txt: "text/plain",
+  md: "text/markdown",
+  csv: "text/csv",
+  epub: "application/epub+zip",
 };
 
 // Format descriptions for tooltips
 const FORMAT_DESCRIPTIONS: Record<ConversionFormat, string> = {
-  'png': 'Lossless image format with transparency support',
-  'jpg': 'Compressed image format ideal for photographs',
-  'pdf': 'Portable Document Format for documents and images',
-  'webp': 'Modern image format with superior compression',
-  'docx': 'Microsoft Word document format',
-  'xlsx': 'Microsoft Excel spreadsheet format',
-  'pptx': 'Microsoft PowerPoint presentation format',
-  'txt': 'Plain text format',
-  'md': 'Markdown text format',
-  'csv': 'Comma-separated values for data',
-  'epub': 'Electronic publication format for e-books'
+  png: "Lossless image format with transparency support",
+  jpg: "Compressed image format ideal for photographs",
+  pdf: "Portable Document Format for documents and images",
+  webp: "Modern image format with superior compression",
+  docx: "Microsoft Word document format",
+  xlsx: "Microsoft Excel spreadsheet format",
+  pptx: "Microsoft PowerPoint presentation format",
+  txt: "Plain text format",
+  md: "Markdown text format",
+  csv: "Comma-separated values for data",
+  epub: "Electronic publication format for e-books",
 };
 
 export default function FileConverterWrapper() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState<string>("");
-  const [targetFormat, setTargetFormat] = useState<ConversionFormat>('pdf');
+  const [targetFormat, setTargetFormat] = useState<ConversionFormat>("pdf");
   const [conversionProgress, setConversionProgress] = useState(0);
 
   // Get available conversion formats for the selected file
@@ -104,7 +124,7 @@ export default function FileConverterWrapper() {
     const reader = new FileReader();
     reader.onload = async (event) => {
       const buffer = event.target?.result as ArrayBuffer;
-      const fileData = Buffer.from(buffer).toString('base64');
+      const fileData = Buffer.from(buffer).toString("base64");
 
       try {
         const response = await fetch("/api/convert/file", {
@@ -119,8 +139,8 @@ export default function FileConverterWrapper() {
             fileName: selectedFile.name,
             options: {
               quality: 90, // for image conversions
-              preserveMetadata: true
-            }
+              preserveMetadata: true,
+            },
           }),
         });
 
@@ -129,24 +149,25 @@ export default function FileConverterWrapper() {
         }
 
         const data = await response.json();
-        
+
         if (data.error) {
           throw new Error(data.error);
         }
 
         const convertedData = Buffer.from(data.convertedData, "base64");
-        const outputFileName = data.fileName || `converted-file.${targetFormat}`;
+        const outputFileName =
+          data.fileName || `converted-file.${targetFormat}`;
 
-        downloadFile(
-          convertedData,
-          outputFileName,
-          MIME_TYPES[targetFormat]
-        );
+        downloadFile(convertedData, outputFileName, MIME_TYPES[targetFormat]);
 
         setConversionProgress(100);
       } catch (error) {
         console.error("Error during file conversion:", error);
-        setError(error instanceof Error ? error.message : "Conversion failed. Please try again or contact support.");
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Conversion failed. Please try again or contact support."
+        );
       } finally {
         setIsConverting(false);
       }
@@ -167,20 +188,22 @@ export default function FileConverterWrapper() {
         <h2 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600">
           Cosmo FileConverter
         </h2>
-        
+
         <div className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-lg p-8 rounded-lg transition-all duration-300 hover:shadow-xl">
           <FileUpload onConvert={setSelectedFile} maxSizeMB={25} />
-          
+
           {selectedFile && availableFormats.length > 0 && (
             <div className="mt-6 space-y-4">
               <div className="flex flex-col sm:flex-row justify-center gap-2">
                 <div className="relative group">
                   <select
                     value={targetFormat}
-                    onChange={(e) => setTargetFormat(e.target.value as ConversionFormat)}
+                    onChange={(e) =>
+                      setTargetFormat(e.target.value as ConversionFormat)
+                    }
                     className="px-3 py-2 rounded-lg bg-white/10 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700"
                   >
-                    {availableFormats.map(format => (
+                    {availableFormats.map((format) => (
                       <option key={format} value={format}>
                         Convert to {format.toUpperCase()}
                       </option>
@@ -216,7 +239,7 @@ export default function FileConverterWrapper() {
 
               {conversionProgress > 0 && conversionProgress < 100 && (
                 <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                  <div 
+                  <div
                     className="bg-purple-600 h-2.5 rounded-full transition-all duration-300"
                     style={{ width: `${conversionProgress}%` }}
                   ></div>
