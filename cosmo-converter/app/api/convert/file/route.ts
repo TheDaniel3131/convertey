@@ -1,29 +1,11 @@
 import { NextResponse, NextRequest } from "next/server";
 import sharp from "sharp";
+import mammoth from "mammoth";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
-async function convertImage(
-  fileBuffer: Buffer,
-  format: string,
-  options: { quality?: number } = { quality: 90 }
-): Promise<Buffer> {
-  const sharpInstance = sharp(fileBuffer);
-
-  switch (format) {
-    case "png":
-      return sharpInstance.png().toBuffer();
-    case "jpg":
-    case "jpeg":
-      return sharpInstance.jpeg({ quality: options.quality }).toBuffer();
-    case "webp":
-      return sharpInstance.webp({ quality: options.quality }).toBuffer();
-    default:
-      throw new Error("Unsupported image format");
-  }
-}
-
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest) {
   try {
-    const { fileData, fileType, format } = await request.json();
+    const { fileData, fileType, format, fileName } = await request.json();
 
     if (!fileData || !fileType || !format) {
       return NextResponse.json(
@@ -33,32 +15,65 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const fileBuffer = Buffer.from(fileData, "base64");
-    let convertedBuffer: Buffer;
 
-    if (fileType.startsWith("image/")) {
-      try {
-        convertedBuffer = await convertImage(fileBuffer, format);
-      } catch (error) {
-        console.error("Image conversion error:", error);
+    if (fileType.includes("image/")) {
+      // Image conversion
+      const result = await sharp(fileBuffer)
+        .toFormat(format as keyof sharp.FormatEnum)
+        .toBuffer();
+
+      return NextResponse.json({
+        convertedData: result.toString("base64"),
+        fileName: `converted.${format}`,
+      });
+    } else if (
+      fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      fileType === "application/msword"
+    ) {
+      // Word to PDF conversion
+      if (format !== "pdf") {
         return NextResponse.json(
-          { error: "Image conversion failed" },
-          { status: 500 }
+          { error: "Only PDF conversion supported for Word documents" },
+          { status: 400 }
         );
       }
-    } else {
-      return NextResponse.json(
-        { error: "Currently only image conversions are supported" },
-        { status: 400 }
-      );
+
+      // Extract text from docx
+      const { value: text } = await mammoth.extractRawText({ buffer: fileBuffer });
+
+      // Create PDF using pdf-lib
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage();
+      const { width, height } = page.getSize();
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      
+      page.drawText(text, {
+        x: 50,
+        y: height - 100,
+        maxWidth: width - 100,
+        size: 12,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+
+      const pdfBytes = await pdfDoc.save();
+
+      return NextResponse.json({
+        convertedData: Buffer.from(pdfBytes).toString("base64"),
+        fileName: `${fileName.split('.')[0]}.pdf`,
+      });
     }
 
-    return NextResponse.json({
-      convertedData: convertedBuffer.toString("base64"),
-      fileName: `converted.${format}`,
-    });
+    return NextResponse.json(
+      { error: "Unsupported file type or conversion" },
+      { status: 400 }
+    );
   } catch (error) {
     console.error("Conversion error:", error);
-    return NextResponse.json({ error: "Conversion failed" }, { status: 500 });
+    return NextResponse.json({ 
+      error: error instanceof Error ? error.message : "Conversion failed",
+      details: error 
+    }, { status: 500 });
   }
 }
 
