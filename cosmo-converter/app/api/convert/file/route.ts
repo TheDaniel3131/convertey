@@ -2,6 +2,8 @@ import { NextResponse, NextRequest } from "next/server";
 import sharp from "sharp";
 import mammoth from "mammoth";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { Document, Packer, Paragraph, TextRun } from "docx";
+import PDFParser from "pdf2json";
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,7 +41,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Extract text from docx
+      // Extract text from DOCX
       const { value: text } = await mammoth.extractRawText({
         buffer: fileBuffer,
       });
@@ -64,6 +66,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         convertedData: Buffer.from(pdfBytes).toString("base64"),
         fileName: `${fileName.split(".")[0]}.pdf`,
+      });
+    } else if (fileType === "application/pdf" && format === "docx") {
+      // Create new parser instance
+      const pdfParser = new PDFParser();
+      
+      // Convert PDF to text and create DOCX
+      const doc = await new Promise<Document>((resolve) => {
+        pdfParser.on("pdfParser_dataReady", (pdfData) => {
+          const text = pdfData.Pages.map(page => 
+            page.Texts.map(text => decodeURIComponent(text.R[0].T)).join(' ')
+          ).join('\n');
+          
+          // Create a DOCX document
+          const document = new Document({
+            sections: [
+              {
+                properties: {},
+                children: [
+                  new Paragraph({
+                    children: [new TextRun(text)],
+                  }),
+                ],
+              },
+            ],
+          });
+          resolve(document);
+        });
+        
+        pdfParser.parseBuffer(fileBuffer);
+      });
+
+      // Convert DOCX to buffer
+      const docxBuffer = await Packer.toBuffer(doc);
+
+      return NextResponse.json({
+        convertedData: Buffer.from(docxBuffer).toString("base64"),
+        fileName: `${fileName.split(".")[0]}.docx`,
       });
     }
 

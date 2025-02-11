@@ -116,16 +116,20 @@ export default function FileConverterWrapper() {
       setError("No file selected");
       return;
     }
-
+  
     setIsConverting(true);
     setError("");
     setConversionProgress(0);
-
+  
     const reader = new FileReader();
     reader.onload = async (event) => {
       const buffer = event.target?.result as ArrayBuffer;
       const fileData = Buffer.from(buffer).toString("base64");
-
+  
+      console.log("File type:", selectedFile.type); // Debug log
+      console.log("Target format:", targetFormat); // Debug log
+      console.log("File name:", selectedFile.name); // Debug log
+  
       try {
         const response = await fetch("/api/convert/file", {
           method: "POST",
@@ -137,29 +141,27 @@ export default function FileConverterWrapper() {
             fileType: selectedFile.type,
             format: targetFormat,
             fileName: selectedFile.name,
-            options: {
-              quality: 90, // for image conversions
-              preserveMetadata: true,
-            },
           }),
         });
-
+  
+        console.log("Response status:", response.status); // Debug log
+  
         if (!response.ok) {
           throw new Error(`Conversion failed: ${response.statusText}`);
         }
-
+  
         const data = await response.json();
-
+  
         if (data.error) {
           throw new Error(data.error);
         }
-
+  
         const convertedData = Buffer.from(data.convertedData, "base64");
         const outputFileName =
           data.fileName || `converted-file.${targetFormat}`;
-
+  
         downloadFile(convertedData, outputFileName, MIME_TYPES[targetFormat]);
-
+  
         setConversionProgress(100);
       } catch (error) {
         console.error("Error during file conversion:", error);
@@ -172,12 +174,12 @@ export default function FileConverterWrapper() {
         setIsConverting(false);
       }
     };
-
+  
     reader.onerror = () => {
       setError("Error reading file. Please try again.");
       setIsConverting(false);
     };
-
+  
     reader.readAsArrayBuffer(selectedFile);
   };
 
@@ -265,3 +267,4 @@ export default function FileConverterWrapper() {
     </section>
   );
 }
+
