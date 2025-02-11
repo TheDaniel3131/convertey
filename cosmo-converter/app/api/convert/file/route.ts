@@ -8,6 +8,7 @@ import ffmpeg from "fluent-ffmpeg";
 import { writeFile, unlink, readFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { randomUUID } from "crypto";
+import * as XLSX from "xlsx"; 
 
 // Configuration
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -132,6 +133,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         convertedData: Buffer.from(docxBuffer).toString("base64"),
         fileName: `converted.docx`,
+      });
+    } else if (
+      fileType === "application/vnd.ms-excel" || // .xls
+      fileType ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || // .xlsx
+      fileType === "text/csv" // .csv
+    ) {
+      // Read the spreadsheet file
+      const workbook = XLSX.read(fileBuffer, { type: "buffer" });
+
+      // Convert to the target format
+      let outputBuffer: Buffer;
+      if (format === "csv") {
+        const csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+        outputBuffer = Buffer.from(csv);
+      } else if (format === "xlsx") {
+        outputBuffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+      } else if (format === "xls") {
+        outputBuffer = XLSX.write(workbook, { type: "buffer", bookType: "xls" });
+      } else {
+        return NextResponse.json(
+          { error: "Unsupported spreadsheet conversion format" },
+          { status: 400 }
+        );
+      }
+
+      return NextResponse.json({
+        convertedData: outputBuffer.toString("base64"),
+        fileName: `converted.${format}`,
       });
     }
 
