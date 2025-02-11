@@ -70,14 +70,14 @@ export async function POST(request: NextRequest) {
     } else if (fileType === "application/pdf" && format === "docx") {
       // Create new parser instance
       const pdfParser = new PDFParser();
-      
+
       // Convert PDF to text and create DOCX
       const doc = await new Promise<Document>((resolve) => {
         pdfParser.on("pdfParser_dataReady", (pdfData) => {
-          const text = pdfData.Pages.map(page => 
-            page.Texts.map(text => decodeURIComponent(text.R[0].T)).join(' ')
-          ).join('\n');
-          
+          const text = pdfData.Pages.map((page) =>
+            page.Texts.map((text) => decodeURIComponent(text.R[0].T)).join(" ")
+          ).join("\n");
+
           // Create a DOCX document
           const document = new Document({
             sections: [
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
           });
           resolve(document);
         });
-        
+
         pdfParser.parseBuffer(fileBuffer);
       });
 

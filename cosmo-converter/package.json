@@ -23,9 +23,11 @@
     "@vercel/speed-insights": "^1.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "docx": "^9.1.1",
     "docx-pdf": "^0.0.1",
     "framer-motion": "^12.4.1",
     "html-to-text": "^9.0.5",
+    "libreoffice": "^0.4.5",
     "libreoffice-convert": "^1.6.0",
     "lucide-react": "^0.474.0",
     "mammoth": "^1.9.0",
@@ -48,15 +50,15 @@
     "@eslint/eslintrc": "^3",
     "@supabase/supabase-js": "^2.48.1",
     "@types/html-to-text": "^9.0.4",
-    "@types/node": "^20",
+    "@types/node": "^20.17.17",
     "@types/pdfkit": "^0.13.9",
-    "@types/react": "^19",
+    "@types/react": "^19.0.8",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
     "postcss": "^8",
     "shadcn-ui": "^0.9.4",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "typescript": "^5.7.3"
   }
 }
