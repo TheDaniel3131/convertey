@@ -4,15 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Expanded supported file types with their extensions
-
-// Group formats for display
 const FORMAT_GROUPS = {
-  'Images': ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-  'Documents': ['pdf', 'doc', 'docx', 'rtf'],
-  'Spreadsheets': ['xls', 'xlsx', 'csv'],
-  'Presentations': ['ppt', 'pptx'],
-  'Text': ['txt', 'md'],
-  'eBooks': ['epub']
+  Images: ["jpg", "jpeg", "png", "gif", "webp"],
+  Documents: ["pdf", "doc", "docx", "rtf"],
+  Spreadsheets: ["xls", "xlsx", "csv"],
+  Presentations: ["ppt", "pptx"],
+  Text: ["txt", "md"],
+  eBooks: ["epub"],
+  Audio: ["mp3", "wav", "flac", "ogg"],
+  Video: ["mp4", "avi", "mov", "wmv", "flv", "mkv"],
 };
 
 type FileUploadProps = {
@@ -21,10 +21,12 @@ type FileUploadProps = {
   allowedGroups?: Array<keyof typeof FORMAT_GROUPS>;
 };
 
-export default function FileUpload({ 
-  onConvert, 
+export default function FileUpload({
+  onConvert,
   maxSizeMB = 25,
-  allowedGroups = Object.keys(FORMAT_GROUPS) as Array<keyof typeof FORMAT_GROUPS>
+  allowedGroups = Object.keys(FORMAT_GROUPS) as Array<
+    keyof typeof FORMAT_GROUPS
+  >,
 }: FileUploadProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string>("");
@@ -33,16 +35,15 @@ export default function FileUpload({
   // Get allowed extensions based on allowed groups
   const getAllowedExtensions = () => {
     return allowedGroups
-      .flatMap(group => FORMAT_GROUPS[group])
-      .map(ext => `.${ext}`)
-      .join(',');
+      .flatMap((group) => FORMAT_GROUPS[group])
+      .map((ext) => `.${ext}`)
+      .join(",");
   };
 
-
   const getFileGroup = (file: File): string | null => {
-    const extension = file.name.split('.').pop()?.toLowerCase();
+    const extension = file.name.split(".").pop()?.toLowerCase();
     for (const [group, extensions] of Object.entries(FORMAT_GROUPS)) {
-      if (extensions.includes(extension || '')) {
+      if (extensions.includes(extension || "")) {
         return group;
       }
     }
@@ -58,8 +59,13 @@ export default function FileUpload({
     }
 
     const fileGroup = getFileGroup(file);
-    if (!fileGroup || !allowedGroups.includes(fileGroup as keyof typeof FORMAT_GROUPS)) {
-      setError(`Unsupported file type. Please upload one of the supported formats.`);
+    if (
+      !fileGroup ||
+      !allowedGroups.includes(fileGroup as keyof typeof FORMAT_GROUPS)
+    ) {
+      setError(
+        `Unsupported file type. Please upload one of the supported formats.`
+      );
       return false;
     }
 
@@ -81,7 +87,7 @@ export default function FileUpload({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragActive(false);
-    
+
     const file = e.dataTransfer.files?.[0];
     if (file && validateFile(file)) {
       setSelectedFile(file);
@@ -111,11 +117,11 @@ export default function FileUpload({
 
   return (
     <div className="py-8 text-center">
-      <div 
+      <div
         className={`
           bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg p-8 rounded-lg 
           transition-all duration-300 hover:shadow-xl 
-          ${dragActive ? 'border-2 border-purple-500 bg-purple-50/10' : ''}
+          ${dragActive ? "border-2 border-purple-500 bg-purple-50/10" : ""}
         `}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -140,7 +146,7 @@ export default function FileUpload({
               />
               <Button
                 variant="outline"
-                onClick={() => document.getElementById('file-upload')?.click()}
+                onClick={() => document.getElementById("file-upload")?.click()}
                 className="w-full max-w-xs"
               >
                 Choose File
@@ -180,10 +186,10 @@ export default function FileUpload({
         <div className="mt-6">
           <h3 className="text-sm font-medium mb-2">Supported Formats</h3>
           <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
-            {allowedGroups.map(group => (
+            {allowedGroups.map((group) => (
               <div key={group}>
-                <span className="font-medium">{group}:</span>{' '}
-                {FORMAT_GROUPS[group].join(', ')}
+                <span className="font-medium">{group}:</span>{" "}
+                {FORMAT_GROUPS[group].join(", ")}
               </div>
             ))}
           </div>

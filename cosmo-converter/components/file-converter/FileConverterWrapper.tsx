@@ -7,7 +7,6 @@ import FileUpload from "@/components/file-upload/FileUpload";
 import { downloadFile } from "@/lib/utils/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-// Define all possible conversion formats
 type ConversionFormat =
   | "png"
   | "jpg"
@@ -19,17 +18,24 @@ type ConversionFormat =
   | "txt"
   | "md"
   | "csv"
-  | "epub";
+  | "epub"
+  // Video formats
+  | "mp4"
+  | "webm"
+  | "mov"
+  | "avi"
+  // Audio formats
+  | "mp3"
+  | "wav"
+  | "ogg"
+  | "flac";
 
-// Define conversion possibilities for each input type
 const CONVERSION_MAP: Record<string, ConversionFormat[]> = {
-  // Images
+  // Previous formats...
   "image/jpeg": ["png", "webp", "pdf"],
   "image/png": ["jpg", "webp", "pdf"],
   "image/gif": ["png", "jpg", "webp"],
   "image/webp": ["png", "jpg", "pdf"],
-
-  // Documents
   "application/pdf": ["docx", "txt", "png", "jpg"],
   "application/msword": ["pdf", "docx", "txt"],
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
@@ -37,32 +43,37 @@ const CONVERSION_MAP: Record<string, ConversionFormat[]> = {
     "txt",
     "md",
   ],
-
-  // Spreadsheets
   "application/vnd.ms-excel": ["xlsx", "csv", "pdf"],
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
     "csv",
     "pdf",
   ],
   "text/csv": ["xlsx", "pdf"],
-
-  // Presentations
   "application/vnd.ms-powerpoint": ["pptx", "pdf"],
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": [
     "pdf",
   ],
-
-  // Text
   "text/plain": ["pdf", "docx", "md"],
   "text/markdown": ["pdf", "docx", "txt"],
-
-  // Others
   "application/rtf": ["pdf", "docx", "txt"],
   "application/epub+zip": ["pdf", "txt"],
+
+  // Video formats
+  "video/mp4": ["webm", "mov", "avi", "mp3"], // Extract audio to mp3
+  "video/webm": ["mp4", "mov", "avi", "mp3"],
+  "video/quicktime": ["mp4", "webm", "avi", "mp3"],
+  "video/x-msvideo": ["mp4", "webm", "mov", "mp3"],
+
+  // Audio formats
+  "audio/mpeg": ["wav", "ogg", "flac"],
+  "audio/wav": ["mp3", "ogg", "flac"],
+  "audio/ogg": ["mp3", "wav", "flac"],
+  "audio/aac": ["mp3", "wav", "flac"],
+  "audio/flac": ["mp3", "wav", "ogg"],
 };
 
-// MIME types for downloads
 const MIME_TYPES: Record<ConversionFormat, string> = {
+  // Previous MIME types...
   png: "image/png",
   jpg: "image/jpeg",
   pdf: "application/pdf",
@@ -74,10 +85,22 @@ const MIME_TYPES: Record<ConversionFormat, string> = {
   md: "text/markdown",
   csv: "text/csv",
   epub: "application/epub+zip",
+
+  // Video MIME types
+  mp4: "video/mp4",
+  webm: "video/webm",
+  mov: "video/quicktime",
+  avi: "video/x-msvideo",
+
+  // Audio MIME types
+  mp3: "audio/mpeg",
+  wav: "audio/wav",
+  ogg: "audio/ogg",
+  flac: "audio/flac",
 };
 
-// Format descriptions for tooltips
 const FORMAT_DESCRIPTIONS: Record<ConversionFormat, string> = {
+  // Previous descriptions...
   png: "Lossless image format with transparency support",
   jpg: "Compressed image format ideal for photographs",
   pdf: "Portable Document Format for documents and images",
@@ -89,6 +112,18 @@ const FORMAT_DESCRIPTIONS: Record<ConversionFormat, string> = {
   md: "Markdown text format",
   csv: "Comma-separated values for data",
   epub: "Electronic publication format for e-books",
+
+  // Video format descriptions
+  mp4: "Most widely supported video format",
+  webm: "Open-source video format with good compression",
+  mov: "Apple QuickTime video format",
+  avi: "Microsoft Audio Video Interleave format",
+
+  // Audio format descriptions
+  mp3: "Popular compressed audio format",
+  wav: "Uncompressed audio format with high quality",
+  ogg: "Open-source audio format",
+  flac: "Free Lossless Audio Codec format",
 };
 
 export default function FileConverterWrapper() {
@@ -116,20 +151,20 @@ export default function FileConverterWrapper() {
       setError("No file selected");
       return;
     }
-  
+
     setIsConverting(true);
     setError("");
     setConversionProgress(0);
-  
+
     const reader = new FileReader();
     reader.onload = async (event) => {
       const buffer = event.target?.result as ArrayBuffer;
       const fileData = Buffer.from(buffer).toString("base64");
-  
+
       console.log("File type:", selectedFile.type); // Debug log
       console.log("Target format:", targetFormat); // Debug log
       console.log("File name:", selectedFile.name); // Debug log
-  
+
       try {
         const response = await fetch("/api/convert/file", {
           method: "POST",
@@ -143,25 +178,25 @@ export default function FileConverterWrapper() {
             fileName: selectedFile.name,
           }),
         });
-  
+
         console.log("Response status:", response.status); // Debug log
-  
+
         if (!response.ok) {
           throw new Error(`Conversion failed: ${response.statusText}`);
         }
-  
+
         const data = await response.json();
-  
+
         if (data.error) {
           throw new Error(data.error);
         }
-  
+
         const convertedData = Buffer.from(data.convertedData, "base64");
         const outputFileName =
           data.fileName || `converted-file.${targetFormat}`;
-  
+
         downloadFile(convertedData, outputFileName, MIME_TYPES[targetFormat]);
-  
+
         setConversionProgress(100);
       } catch (error) {
         console.error("Error during file conversion:", error);
@@ -174,12 +209,12 @@ export default function FileConverterWrapper() {
         setIsConverting(false);
       }
     };
-  
+
     reader.onerror = () => {
       setError("Error reading file. Please try again.");
       setIsConverting(false);
     };
-  
+
     reader.readAsArrayBuffer(selectedFile);
   };
 
@@ -267,4 +302,3 @@ export default function FileConverterWrapper() {
     </section>
   );
 }
-
