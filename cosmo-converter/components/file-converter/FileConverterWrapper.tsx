@@ -24,6 +24,8 @@ type ConversionFormat =
   | "webm"
   | "mov"
   | "avi"
+  | "flv"
+
   // Audio formats
   | "mp3"
   | "wav"
@@ -59,10 +61,11 @@ const CONVERSION_MAP: Record<string, ConversionFormat[]> = {
   "application/epub+zip": ["pdf", "txt"],
 
   // Video formats
-  "video/mp4": ["webm", "mov", "avi", "mp3"], // Extract audio to mp3
-  "video/webm": ["mp4", "mov", "avi", "mp3"],
-  "video/quicktime": ["mp4", "webm", "avi", "mp3"],
-  "video/x-msvideo": ["mp4", "webm", "mov", "mp3"],
+  "video/mp4": ["webm", "mov", "avi", "flv", "mp3"], // Extract audio to mp3
+  "video/webm": ["mp4", "mov", "avi", "flv", "mp3"],
+  "video/quicktime": ["mp4", "mov", "avi", "flv", "mp3"],
+  "video/x-msvideo": ["mp4", "mov", "avi", "flv", "mp3"],
+  "video/x-flv": ["mp4", "mov", "avi", "flv", "mp3"],
 
   // Audio formats
   "audio/mpeg": ["wav", "ogg", "flac"],
@@ -91,6 +94,7 @@ const MIME_TYPES: Record<ConversionFormat, string> = {
   webm: "video/webm",
   mov: "video/quicktime",
   avi: "video/x-msvideo",
+  flv: "video/x-flv",
 
   // Audio MIME types
   mp3: "audio/mpeg",
@@ -118,6 +122,7 @@ const FORMAT_DESCRIPTIONS: Record<ConversionFormat, string> = {
   webm: "Open-source video format with good compression",
   mov: "Apple QuickTime video format",
   avi: "Microsoft Audio Video Interleave format",
+  flv: "Flash Video format",
 
   // Audio format descriptions
   mp3: "Popular compressed audio format",
