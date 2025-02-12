@@ -43,3 +43,6 @@ next-env.d.ts
 # Github Workflows
 .github/workflows
 .github/workflows/*
+
+# Temporary Folder 
+/tmp
