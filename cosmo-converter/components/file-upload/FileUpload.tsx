@@ -2,24 +2,8 @@ import React, { useState } from "react";
 import { FileUp, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-
-// Expanded supported file types with their extensions
-const FORMAT_GROUPS = {
-  Images: ["jpg", "jpeg", "png", "gif", "webp"],
-  Documents: ["pdf", "doc", "docx", "rtf"],
-  Spreadsheets: ["xls", "xlsx", "csv"],
-  Presentations: ["ppt", "pptx"],
-  Text: ["txt", "md"],
-  eBooks: ["epub"],
-  Audio: ["mp3", "wav", "flac", "ogg"],
-  Video: ["mp4", "avi", "mov", "wmv", "flv", "mkv"],
-};
-
-type FileUploadProps = {
-  onConvert: (file: File) => void;
-  maxSizeMB?: number;
-  allowedGroups?: Array<keyof typeof FORMAT_GROUPS>;
-};
+import { FORMAT_GROUPS } from "@/lib/config/fileUpload";
+import type { FileUploadProps } from "@/types/FileUploadProps";
 
 export default function FileUpload({
   onConvert,
