@@ -118,16 +118,17 @@ export default function Header() {
           />
         </Link>
         <div className="hidden md:flex space-x-5 items-center font-semibold">
-          <NavLink href="/">Home</NavLink>
-          <NavLink href="/about">About</NavLink>
-          <NavLink href="/pricing">Pricing</NavLink>
-          <NavLink href="/contact">Contact Us</NavLink>
           {user && (
             <>
               <NavLink href="/dashboard">Dashboard</NavLink>
-              <NavLink href="/profile">Profile</NavLink>
             </>
           )}
+          <NavLink href="/about">About Us</NavLink>
+          <NavLink href="/pricing">Pricing</NavLink>
+          <NavLink href="/tools">Tools</NavLink>
+          <NavLink href="/contact">Contact Us</NavLink>
+          <NavLink href="/donate">Donate</NavLink>
+          {user && <>{/* <NavLink href="/profile">Profile</NavLink> */}</>}
           <Button
             variant="outline"
             size="icon"

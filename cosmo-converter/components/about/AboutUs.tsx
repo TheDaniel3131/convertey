@@ -12,30 +12,30 @@ export default function AboutUs() {
           <CardContent className="p-6">
             <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
             <p className="text-gray-600 dark:text-gray-300">
-              At CosmoCrafters, we&apos;re on a mission to revolutionize file
-              conversion across the digital universe. Our flagship product,
-              Cosmo Converter, is designed to break down the barriers between
-              file formats, allowing seamless transformation of data across all
-              digital dimensions.
+              At CosmoCrafters, we aim to create a faster, user-friendlier, and
+              efficient file conversion website. Therefore, we create
+              CosmoConverter, where users are able to upload and convert files
+              easily and swiftly while we take care of the background process
+              and the rest of the stuffs.
             </p>
           </CardContent>
         </Card>
 
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg overflow-hidden">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Our Team</h2>
+            <h2 className="text-2xl font-semibold mb-4">Meet The Team</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <TeamMember
                 name="Daniel Poh"
                 role="Co-Founder of CosmoCrafters"
                 image="/placeholder.svg?height=100&width=100"
-                description="A visionary leader with extensive experience in software development and a passion for innovation."
+                description="Hi, I am Daniel. I like to dev."
               />
               <TeamMember
                 name="Tan Han Jay"
                 role="Co-Founder of CosmoCrafters"
                 image="/placeholder.svg?height=100&width=100"
-                description="A tech expert with a deep understanding of algorithms and a drive to push the boundaries of technology."
+                description="A tech enthusiast and upcoming software engineer."
               />
             </div>
           </CardContent>
@@ -43,13 +43,11 @@ export default function AboutUs() {
 
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Our Journey</h2>
+            <h2 className="text-2xl font-semibold mb-4">Background</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Founded in 2025, CosmoCrafters started as a small team of
-              passionate developers and designers who believed in the power of
-              seamless data transformation. Today, we&apos;re proud to serve
-              millions of users across the galaxy, constantly pushing the
-              boundaries of what&apos;s possible in file conversion technology!
+              Founded in 4 February 2025, CosmoCrafters started as a small team
+              of passionate software developers with a vision to create a better
+              file conversion website for user to use.
             </p>
           </CardContent>
         </Card>

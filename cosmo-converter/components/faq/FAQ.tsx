@@ -8,9 +8,9 @@ import { faqData } from "@/lib/data/faq";
 
 export default function FAQ() {
   return (
-    <section className="py-16 bg-gray-50 dark:bg-gray-900">
+    <section className="py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-8 text-center">
+        <h2 className="py-4 text-4xl font-bold mb-8 text-center">
           Frequently Asked Questions
         </h2>
         <Accordion
@@ -20,7 +20,7 @@ export default function FAQ() {
         >
           {faqData.map((faq, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="text-left">
+              <AccordionTrigger className="text-left text-1xl">
                 {faq.question}
               </AccordionTrigger>
               <AccordionContent>{faq.answer}</AccordionContent>

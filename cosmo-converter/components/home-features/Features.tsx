@@ -4,7 +4,7 @@ import FeatureCard from "@/components/elements/home-features/FeatureCard";
 export default function Features() {
   return (
     /* Features Section */
-    <section id="features" className="py-16">
+    <section id="features" className="py-20">
       <h2 className="text-3xl font-bold mb-12 text-center">
         Cosmic Capabilities
       </h2>

@@ -179,8 +179,8 @@ export default function FileConverterWrapper() {
     <section className="py-16 bg-transparent rounded-lg overflow-hidden relative">
       <div className="absolute inset-0 opacity-50 bg-gray-200 dark:bg-gray-800"></div>
       <div className="max-w-3xl mx-auto px-4 relative">
-        <h2 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600">
-          Cosmo FileConverter
+        <h2 className="py-4 text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600">
+          Try Converting Files with CosmoConverter
         </h2>
         <p className="text-lg text-center text-gray-700 dark:text-gray-300 mb-8">
           We provide the platform for converting files from one format to

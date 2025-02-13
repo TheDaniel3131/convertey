@@ -1,8 +1,13 @@
 export const faqData = [
   {
+    question: "Why use CosmoConverter?",
+    answer:
+      "We want to offer users a user-friendly, fast and reliable file conversion services. Speed and quality are our top priorities, and we strive to provide the best possible experience for our users. Whether you need to convert documents, images, audio, video, or other file types, CosmoConverter has you covered.",
+  },
+  {
     question: "What file formats does CosmoConverter support?",
     answer:
-      "CosmoConverter supports a wide range of file formats, including documents (PDF, DOCX, TXT), images (JPG, PNG, GIF), audio (MP3, WAV), video (MP4, AVI), and more. Check our conversion options for a full list of supported formats.",
+      "CosmoConverter supports a wide range of file formats, including documents (PDF, DOCX, TXT), images (JPG, PNG, GIF), audio (MP3, WAV), video (MP4, AVI), and many more. Check out our conversion options for a full list of supported formats.",
   },
   {
     question: "Is CosmoConverter free to use?",
@@ -27,7 +32,7 @@ export const faqData = [
   {
     question: "Can I convert multiple files at once?",
     answer:
-      "Yes, CosmoConverter supports batch conversions. Free users can convert up to 5 files simultaneously, while premium users have higher or unlimited batch conversion limits depending on their plan.",
+      "Yes, CosmoConverter supports batch conversions. Free users can only convert up to 3 files simultaneously, while premium users have higher or unlimited batch conversion limits depending on their plan.",
   },
   {
     question: "Is there a limit to how many files I can convert?",
@@ -35,9 +40,8 @@ export const faqData = [
       "Free users can perform up to 5 conversions per day. Premium users have higher or unlimited daily conversion limits based on their subscription plan.",
   },
   {
-    question:
-      "Do you offer an API for integrating CosmoConverter into my application?",
+    question: "If I have any issues or questions, how can I contact support?",
     answer:
-      "Yes, we offer a robust API for developers who want to integrate our conversion capabilities into their own applications. Check our Developer section for API documentation and pricing.",
+      "If you have any questions or need assistance, please reach us out through our social handlers, use the contact form on our website, or send an email to us at official.cosmoconverters@gmail.com",
   },
 ];
