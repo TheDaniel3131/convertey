@@ -1,10 +1,13 @@
 import type { ConversionFormat } from "@/types/FileConversionFormats";
 
 export const CONVERSION_MAP: Record<string, ConversionFormat[]> = {
+  // Image formats
   "image/jpeg": ["png", "webp", "pdf"],
   "image/png": ["jpg", "webp", "pdf"],
   "image/gif": ["png", "jpg", "webp"],
   "image/webp": ["png", "jpg", "pdf"],
+
+  // Document formats
   "application/pdf": ["docx", "txt", "png", "jpg"],
   "application/msword": ["pdf", "docx", "txt"],
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
@@ -22,8 +25,12 @@ export const CONVERSION_MAP: Record<string, ConversionFormat[]> = {
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": [
     "pdf",
   ],
+
+  // Text formats
   "text/plain": ["pdf", "docx", "md"],
   "text/markdown": ["pdf", "docx", "txt"],
+
+  // Other formats
   "application/rtf": ["pdf", "docx", "txt"],
   "application/epub+zip": ["pdf", "txt"],
 
@@ -43,16 +50,23 @@ export const CONVERSION_MAP: Record<string, ConversionFormat[]> = {
 };
 
 export const MIME_TYPES: Record<ConversionFormat, string> = {
+  // Image MIME types
   png: "image/png",
   jpg: "image/jpeg",
-  pdf: "application/pdf",
   webp: "image/webp",
+
+  // Document MIME types
+  pdf: "application/pdf",
   docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+
+  // Text MIME types
   txt: "text/plain",
   md: "text/markdown",
   csv: "text/csv",
+
+  // Other MIME types
   epub: "application/epub+zip",
 
   // Video MIME types
@@ -70,16 +84,23 @@ export const MIME_TYPES: Record<ConversionFormat, string> = {
 };
 
 export const FORMAT_DESCRIPTIONS: Record<ConversionFormat, string> = {
+  // Image format descriptions
   png: "Lossless image format with transparency support",
   jpg: "Compressed image format ideal for photographs",
-  pdf: "Portable Document Format for documents and images",
   webp: "Modern image format with superior compression",
+
+  // Document format descriptions
+  pdf: "Portable Document Format for documents and images",
   docx: "Microsoft Word document format",
   xlsx: "Microsoft Excel spreadsheet format",
   pptx: "Microsoft PowerPoint presentation format",
+
+  // Text format descriptions
   txt: "Plain text format",
   md: "Markdown text format",
   csv: "Comma-separated values for data",
+
+  // Other format descriptions
   epub: "Electronic publication format for e-books",
 
   // Video format descriptions

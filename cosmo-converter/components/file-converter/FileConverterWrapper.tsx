@@ -20,10 +20,65 @@ export default function FileConverterWrapper() {
   const [targetFormat, setTargetFormat] = useState<ConversionFormat>("pdf");
   const [conversionProgress, setConversionProgress] = useState(0);
 
+  const getFileType = (file: File): string => {
+    const extension = file.name.split(".").pop()?.toLowerCase();
+    switch (extension) {
+      case "md":
+        return "text/markdown";
+      case "txt":
+        return "text/plain";
+      case "jpg":
+      case "jpeg":
+        return "image/jpeg";
+      case "png":
+        return "image/png";
+      case "pdf":
+        return "application/pdf";
+      case "docx":
+        return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      case "xlsx":
+        return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      case "pptx":
+        return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+      case "csv":
+        return "text/csv";
+      case "mp4":
+        return "video/mp4";
+      case "webm":
+        return "video/webm";
+      case "mov":
+        return "video/quicktime";
+      case "avi":
+        return "video/x-msvideo";
+      case "flv":
+        return "video/x-flv";
+      case "mp3":
+        return "audio/mpeg";
+      case "wav":
+        return "audio/wav";
+      case "ogg":
+        return "audio/ogg";
+      case "flac":
+        return "audio/flac";
+      default:
+        return file.type; // Fallback to the detected MIME type
+    }
+  };
+
+  const handleFileUpload = (file: File) => {
+    console.log("Uploaded file type:", file.type); // Debug log
+    console.log("Uploaded file name:", file.name); // Debug log
+    setSelectedFile(file);
+  };
+
   // Get available conversion formats for the selected file
   const availableFormats = useMemo(() => {
     if (!selectedFile) return [];
-    return CONVERSION_MAP[selectedFile.type] || [];
+    const fileType = getFileType(selectedFile); // Use the custom function
+    console.log("Detected file type:", fileType); // Debug log
+    const formats = CONVERSION_MAP[fileType] || [];
+    console.log("Available formats:", formats); // Debug log
+    return formats;
   }, [selectedFile]);
 
   // Set first available format when file is selected
@@ -60,7 +115,7 @@ export default function FileConverterWrapper() {
           },
           body: JSON.stringify({
             fileData,
-            fileType: selectedFile.type,
+            fileType: getFileType(selectedFile), // Use the custom function
             format: targetFormat,
             fileName: selectedFile.name,
           }),
@@ -114,7 +169,7 @@ export default function FileConverterWrapper() {
         </h2>
 
         <div className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-lg p-8 rounded-lg transition-all duration-300 hover:shadow-xl">
-          <FileUpload onConvert={setSelectedFile} maxSizeMB={25} />
+          <FileUpload onConvert={handleFileUpload} maxSizeMB={25} />
 
           {selectedFile && availableFormats.length > 0 && (
             <div className="mt-6 space-y-4">

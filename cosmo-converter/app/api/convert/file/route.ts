@@ -8,7 +8,8 @@ import ffmpeg from "fluent-ffmpeg";
 import { writeFile, unlink, readFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { randomUUID } from "crypto";
-import * as XLSX from "xlsx"; 
+import * as XLSX from "xlsx";
+import removeMarkdown from "remove-markdown"; // For stripping Markdown formatting
 
 // Configuration
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -163,6 +164,54 @@ export async function POST(request: NextRequest) {
         convertedData: outputBuffer.toString("base64"),
         fileName: `converted.${format}`,
       });
+    } else if (fileType === "text/plain" || fileType === "text/markdown") {
+      const textContent = fileBuffer.toString("utf-8");
+
+      if (format === "txt") {
+        // Convert to plain text (strip Markdown if necessary)
+        let plainText = textContent;
+        if (fileType === "text/markdown") {
+          plainText = removeMarkdown(textContent); // Strip Markdown formatting
+        }
+        return NextResponse.json({
+          convertedData: Buffer.from(plainText).toString("base64"),
+          fileName: `converted.txt`,
+        });
+      } else if (format === "md") {
+        // Convert to Markdown (wrap plain text in Markdown formatting if necessary)
+        let markdownContent = textContent;
+        if (fileType === "text/plain") {
+          markdownContent = `# Converted Text\n\n${textContent}`; // Wrap in Markdown
+        }
+        return NextResponse.json({
+          convertedData: Buffer.from(markdownContent).toString("base64"),
+          fileName: `converted.md`,
+        });
+      } else if (format === "pdf") {
+        // Convert to PDF
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage();
+        const { width, height } = page.getSize();
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        page.drawText(textContent, {
+          x: 50,
+          y: height - 100,
+          maxWidth: width - 100,
+          size: 12,
+          font,
+          color: rgb(0, 0, 0),
+        });
+        const pdfBytes = await pdfDoc.save();
+        return NextResponse.json({
+          convertedData: Buffer.from(pdfBytes).toString("base64"),
+          fileName: `converted.pdf`,
+        });
+      } else {
+        return NextResponse.json(
+          { error: "Unsupported text conversion format" },
+          { status: 400 }
+        );
+      }
     }
 
     const convertedBuffer = await readFile(outputPath);
