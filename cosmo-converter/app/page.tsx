@@ -7,6 +7,8 @@ import Footer from "@/components/footer/Footer";
 import C2A from "@/components/call-to-action/C2A";
 import FileConverterWrapper from "@/components/file-converter/FileConverterWrapper";
 import { Suspense } from "react";
+import FAQ from "@/components/faq/FAQ";
+
 // import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -31,6 +33,7 @@ export default function Home() {
         <Features />
         <C2A />
         <FileConverterWrapper />
+        <FAQ />
       </main>
       <Footer />
     </div>

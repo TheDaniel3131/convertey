@@ -13,6 +13,21 @@ import {
   FORMAT_DESCRIPTIONS,
 } from "@/lib/config/fileConversions";
 
+/**
+ * FileConverterWrapper is a React component that provides a user interface for converting files
+ * from one format to another. It allows users to upload a file, select a target format, and
+ * initiate the conversion process. The component handles file type detection, displays available
+ * conversion formats, and manages the conversion state and progress.
+ *
+ * Free users can try the file conversion feature three times. If they need to convert more than
+ * three files, they are required to subscribe to one of our plans from the pricing page.
+ *
+ * @component
+ * @example
+ * return (
+ *   <FileConverterWrapper />
+ * )
+ */
 export default function FileConverterWrapper() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isConverting, setIsConverting] = useState(false);
@@ -162,11 +177,21 @@ export default function FileConverterWrapper() {
 
   return (
     <section className="py-16 bg-transparent rounded-lg overflow-hidden relative">
-      <div className="absolute inset-0 opacity-50 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20"></div>
+      <div className="absolute inset-0 opacity-50 bg-gray-200 dark:bg-gray-800"></div>
       <div className="max-w-3xl mx-auto px-4 relative">
         <h2 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600">
           Cosmo FileConverter
         </h2>
+        <p className="text-lg text-center text-gray-700 dark:text-gray-300 mb-8">
+          We provide the platform for converting files from one format to
+          another. It allows users to upload a file, select a target format, and
+          initiate the conversion process.
+        </p>
+        <p className="text-lg text-center text-gray-700 dark:text-gray-300 mb-8">
+          Free users can try the file conversion feature three times. If they
+          need to convert more than three files, they are required to subscribe
+          to one of our plans from the pricing page.
+        </p>
 
         <div className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-lg p-8 rounded-lg transition-all duration-300 hover:shadow-xl">
           <FileUpload onConvert={handleFileUpload} maxSizeMB={25} />

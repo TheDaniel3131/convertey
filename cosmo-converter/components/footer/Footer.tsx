@@ -53,6 +53,14 @@ export default function Footer() {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/faq"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                >
+                  FAQ
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
