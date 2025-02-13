@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Rocket, Twitter, Facebook } from "lucide-react";
+import { Rocket, Twitter, Facebook, Linkedin } from "lucide-react";
 
 export default function ThankYouPage() {
   const router = useRouter();
@@ -22,6 +24,19 @@ export default function ThankYouPage() {
 
     return () => clearTimeout(timer);
   }, [router]);
+
+  const shareOnSocial = (platform: string) => {
+    const urls = {
+      twitter:
+        "https://twitter.com/intent/tweet?text=I just supported CosmoConverter, an amazing free file conversion tool! Check it out:",
+      facebook:
+        "https://www.facebook.com/sharer/sharer.php?u=https://cosmo-converter.vercel.app",
+      linkedin:
+        "https://www.linkedin.com/shareArticle?mini=true&url=https://cosmo-converter.vercel.app&title=Support%20CosmoConverter&summary=I%20just%20supported%20CosmoConverter,%20an%20amazing%20free%20file%20conversion%20tool!",
+    };
+
+    window.open(urls[platform as keyof typeof urls], "_blank");
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center px-4">
@@ -59,39 +74,26 @@ export default function ThankYouPage() {
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                window.open(
-                  "https://twitter.com/intent/tweet?text=I just supported CosmoConverter, an amazing free file conversion tool! Check it out:",
-                  "_blank"
-                )
-              }
+              onClick={() => shareOnSocial("twitter")}
             >
               <Twitter className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                window.open(
-                  "https://www.facebook.com/sharer/sharer.php?u=https://cosmo-converter.vercel.app",
-                  "_blank"
-                )
-              }
+              onClick={() => shareOnSocial("facebook")}
             >
               <Facebook className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               size="icon"
-              onClick={() =>
-                window.open(
-                  "https://www.linkedin.com/shareArticle?mini=true&url=https://cosmo-converter.vercel.app&title=Support CosmoConverter&summary=I just supported CosmoConverter, an amazing free file conversion tool!",
-                  "_blank"
-                )
-              }
-            ></Button>
+              onClick={() => shareOnSocial("linkedin")}
+            >
+              <Linkedin className="h-4 w-4" />
+            </Button>
           </div>
-          <Link href="/" passHref>
+          <Link href="/">
             <Button className="mt-4">Return to Homepage</Button>
           </Link>
         </CardFooter>
