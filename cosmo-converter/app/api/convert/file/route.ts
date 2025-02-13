@@ -147,12 +147,20 @@ export async function POST(request: NextRequest) {
       // Convert to the target format
       let outputBuffer: Buffer;
       if (format === "csv") {
-        const csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+        const csv = XLSX.utils.sheet_to_csv(
+          workbook.Sheets[workbook.SheetNames[0]]
+        );
         outputBuffer = Buffer.from(csv);
       } else if (format === "xlsx") {
-        outputBuffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+        outputBuffer = XLSX.write(workbook, {
+          type: "buffer",
+          bookType: "xlsx",
+        });
       } else if (format === "xls") {
-        outputBuffer = XLSX.write(workbook, { type: "buffer", bookType: "xls" });
+        outputBuffer = XLSX.write(workbook, {
+          type: "buffer",
+          bookType: "xls",
+        });
       } else {
         return NextResponse.json(
           { error: "Unsupported spreadsheet conversion format" },
@@ -234,4 +242,4 @@ export async function POST(request: NextRequest) {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 300;
+export const maxDuration = 60;
