@@ -1,40 +1,45 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Rocket, Mail } from "lucide-react"
-import { createSupabaseClient } from "@/lib/utils/supabase/client"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { FaRocket, FaGithub, FaGoogle, FaEnvelope } from "react-icons/fa";
+import { createSupabaseClient } from "@/lib/utils/supabase/client";
 
 export default function SignUpPage() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const [showVerification, setShowVerification] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-  const supabase = createSupabaseClient()
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [showVerification, setShowVerification] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const supabase = createSupabaseClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setIsLoading(true)
-  
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
     if (!supabase) {
-      setError("Supabase client not initialized")
-      setIsLoading(false)
-      return
+      setError("Supabase client not initialized");
+      setIsLoading(false);
+      return;
     }
-  
+
     try {
-      // Directly attempt signup - Supabase will handle duplicate email cases
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -42,42 +47,73 @@ export default function SignUpPage() {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
             full_name: name,
-          }
-        }
-      })
-  
+          },
+        },
+      });
+
       if (authError) {
-        console.error("Signup error:", authError)
-        if (authError.message.includes('already registered')) {
-          setError("This email is already registered. Please use a different email or try logging in.")
+        console.error("Signup error:", authError);
+        if (authError.message.includes("already registered")) {
+          setError(
+            "This email is already registered. Please use a different email or try logging in."
+          );
         } else {
-          setError(authError.message)
+          setError(authError.message);
         }
-        setIsLoading(false)
-        return
-      }
-  
-      if (!authData.user) {
-        setError("User creation failed")
-        setIsLoading(false)
-        return
+        setIsLoading(false);
+        return;
       }
 
-      // Show verification message
-      setShowVerification(true)
-  
-      // Redirect to login page after 5 seconds
+      if (!authData.user) {
+        setError("User creation failed");
+        setIsLoading(false);
+        return;
+      }
+
+      setShowVerification(true);
       setTimeout(() => {
-        router.push("/login")
-      }, 5000)
-  
+        router.push("/login");
+      }, 5000);
     } catch (err) {
-      console.error("Unexpected error during signup:", err)
-      setError("An unexpected error occurred during signup")
+      console.error("Unexpected error during signup:", err);
+      setError("An unexpected error occurred during signup");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
+
+  const handleOAuthLogin = async (provider: "google" | "github") => {
+    setError(null);
+    setIsLoading(true);
+
+    if (!supabase) {
+      setError("Supabase client not initialized");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider,
+      });
+
+      if (error) {
+        console.error("OAuth error:", error);
+        setError(error.message);
+        setIsLoading(false);
+        return;
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error("Unexpected OAuth error:", err);
+      setError("An unexpected error occurred during OAuth login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (showVerification) {
     return (
@@ -87,7 +123,7 @@ export default function SignUpPage() {
           <CardHeader>
             <div className="text-center">
               <div className="mx-auto h-16 w-16 flex items-center justify-center">
-                <Mail className="h-12 w-12 text-purple-400" />
+                <FaEnvelope className="h-12 w-12 text-purple-400" />
               </div>
               <CardTitle className="mt-6 text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
                 Check Your Email
@@ -97,9 +133,10 @@ export default function SignUpPage() {
           <CardContent>
             <Alert className="bg-purple-500/10 border-purple-500/20">
               <AlertDescription className="text-center py-4">
-                We&apos;ve sent a verification link to <strong>{email}</strong>. 
-                Please check your email and click the link to verify your account. 
-                You will be redirected to the login page in a few seconds.
+                We&apos;ve sent a verification link to <strong>{email}</strong>.
+                Please check your email and click the link to verify your
+                account. You will be redirected to the login page in a few
+                seconds.
               </AlertDescription>
             </Alert>
           </CardContent>
@@ -114,7 +151,7 @@ export default function SignUpPage() {
           </CardFooter>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
@@ -203,17 +240,55 @@ export default function SignUpPage() {
                 disabled={isLoading}
               >
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Rocket className="h-5 w-5 text-purple-300 group-hover:text-purple-200" aria-hidden="true" />
+                  <FaRocket
+                    className="h-5 w-5 text-purple-300 group-hover:text-purple-200"
+                    aria-hidden="true"
+                  />
                 </span>
                 {isLoading ? "Signing up..." : "Sign up"}
               </Button>
             </div>
           </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white/10 dark:bg-gray-800/30 text-gray-500 dark:text-gray-400">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => handleOAuthLogin("google")}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center bg-white/10 hover:bg-white/20 text-gray-900 dark:text-gray-100"
+              >
+                <FaGoogle className="h-5 w-5 mr-2" />
+                Google
+              </Button>
+              <Button
+                onClick={() => handleOAuthLogin("github")}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center bg-white/10 hover:bg-white/20 text-gray-900 dark:text-gray-100"
+              >
+                <FaGithub className="h-5 w-5 mr-2" />
+                GitHub
+              </Button>
+            </div>
+          </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2 text-sm text-center">
           <p>
             Already have an account?{" "}
-            <Link href="/login" className="font-medium text-purple-400 hover:text-purple-300">
+            <Link
+              href="/login"
+              className="font-medium text-purple-400 hover:text-purple-300"
+            >
               Sign in
             </Link>
           </p>
@@ -230,5 +305,5 @@ export default function SignUpPage() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

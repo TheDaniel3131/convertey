@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Rocket } from "lucide-react";
+import { FaRocket, FaGithub, FaGoogle } from "react-icons/fa";
 import { createSupabaseClient } from "@/lib/utils/supabase/client";
 
 export default function LoginPage() {
@@ -23,30 +23,30 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);  // Fix this line
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const supabase = createSupabaseClient();
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-  
+
     if (!supabase) {
       setError("Supabase client not initialized");
       setIsLoading(false);
       return;
     }
-  
+
     try {
-      console.log("Attempting login..."); // Debug log
+      console.log("Attempting login...");
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
-        password
+        password,
       });
-  
+
       if (error) {
-        console.error("Login error:", error); // Debug log
+        console.error("Login error:", error);
         if (error.message === "Invalid login credentials") {
           setError("Invalid email or password. Please try again.");
         } else {
@@ -55,30 +55,60 @@ export default function LoginPage() {
         setIsLoading(false);
         return;
       }
-  
+
       if (data.user) {
-        console.log("Login successful, redirecting..."); // Debug log
-        localStorage.setItem('rememberMe', JSON.stringify(rememberMe));
-        
-        // Try both methods of navigation
+        console.log("Login successful, redirecting...");
+        localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
+
         try {
           await router.push("/dashboard");
-          // As a fallback, use window.location
           setTimeout(() => {
             window.location.href = "/dashboard";
           }, 1000);
         } catch (navigationError) {
           console.error("Navigation error:", navigationError);
-          // If router.push fails, force navigation
           window.location.href = "/dashboard";
         }
       } else {
-        console.log("No user data returned"); // Debug log
+        console.log("No user data returned");
         setError("Login successful but no user data returned");
       }
     } catch (err) {
       console.error("Unexpected error:", err);
       setError("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOAuthLogin = async (provider: "google" | "github") => {
+    setError(null);
+    setIsLoading(true);
+
+    if (!supabase) {
+      setError("Supabase client not initialized");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider,
+      });
+
+      if (error) {
+        console.error("OAuth error:", error);
+        setError(error.message);
+        setIsLoading(false);
+        return;
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error("Unexpected OAuth error:", err);
+      setError("An unexpected error occurred during OAuth login");
     } finally {
       setIsLoading(false);
     }
@@ -165,13 +195,13 @@ export default function LoginPage() {
             </div>
 
             <div>
-            <Button
+              <Button
                 type="submit"
                 disabled={isLoading}
                 className="group relative flex w-full justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white py-2 px-4 text-sm font-medium"
               >
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Rocket
+                  <FaRocket
                     className="h-5 w-5 text-purple-300 group-hover:text-purple-200"
                     aria-hidden="true"
                   />
@@ -180,6 +210,38 @@ export default function LoginPage() {
               </Button>
             </div>
           </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white/10 dark:bg-gray-800/30 text-gray-500 dark:text-gray-400">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => handleOAuthLogin("google")}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center bg-white/10 hover:bg-white/20 text-gray-900 dark:text-gray-100"
+              >
+                <FaGoogle className="h-5 w-5 mr-2" />
+                Google
+              </Button>
+              <Button
+                onClick={() => handleOAuthLogin("github")}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center bg-white/10 hover:bg-white/20 text-gray-900 dark:text-gray-100"
+              >
+                <FaGithub className="h-5 w-5 mr-2" />
+                GitHub
+              </Button>
+            </div>
+          </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2 text-sm text-center">
           <p>

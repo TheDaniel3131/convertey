@@ -12,7 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function Header() {
   const [darkMode, setDarkMode] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState<unknown>(null);
+  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [supabase] = useState(() => {
     const client = createSupabaseClient();
     if (!client) {
@@ -23,6 +23,10 @@ export default function Header() {
   });
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    console.log("User state:", user);
+  }, [user]);
 
   useEffect(() => {
     // Dark mode toggle
@@ -60,7 +64,7 @@ export default function Header() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      setUser(user);
+      setUser(user ? { id: user.id, email: user.email ?? "" } : null);
     };
 
     handleEmailVerification();
@@ -69,16 +73,21 @@ export default function Header() {
     // Listen for auth changes
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log("Auth state change:", event, session);
         // Handle email verification event
-        if (event === "SIGNED_IN" && session?.user.email_confirmed_at) {
-          // Sign out the user
-          await supabase.auth.signOut();
-          // Redirect to login
-          router.push("/login");
-          return;
+        if (event === "SIGNED_IN") {
+          setUser(
+            session?.user
+              ? { id: session.user.id, email: session.user.email ?? "" }
+              : null
+          );
         }
 
-        setUser(session?.user ?? null);
+        setUser(
+          session?.user
+            ? { id: session.user.id, email: session.user.email ?? "" }
+            : null
+        );
       }
     );
 
@@ -113,6 +122,12 @@ export default function Header() {
           <NavLink href="/about">About</NavLink>
           <NavLink href="/pricing">Pricing</NavLink>
           <NavLink href="/contact">Contact Us</NavLink>
+          {user && (
+            <>
+              <NavLink href="/dashboard">Dashboard</NavLink>
+              <NavLink href="/profile">Profile</NavLink>
+            </>
+          )}
           <Button
             variant="outline"
             size="icon"
@@ -181,7 +196,10 @@ export default function Header() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => {
+              console.log("Mobile menu open:", !mobileMenuOpen);
+              setMobileMenuOpen(!mobileMenuOpen);
+            }}
             aria-label="Toggle menu"
             className="rounded-full text-purple-600 dark:text-purple-400"
           >
@@ -205,12 +223,15 @@ export default function Header() {
           </NavLink>
           {user ? (
             <>
+              <NavLink href="/dashboard" className="block py-2 px-4">
+                Dashboard
+              </NavLink>
               <NavLink href="/profile" className="block py-2 px-4">
                 Profile
               </NavLink>
               <button
                 onClick={handleSignOut}
-                className="block py-2 px-4 w-full text-left hover:bg-gray-100"
+                className="block py-2 px-4 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 Sign Out
               </button>
