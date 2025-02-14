@@ -9,7 +9,10 @@ import { writeFile, unlink, readFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { randomUUID } from "crypto";
 import * as XLSX from "xlsx";
-import removeMarkdown from "remove-markdown"; // For stripping Markdown formatting
+import removeMarkdown from "remove-markdown";
+import { promisify } from 'util';
+import libre from 'libreoffice-convert';
+const libreConvert = promisify(libre.convert);
 
 // Configuration
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -43,6 +46,31 @@ async function convertAudio(
   });
 }
 
+async function convertPresentation(
+  inputBuffer: Buffer,
+  sourceFormat: string,
+  targetFormat: string
+): Promise<Buffer> {
+  const formatExtMap: Record<string, string> = {
+    'ppt': 'ppt',
+    'pptx': 'pptx',
+    'pdf': 'pdf'
+  };
+
+  if (!formatExtMap[targetFormat]) {
+    throw new Error(`Unsupported target format: ${targetFormat}`);
+  }
+
+  try {
+    // LibreOffice should be installed and accessible in the system PATH
+    const convertedBuffer = await libreConvert(inputBuffer, formatExtMap[targetFormat], undefined);
+    return Buffer.from(convertedBuffer);
+  } catch (error) {
+    console.error('Presentation conversion error:', error);
+    throw new Error(`Failed to convert presentation: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { fileData, fileType, format, fileName } = await request.json();
@@ -73,6 +101,7 @@ export async function POST(request: NextRequest) {
 
     await writeFile(inputPath, fileBuffer);
 
+    // Handle different file types
     if (fileType.startsWith("video/")) {
       await convertVideo(inputPath, outputPath, format);
     } else if (fileType.startsWith("audio/")) {
@@ -85,6 +114,36 @@ export async function POST(request: NextRequest) {
         convertedData: result.toString("base64"),
         fileName: `converted.${format}`,
       });
+    } else if (
+      fileType === "application/vnd.ms-powerpoint" || // PPT
+      fileType === "application/vnd.openxmlformats-officedocument.presentationml.presentation" // PPTX
+    ) {
+      try {
+        const sourceFormat = fileType === "application/vnd.ms-powerpoint" ? "ppt" : "pptx";
+        
+        if (!["ppt", "pptx", "pdf"].includes(format)) {
+          return NextResponse.json(
+            { error: "Unsupported presentation conversion format. Supported formats: ppt, pptx, pdf" },
+            { status: 400 }
+          );
+        }
+
+        const convertedBuffer = await convertPresentation(fileBuffer, sourceFormat, format);
+
+        return NextResponse.json({
+          convertedData: convertedBuffer.toString("base64"),
+          fileName: `converted.${format}`,
+        });
+      } catch (error) {
+        console.error("Presentation conversion error:", error);
+        return NextResponse.json(
+          {
+            error: "Presentation conversion failed",
+            details: error instanceof Error ? error.message : String(error),
+          },
+          { status: 500 }
+        );
+      }
     } else if (fileType.includes("word")) {
       if (format !== "pdf")
         return NextResponse.json(
@@ -137,30 +196,19 @@ export async function POST(request: NextRequest) {
       });
     } else if (
       fileType === "application/vnd.ms-excel" || // .xls
-      fileType ===
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || // .xlsx
+      fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || // .xlsx
       fileType === "text/csv" // .csv
     ) {
-      // Read the spreadsheet file
       const workbook = XLSX.read(fileBuffer, { type: "buffer" });
 
-      // Convert to the target format
       let outputBuffer: Buffer;
       if (format === "csv") {
-        const csv = XLSX.utils.sheet_to_csv(
-          workbook.Sheets[workbook.SheetNames[0]]
-        );
+        const csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
         outputBuffer = Buffer.from(csv);
       } else if (format === "xlsx") {
-        outputBuffer = XLSX.write(workbook, {
-          type: "buffer",
-          bookType: "xlsx",
-        });
+        outputBuffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
       } else if (format === "xls") {
-        outputBuffer = XLSX.write(workbook, {
-          type: "buffer",
-          bookType: "xls",
-        });
+        outputBuffer = XLSX.write(workbook, { type: "buffer", bookType: "xls" });
       } else {
         return NextResponse.json(
           { error: "Unsupported spreadsheet conversion format" },
@@ -176,27 +224,24 @@ export async function POST(request: NextRequest) {
       const textContent = fileBuffer.toString("utf-8");
 
       if (format === "txt") {
-        // Convert to plain text (strip Markdown if necessary)
         let plainText = textContent;
         if (fileType === "text/markdown") {
-          plainText = removeMarkdown(textContent); // Strip Markdown formatting
+          plainText = removeMarkdown(textContent);
         }
         return NextResponse.json({
           convertedData: Buffer.from(plainText).toString("base64"),
           fileName: `converted.txt`,
         });
       } else if (format === "md") {
-        // Convert to Markdown (wrap plain text in Markdown formatting if necessary)
         let markdownContent = textContent;
         if (fileType === "text/plain") {
-          markdownContent = `# Converted Text\n\n${textContent}`; // Wrap in Markdown
+          markdownContent = `# Converted Text\n\n${textContent}`;
         }
         return NextResponse.json({
           convertedData: Buffer.from(markdownContent).toString("base64"),
           fileName: `converted.md`,
         });
       } else if (format === "pdf") {
-        // Convert to PDF
         const pdfDoc = await PDFDocument.create();
         const page = pdfDoc.addPage();
         const { width, height } = page.getSize();
@@ -242,4 +287,4 @@ export async function POST(request: NextRequest) {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 300;

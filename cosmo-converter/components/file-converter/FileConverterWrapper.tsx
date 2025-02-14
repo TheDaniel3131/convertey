@@ -38,6 +38,7 @@ export default function FileConverterWrapper() {
   const getFileType = (file: File): string => {
     const extension = file.name.split(".").pop()?.toLowerCase();
     switch (extension) {
+      // Existing formats
       case "md":
         return "text/markdown";
       case "txt":
@@ -53,8 +54,18 @@ export default function FileConverterWrapper() {
         return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
       case "xlsx":
         return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      
+      // New presentation formats
+      case "ppt":
+        return "application/vnd.ms-powerpoint";
       case "pptx":
         return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+      
+      // New ebook format
+      case "epub":
+        return "application/epub+zip";
+      
+      // Existing media formats
       case "csv":
         return "text/csv";
       case "mp4":
@@ -76,10 +87,10 @@ export default function FileConverterWrapper() {
       case "flac":
         return "audio/flac";
       default:
-        return file.type; // Fallback to the detected MIME type
+        return file.type;
     }
   };
-
+  
   const handleFileUpload = (file: File) => {
     console.log("Uploaded file type:", file.type); // Debug log
     console.log("Uploaded file name:", file.name); // Debug log
