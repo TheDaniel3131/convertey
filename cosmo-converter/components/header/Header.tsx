@@ -114,7 +114,7 @@ export default function Header() {
             }
             alt="CosmoConverter Logo"
             width={250}
-            height={250}
+            height={48.44}
           />
         </Link>
         <div className="hidden md:flex space-x-5 items-center font-semibold">
