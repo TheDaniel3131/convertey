@@ -3,7 +3,19 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Menu, User } from "lucide-react";
+import {
+  Sun,
+  Moon,
+  Menu,
+  User,
+  Info,
+  DollarSign,
+  Mail,
+  LayoutDashboard,
+  LogOut,
+  LogIn,
+  UserPlus,
+} from "lucide-react";
 import Link from "next/link";
 import NavLink from "@/components/elements/header/NavLinks";
 import { createSupabaseClient } from "@/lib/utils/supabase/client";
@@ -209,41 +221,62 @@ export default function Header() {
         </div>
       </nav>
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-black bg-opacity-90 dark:bg-opacity-90 backdrop-blur-md py-2">
-          <NavLink href="/" className="block py-2 px-4">
+        <div className="md:hidden font-semibold text-center items-center justify-center bg-opacity-90 dark:bg-opacity-90 backdrop-blur-md py-2">
+          {/* <NavLink href="/" className="block py-2 px-4">
             Home
+          </NavLink> */}
+          <NavLink
+            href="/about"
+            className="py-2 px-4 flex items-center text-center justify-center my-2"
+          >
+            <Info className="mr-2" /> About
           </NavLink>
-          <NavLink href="/about" className="block py-2 px-4">
-            About
+          <NavLink
+            href="/pricing"
+            className="py-2 px-4 flex items-center text-center justify-center my-2"
+          >
+            <DollarSign className="mr-2" /> Pricing
           </NavLink>
-          <NavLink href="/pricing" className="block py-2 px-4">
-            Pricing
-          </NavLink>
-          <NavLink href="/contact" className="block py-2 px-4">
-            Contact
+          <NavLink
+            href="/contact"
+            className="py-2 px-4 flex items-center text-center justify-center my-2"
+          >
+            <Mail className="mr-2" /> Contact
           </NavLink>
           {user ? (
             <>
-              <NavLink href="/dashboard" className="block py-2 px-4">
-                Dashboard
+              <NavLink
+                href="/dashboard"
+                className="py-2 px-4 flex items-center text-center justify-center my-2"
+              >
+                <LayoutDashboard className="mr-2" /> Dashboard
               </NavLink>
-              <NavLink href="/profile" className="block py-2 px-4">
-                Profile
+              <NavLink
+                href="/profile"
+                className="py-2 px-4 flex items-center text-center justify-center my-2"
+              >
+                <User className="mr-2" /> Profile
               </NavLink>
               <button
                 onClick={handleSignOut}
-                className="block py-2 px-4 w-full text-left hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="py-2 px-4 w-full hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center text-center justify-center my-2"
               >
-                Sign Out
+                <LogOut className="mr-2" /> Sign Out
               </button>
             </>
           ) : (
             <>
-              <NavLink href="/login" className="block py-2 px-4">
-                Login
+              <NavLink
+                href="/login"
+                className="py-2 px-4 flex items-center text-center justify-center my-2"
+              >
+                <LogIn className="mr-2" /> Login
               </NavLink>
-              <NavLink href="/signup" className="block py-2 px-4">
-                Sign Up
+              <NavLink
+                href="/signup"
+                className="py-2 px-4 flex items-center text-center justify-center my-2"
+              >
+                <UserPlus className="mr-2" /> Sign Up
               </NavLink>
             </>
           )}
