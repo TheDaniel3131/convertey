@@ -10,7 +10,7 @@ import { createSupabaseClient } from "@/lib/utils/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Header() {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [supabase] = useState(() => {
