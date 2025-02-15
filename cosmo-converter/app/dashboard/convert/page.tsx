@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,19 +20,85 @@ import {
 } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { FileUp, ArrowRight, Settings } from "lucide-react";
+import {
+  FileUp,
+  ArrowRight,
+  Settings,
+  Rocket,
+  AlertCircle,
+} from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { downloadFile } from "@/lib/utils/utils";
+import {
+  CONVERSION_MAP,
+  MIME_TYPES,
+  FORMAT_DESCRIPTIONS,
+} from "@/lib/config/fileConversions";
+import type { ConversionFormat } from "@/types/FileConversionFormats";
 
 export default function ConvertPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [outputFormat, setOutputFormat] = useState("");
+  const [outputFormat, setOutputFormat] = useState<ConversionFormat>("pdf");
   const [quality, setQuality] = useState(80);
   const [preserveMetadata, setPreserveMetadata] = useState(true);
+  const [isConverting, setIsConverting] = useState(false);
+  const [error, setError] = useState<string>("");
+  const [conversionProgress, setConversionProgress] = useState(0);
+
+  const getFileType = (file: File): string => {
+    const extension = file.name.split(".").pop()?.toLowerCase();
+    switch (extension) {
+      case "md":
+        return "text/markdown";
+      case "txt":
+        return "text/plain";
+      case "jpg":
+      case "jpeg":
+        return "image/jpeg";
+      case "png":
+        return "image/png";
+      case "pdf":
+        return "application/pdf";
+      case "docx":
+        return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      case "xlsx":
+        return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      case "ppt":
+        return "application/vnd.ms-powerpoint";
+      case "pptx":
+        return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+      case "epub":
+        return "application/epub+zip";
+      case "csv":
+        return "text/csv";
+      case "mp4":
+        return "video/mp4";
+      case "webm":
+        return "video/webm";
+      case "mov":
+        return "video/quicktime";
+      case "avi":
+        return "video/x-msvideo";
+      case "flv":
+        return "video/x-flv";
+      case "mp3":
+        return "audio/mpeg";
+      case "wav":
+        return "audio/wav";
+      case "ogg":
+        return "audio/ogg";
+      case "flac":
+        return "audio/flac";
+      default:
+        return file.type;
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -40,12 +106,81 @@ export default function ConvertPage() {
     }
   };
 
-  const handleConvert = () => {
-    // Implement conversion logic here
-    console.log("Converting", file, "to", outputFormat, "with options:", {
-      quality,
-      preserveMetadata,
-    });
+  const availableFormats = useMemo(() => {
+    if (!file) return [];
+    const fileType = getFileType(file);
+    return CONVERSION_MAP[fileType] || [];
+  }, [file]);
+
+  useMemo(() => {
+    if (file && availableFormats.length > 0) {
+      setOutputFormat(availableFormats[0]);
+    }
+  }, [file, availableFormats]);
+
+  const handleConvert = async () => {
+    if (!file) {
+      setError("No file selected");
+      return;
+    }
+
+    setIsConverting(true);
+    setError("");
+    setConversionProgress(0);
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const buffer = event.target?.result as ArrayBuffer;
+      const fileData = Buffer.from(buffer).toString("base64");
+
+      try {
+        const response = await fetch("/api/convert/file", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fileData,
+            fileType: getFileType(file),
+            format: outputFormat,
+            fileName: file.name,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Conversion failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        const convertedData = Buffer.from(data.convertedData, "base64");
+        const outputFileName =
+          data.fileName || `converted-file.${outputFormat}`;
+
+        downloadFile(convertedData, outputFileName, MIME_TYPES[outputFormat]);
+
+        setConversionProgress(100);
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Conversion failed. Please try again or contact support."
+        );
+      } finally {
+        setIsConverting(false);
+      }
+    };
+
+    reader.onerror = () => {
+      setError("Error reading file. Please try again.");
+      setIsConverting(false);
+    };
+
+    reader.readAsArrayBuffer(file);
   };
 
   return (
@@ -64,15 +199,20 @@ export default function ConvertPage() {
             </div>
             <div>
               <Label htmlFor="outputFormat">Output Format</Label>
-              <Select onValueChange={setOutputFormat}>
+              <Select
+                onValueChange={(value) =>
+                  setOutputFormat(value as ConversionFormat)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select output format" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pdf">PDF</SelectItem>
-                  <SelectItem value="docx">DOCX</SelectItem>
-                  <SelectItem value="jpg">JPG</SelectItem>
-                  <SelectItem value="png">PNG</SelectItem>
+                  {availableFormats.map((format) => (
+                    <SelectItem key={format} value={format}>
+                      {format.toUpperCase()}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -119,10 +259,19 @@ export default function ConvertPage() {
         <CardFooter>
           <Button
             onClick={handleConvert}
-            disabled={!file || !outputFormat}
+            disabled={!file || !outputFormat || isConverting}
             className="w-full"
           >
-            <FileUp className="mr-2 h-4 w-4" /> Convert File
+            {isConverting ? (
+              <div className="flex items-center">
+                <span className="mr-2">Converting...</span>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : (
+              <>
+                <Rocket className="mr-2 h-4 w-4" /> Convert File
+              </>
+            )}
           </Button>
         </CardFooter>
       </Card>
@@ -157,6 +306,13 @@ export default function ConvertPage() {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {error && (
+        <Alert variant="destructive" className="mt-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
     </div>
   );
