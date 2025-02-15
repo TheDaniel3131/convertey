@@ -15,11 +15,13 @@ import {
   LogOut,
   LogIn,
   UserPlus,
+  Bell,
 } from "lucide-react";
 import Link from "next/link";
 import NavLink from "@/components/elements/header/NavLinks";
 import { createSupabaseClient } from "@/lib/utils/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
+import NotificationsPopover from "@/components/notification/NotificationsPopover";
 
 export default function Header() {
   const [darkMode, setDarkMode] = useState(false);
@@ -156,6 +158,16 @@ export default function Header() {
           </Button>
           {user ? (
             <>
+              {/* <Button
+                variant="outline"
+                size="icon"
+                aria-label="Notifications"
+                onClick={() => router.push("/notifications")}
+                className="rounded-full bg-transparent border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400"
+              >
+                <Bell className="h-5 w-5" />
+              </Button> */}
+              <NotificationsPopover />
               <Button
                 variant="outline"
                 size="icon"
@@ -256,6 +268,12 @@ export default function Header() {
                 className="py-2 px-4 flex items-center text-center justify-center my-2"
               >
                 <User className="mr-2" /> Profile
+              </NavLink>
+              <NavLink
+                href="/notifications"
+                className="py-2 px-4 flex items-center text-center justify-center my-2"
+              >
+                <Bell className="mr-2" /> Notifications
               </NavLink>
               <button
                 onClick={handleSignOut}

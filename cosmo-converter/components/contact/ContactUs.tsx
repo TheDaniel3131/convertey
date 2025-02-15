@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+// import { useCallback } from "react";
+// import { useDropzone } from "react-dropzone";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@/components/ui/button";
@@ -11,6 +13,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import ContactInfo from "@/components/elements/contact/ContactInfo";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+// import { UploadCloud } from "lucide-react";
 
 export default function ContactUs() {
   const [name, setName] = useState("");
@@ -19,6 +22,7 @@ export default function ContactUs() {
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
+  // const [files, setFiles] = useState<File[]>([]); // Commented out
   const [alertMessage, setAlertMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,7 +30,11 @@ export default function ContactUs() {
     setStatus("loading");
     setAlertMessage("");
 
-    const formData = new FormData(e.target as HTMLFormElement); // Create FormData from the form
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("message", message);
+    // files.forEach((file) => formData.append("files", file)); // Commented out
 
     try {
       const response = await fetch("/api/contact", {
@@ -41,6 +49,7 @@ export default function ContactUs() {
         setName("");
         setEmail("");
         setMessage("");
+        // setFiles([]); // Commented out
         setStatus("success");
       } else {
         const errorMessage = `Error sending message: ${
@@ -60,6 +69,18 @@ export default function ContactUs() {
       setStatus("idle");
     }
   };
+
+  // const onDrop = useCallback((acceptedFiles: File[]) => {
+  //   setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+  // }, []);
+
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   onDrop,
+  //   accept: {
+  //     "image/*": [],
+  //     "video/*": [],
+  //   },
+  // });
 
   return (
     <main className="container mx-auto px-4 py-16 relative z-10 overflow-y">
@@ -82,7 +103,7 @@ export default function ContactUs() {
                 </label>
                 <Input
                   id="name"
-                  name="name" // Add name attribute
+                  name="name"
                   placeholder="Your Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -98,7 +119,7 @@ export default function ContactUs() {
                 </label>
                 <Input
                   id="email"
-                  name="email" // Add name attribute
+                  name="email"
                   type="email"
                   placeholder="your@email.com"
                   value={email}
@@ -115,7 +136,7 @@ export default function ContactUs() {
                 </label>
                 <Textarea
                   id="message"
-                  name="message" // Add name attribute
+                  name="message"
                   placeholder="Your message here..."
                   rows={4}
                   value={message}
@@ -123,6 +144,30 @@ export default function ContactUs() {
                   required
                 />
               </div>
+              {/* <div>
+                <div
+                  {...getRootProps({
+                    className:
+                      "border-2 border-dashed border-gray-400 rounded-lg p-4 text-center cursor-pointer",
+                  })}
+                >
+                  <input {...getInputProps()} />
+                  <div className="flex flex-col items-center">
+                    <UploadCloud className="mb-2 h-6 w-6" />
+                    <p className="text-sm text-muted-foreground">
+                      Drag &apos;n&apos; drop files here, or click to select
+                      files
+                      <br />
+                      (Images and videos only)
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-2 text-sm">
+                  {files.map((file) => (
+                    <div key={file.name}>{file.name}</div>
+                  ))}
+                </div>
+              </div> */}
               <Button
                 type="submit"
                 disabled={status === "loading"}
@@ -176,11 +221,11 @@ export default function ContactUs() {
                 <br />
                 Saturday: 10AM - 2PM (GST)
               </p>
-              <ToastContainer />
             </CardContent>
           </Card>
         </div>
       </div>
+      <ToastContainer position="bottom-left" />
     </main>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { NotificationsProvider } from "@/components/contexts/NotificationsContext";
 // import LoadingTransition from "@/components/Transitioning";
 import "./globals.css";
 
@@ -39,9 +40,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* <LoadingTransition> */}
-        {children}
-        <Analytics />
-        <SpeedInsights />
+        <NotificationsProvider>
+          {children}
+          <Analytics />
+          <SpeedInsights />
+        </NotificationsProvider>
         {/* </LoadingTransition> */}
       </body>
     </html>
