@@ -12,11 +12,23 @@ import * as XLSX from "xlsx";
 import removeMarkdown from "remove-markdown";
 import { promisify } from 'util';
 import libre from 'libreoffice-convert';
+import AdmZip from 'adm-zip';
+import { parseString } from 'xml2js';
 const libreConvert = promisify(libre.convert);
+const parseXml = promisify(parseString);
 
 // Configuration
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 const TMP_DIR = join(process.cwd(), "tmp");
+
+interface EpubContent {
+  title: string;
+  chapters: Array<{
+    id: string;
+    title?: string;
+    content: string;
+  }>;
+}
 
 async function convertVideo(
   inputPath: string,
@@ -71,6 +83,221 @@ async function convertPresentation(
   }
 }
 
+// Helper function to parse EPUB content
+async function parseEpub(epubBuffer: Buffer): Promise<EpubContent> {
+  const zip = new AdmZip(epubBuffer);
+  const containerEntry = zip.getEntry('META-INF/container.xml');
+  
+  if (!containerEntry) {
+    throw new Error('Invalid EPUB: Missing container.xml');
+  }
+
+  // Define interface for container XML structure
+  interface ContainerXml {
+    container: {
+      rootfiles: [{
+        rootfile: [{
+          $: {
+            'full-path': string
+          }
+        }]
+      }]
+    }
+  }
+
+  // Parse container.xml to get the path to content.opf
+  const containerXml = containerEntry.getData().toString('utf8');
+  const container = await parseXml(containerXml) as ContainerXml;
+  const contentPath = container.container.rootfiles[0].rootfile[0].$['full-path'];
+
+  // Parse content.opf
+  const contentEntry = zip.getEntry(contentPath);
+  if (!contentEntry) {
+    throw new Error('Invalid EPUB: Missing content.opf');
+  }
+
+  const contentXml = contentEntry.getData().toString('utf8');
+
+  interface PackageXml {
+    package: {
+      spine: [{
+        itemref: Array<{
+          $: { 'idref': string }
+        }>
+      }];
+      manifest: [{
+        item: Array<{
+          $: { id: string; href: string }
+        }>
+      }];
+      metadata: [{
+        'dc:title': string[]
+      }];
+    }
+  }
+
+  const content = await parseXml(contentXml) as PackageXml;
+
+  // Get spine order
+  const spine = content.package.spine[0].itemref.map((item) => item.$['idref']);
+  
+  // Define interface for manifest item structure
+  interface ManifestMap {
+    [key: string]: string;
+  }
+
+  // Get manifest items
+  const manifest = content.package.manifest[0].item.reduce((acc: ManifestMap, item: { $: { id: string; href: string } }) => {
+    acc[item.$['id']] = item.$['href'];
+    return acc;
+  }, {} as ManifestMap);
+
+  // Extract title
+  const title = content.package.metadata[0]['dc:title'][0] || 'Untitled';
+
+  // Process chapters in spine order
+  const chapters = [];
+  const contentDir = contentPath.split('/').slice(0, -1).join('/');
+
+  for (const itemId of spine) {
+    const href = manifest[itemId];
+    if (!href) continue;
+
+    const chapterPath = contentDir ? `${contentDir}/${href}` : href;
+    const chapterEntry = zip.getEntry(chapterPath);
+    
+    if (chapterEntry) {
+      const chapterContent = chapterEntry.getData().toString('utf8');
+      chapters.push({
+        id: itemId,
+        content: chapterContent
+      });
+    }
+  }
+
+  return { title, chapters };
+}
+
+// Helper function to convert HTML content to plain text
+function htmlToText(html: string): string {
+  return html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&[a-zA-Z]+;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Helper function to convert EPUB to plain text
+async function epubToText(epubBuffer: Buffer): Promise<string> {
+  const { title, chapters } = await parseEpub(epubBuffer);
+  
+  let textContent = `${title}\n\n`;
+  
+  for (const chapter of chapters) {
+    const chapterText = htmlToText(chapter.content);
+    textContent += chapterText + '\n\n';
+  }
+  
+  return textContent;
+}
+
+// Helper function to convert EPUB to PDF
+// Helper function to normalize special characters
+function normalizeSpecialChars(text: string): string {
+  return text
+    // Replace various types of hyphens/dashes with standard hyphen
+    .replace(/[\u2010-\u2015]/g, '-')
+    // Replace curly quotes with straight quotes
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    // Replace other special spaces and punctuation
+    .replace(/[\u2000-\u200F\u2028-\u202F\u205F\u2060\u3000]/g, ' ')
+    // First try to decompose characters to their base form
+    .normalize('NFKD')
+    // Remove combining diacritical marks
+    .replace(/[\u0300-\u036f]/g, '')
+    // Replace any remaining non-ASCII characters with their closest ASCII equivalents
+    .replace(/[^\x00-\x7F]/g, char => {
+      // Map common Unicode characters to ASCII equivalents
+      const charMap: { [key: string]: string } = {
+        '…': '...',
+        '–': '-',
+        '—': '-',
+        "'''": "'",
+        '"': '"',
+        '′': "'",
+        '″': '"',
+        '‴': "'''",
+        '⁗': '""""',
+        '「': '"',
+        '」': '"',
+        '『': '"',
+        '』': '"',
+        '〝': '"',
+        '〞': '"',
+        '＂': '"',
+        '｢': '"',
+        '｣': '"',
+      };
+      return charMap[char] || ' ';
+    });
+}
+
+// Helper function to convert EPUB to PDF
+async function epubToPdf(epubBuffer: Buffer): Promise<Buffer> {
+  const { title, chapters } = await parseEpub(epubBuffer);
+  
+  // Create PDF document
+  const pdfDoc = await PDFDocument.create();
+  
+  // Use Times Roman for better character support
+  const font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+  const titleFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+  
+  // Add title page
+  const titlePage = pdfDoc.addPage();
+  const { width, height } = titlePage.getSize();
+  
+  // Safely encode title text
+  const normalizedTitle = normalizeSpecialChars(title);
+  titlePage.drawText(normalizedTitle, {
+    x: 50,
+    y: height - 150,
+    size: 24,
+    font: titleFont,
+    color: rgb(0, 0, 0),
+  });
+
+  // Process chapters
+  for (const chapter of chapters) {
+    const chapterText = htmlToText(chapter.content);
+    
+    // Split text into pages (rough calculation)
+    const CHARS_PER_PAGE = 3000;
+    const textChunks = chapterText.match(new RegExp(`.{1,${CHARS_PER_PAGE}}`, 'g')) || [];
+    
+    for (const chunk of textChunks) {
+      const page = pdfDoc.addPage();
+      const normalizedChunk = normalizeSpecialChars(chunk);
+      
+      page.drawText(normalizedChunk, {
+        x: 50,
+        y: height - 50,
+        maxWidth: width - 100,
+        size: 12,
+        font: font,
+        color: rgb(0, 0, 0),
+        lineHeight: 16,
+      });
+    }
+  }
+  
+  return Buffer.from(await pdfDoc.save());
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { fileData, fileType, format, fileName } = await request.json();
@@ -101,8 +328,41 @@ export async function POST(request: NextRequest) {
 
     await writeFile(inputPath, fileBuffer);
 
+    // Handle EPUB conversions
+    if (fileType === "application/epub+zip") {
+      if (!["pdf", "txt"].includes(format)) {
+        return NextResponse.json(
+          { error: "EPUB can only be converted to PDF or TXT formats" },
+          { status: 400 }
+        );
+      }
+
+      try {
+        let convertedData: Buffer;
+        if (format === "pdf") {
+          convertedData = await epubToPdf(fileBuffer);
+        } else { // format === "txt"
+          const textContent = await epubToText(fileBuffer);
+          convertedData = Buffer.from(textContent);
+        }
+
+        return NextResponse.json({
+          convertedData: convertedData.toString("base64"),
+          fileName: `converted.${format}`,
+        });
+      } catch (error) {
+        console.error("EPUB conversion error:", error);
+        return NextResponse.json(
+          {
+            error: "EPUB conversion failed",
+            details: error instanceof Error ? error.message : String(error),
+          },
+          { status: 500 }
+        );
+      }
+    }
     // Handle different file types
-    if (fileType.startsWith("video/")) {
+    else if (fileType.startsWith("video/")) {
       await convertVideo(inputPath, outputPath, format);
     } else if (fileType.startsWith("audio/")) {
       await convertAudio(inputPath, outputPath, format);
