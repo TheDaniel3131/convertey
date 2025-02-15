@@ -22,12 +22,12 @@ const navItems = [
   { icon: FileUp, label: "Convert", href: "/dashboard/convert" },
   { icon: History, label: "History", href: "/dashboard/history" },
   { icon: BarChart, label: "Analytics", href: "/dashboard/analytics" },
-  { icon: Settings, label: "Settings", href: "/dashboard/settings" },
+  { icon: Settings, label: "Settings", href: "/dashboard/profile/settings" },
 ];
 
-export default function SideBar() {
+export default function SideBar({ darkMode }: { darkMode: boolean }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  // Remove darkMode state as it is now passed as a prop
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -45,7 +45,7 @@ export default function SideBar() {
     if (!supabase) return;
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
-      setDarkMode(true);
+      // setDarkMode(true); // darkMode is now passed as a prop
       document.documentElement.classList.add("dark");
     }
   }, [supabase]);

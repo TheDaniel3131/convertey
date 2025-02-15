@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CopyIcon } from "lucide-react";
+// import { CopyIcon } from "lucide-react";
 
 export default function SettingsPage() {
   const [personalInfo, setPersonalInfo] = useState({
@@ -29,7 +29,7 @@ export default function SettingsPage() {
   });
 
   const [avatar, setAvatar] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+  // const [apiKey, setApiKey] = useState("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
   const handlePersonalInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPersonalInfo({ ...personalInfo, [e.target.name]: e.target.value });
@@ -61,10 +61,10 @@ export default function SettingsPage() {
     console.log("Changing password:", newPassword);
   };
 
-  const regenerateApiKey = () => {
-    // Implement API key regeneration logic here
-    setApiKey("new-api-key-here");
-  };
+  // const regenerateApiKey = () => {
+  //   // Implement API key regeneration logic here
+  //   setApiKey("new-api-key-here");
+  // };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -74,7 +74,7 @@ export default function SettingsPage() {
         <TabsList className="mb-4">
           <TabsTrigger value="personal">Personal Information</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="api">API Access</TabsTrigger>
+          {/* <TabsTrigger value="api">API Access</TabsTrigger> */}
         </TabsList>
 
         <TabsContent value="personal">
@@ -181,7 +181,7 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="api">
+        {/* <TabsContent value="api">
           <Card>
             <CardHeader>
               <CardTitle>API Access</CardTitle>
@@ -203,7 +203,7 @@ export default function SettingsPage() {
               <Button onClick={regenerateApiKey}>Regenerate API Key</Button>
             </CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
     </div>
   );

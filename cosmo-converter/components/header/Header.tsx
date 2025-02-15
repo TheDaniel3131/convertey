@@ -171,8 +171,8 @@ export default function Header() {
               <Button
                 variant="outline"
                 size="icon"
-                aria-label="Profile"
-                onClick={() => router.push("/profile")}
+                aria-label="Settings"
+                onClick={() => router.push("/dashboard/profile/settings")}
                 className="rounded-full bg-transparent border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400"
               >
                 <User className="h-5 w-5" />
