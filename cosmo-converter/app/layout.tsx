@@ -3,6 +3,7 @@ import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NotificationsProvider } from "@/components/contexts/NotificationsContext";
+import { Toaster } from 'sonner';
 // import LoadingTransition from "@/components/Transitioning";
 import "./globals.css";
 
@@ -46,6 +47,7 @@ export default function RootLayout({
           <SpeedInsights />
         </NotificationsProvider>
         {/* </LoadingTransition> */}
+        <Toaster />
       </body>
     </html>
   );

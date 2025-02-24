@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,13 +13,15 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { CopyIcon } from "lucide-react";
+import { createSupabaseClient } from "@/lib/utils/supabase/client";
+import { toast } from "sonner";
 
 export default function SettingsPage() {
+  const [supabase] = useState(() => createSupabaseClient());
+  
   const [personalInfo, setPersonalInfo] = useState({
     fullName: "",
     email: "",
-    phone: "",
   });
 
   const [newPassword, setNewPassword] = useState({
@@ -28,43 +30,247 @@ export default function SettingsPage() {
     confirm: "",
   });
 
-  const [avatar, setAvatar] = useState<string | null>(null);
-  // const [apiKey, setApiKey] = useState("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+    // Email validation function
+    const isValidEmail = (email: string) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setPersonalInfo({
+            fullName: user.user_metadata?.full_name || "",
+            email: user.email || "",
+          });
+
+          // Get avatar URL if it exists
+          if (user.user_metadata?.avatar_url) {
+            setAvatarUrl(user.user_metadata.avatar_url);
+            setPreviewAvatar(user.user_metadata.avatar_url);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        toast.error("Failed to load user data");
+      }
+    };
+
+    fetchUserData();
+  }, [supabase]);
 
   const handlePersonalInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPersonalInfo({ ...personalInfo, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setPersonalInfo({ ...personalInfo, [name]: value });
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewPassword({ ...newPassword, [e.target.name]: e.target.value });
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!e.target.files || !e.target.files[0]) return;
+
+      const file = e.target.files[0];
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('File size must be less than 5MB');
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        throw new Error('File must be an image');
+      }
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+
+      // Show preview
       const reader = new FileReader();
       reader.onload = (e) => {
-        setAvatar(e.target?.result as string);
+        if (e.target?.result) {
+          setPreviewAvatar(e.target.result as string);
+        }
       };
-      reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(file);
+
+      setLoading(true);
+      
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase
+        .storage
+        .from('avatars')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get the public URL
+      const { data: { publicUrl } } = supabase
+        .storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+
+      // Update user metadata with new avatar URL
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { avatar_url: publicUrl }
+      });
+
+      if (updateError) throw updateError;
+
+      setAvatarUrl(publicUrl);
+      toast.success("Profile picture updated successfully");
+    } catch (error) {
+      console.error('Error uploading avatar:', error);
+      toast.error(error instanceof Error ? error.message : "Failed to upload profile picture");
+      // Reset preview to the last valid avatar if upload fails
+      setPreviewAvatar(avatarUrl);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handlePersonalInfoSubmit = (e: React.FormEvent) => {
+  const handlePersonalInfoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement update logic here
-    console.log("Updating personal info:", personalInfo);
+
+    // Validate email before submission
+    if (!isValidEmail(personalInfo.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      
+      // If email is being changed
+      if (personalInfo.email !== (await supabase.auth.getUser()).data.user?.email) {
+        const { error } = await supabase.auth.updateUser({
+          email: personalInfo.email
+        });
+        
+        if (error) {
+          if (error.message.includes("invalid")) {
+            toast.error("Please enter a valid email address");
+          } else {
+            toast.error(error.message);
+          }
+          return;
+        }
+        
+        toast.success("A verification email has been sent to your new email address. Please check your inbox to confirm the change.");
+        return;
+      }
+
+      // If only updating name
+      const { error } = await supabase.auth.updateUser({
+        data: { full_name: personalInfo.fullName }
+      });
+
+      if (error) throw error;
+
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to update profile");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement password change logic here
-    console.log("Changing password:", newPassword);
+    
+    if (!newPassword.current || !newPassword.new || !newPassword.confirm) {
+      toast.error("Please fill in all password fields");
+      return;
+    }
+  
+    if (newPassword.new.length < 6) {
+      toast.error("New password must be at least 6 characters long");
+      return;
+    }
+  
+    if (newPassword.new !== newPassword.confirm) {
+      toast.error("New passwords do not match");
+      return;
+    }
+  
+    // Add check for new password being same as current password
+    if (newPassword.new === newPassword.current) {
+      toast.error("New password must be different from your current password");
+      return;
+    }
+  
+    try {
+      setLoading(true);
+  
+      // Get the user's email
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user?.email) {
+        throw new Error('User email not found');
+      }
+  
+      // Reauthenticate with current password
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: newPassword.current
+      });
+  
+      if (signInError) {
+        if (signInError.message.includes("Invalid login credentials")) {
+          toast.error("Current password is incorrect");
+        } else {
+          toast.error(signInError.message);
+        }
+        return;
+      }
+  
+      // Now update the password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword.new
+      });
+  
+      if (updateError) {
+        if (updateError.message.includes("different from the old password")) {
+          toast.error("New password must be different from your current password");
+        } else {
+          throw updateError;
+        }
+        return;
+      }
+  
+      setNewPassword({ current: "", new: "", confirm: "" });
+      toast.success("Password updated successfully");
+    } catch (error) {
+      console.error('Error updating password:', error);
+      if (error instanceof Error) {
+        if (error.message.includes("reauthentication")) {
+          toast.error("Please try again with your current password");
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        toast.error("Failed to update password");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
-
-  // const regenerateApiKey = () => {
-  //   // Implement API key regeneration logic here
-  //   setApiKey("new-api-key-here");
-  // };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -74,7 +280,6 @@ export default function SettingsPage() {
         <TabsList className="mb-4">
           <TabsTrigger value="personal">Personal Information</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
-          {/* <TabsTrigger value="api">API Access</TabsTrigger> */}
         </TabsList>
 
         <TabsContent value="personal">
@@ -86,8 +291,10 @@ export default function SettingsPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-4">
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src={avatar || ""} />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarImage src={previewAvatar || ""} alt="Profile" />
+                    <AvatarFallback>
+                      {personalInfo.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
                     <Label htmlFor="avatar">Profile Picture</Label>
@@ -96,6 +303,7 @@ export default function SettingsPage() {
                       type="file"
                       accept="image/*"
                       onChange={handleAvatarChange}
+                      disabled={loading}
                     />
                   </div>
                 </div>
@@ -106,6 +314,7 @@ export default function SettingsPage() {
                     name="fullName"
                     value={personalInfo.fullName}
                     onChange={handlePersonalInfoChange}
+                    disabled={loading}
                   />
                 </div>
                 <div>
@@ -116,21 +325,18 @@ export default function SettingsPage() {
                     type="email"
                     value={personalInfo.email}
                     onChange={handlePersonalInfoChange}
+                    disabled={loading}
+                    className={!isValidEmail(personalInfo.email) && personalInfo.email ? "border-red-500" : ""}
                   />
-                </div>
-                <div>
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={personalInfo.phone}
-                    onChange={handlePersonalInfoChange}
-                  />
+                  {!isValidEmail(personalInfo.email) && personalInfo.email && (
+                    <p className="text-sm text-red-500 mt-1">Please enter a valid email address</p>
+                  )}
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit">Save Changes</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Saving..." : "Save Changes"}
+                </Button>
               </CardFooter>
             </form>
           </Card>
@@ -151,6 +357,7 @@ export default function SettingsPage() {
                     type="password"
                     value={newPassword.current}
                     onChange={handlePasswordChange}
+                    disabled={loading}
                   />
                 </div>
                 <div>
@@ -161,6 +368,7 @@ export default function SettingsPage() {
                     type="password"
                     value={newPassword.new}
                     onChange={handlePasswordChange}
+                    disabled={loading}
                   />
                 </div>
                 <div>
@@ -171,39 +379,18 @@ export default function SettingsPage() {
                     type="password"
                     value={newPassword.confirm}
                     onChange={handlePasswordChange}
+                    disabled={loading}
                   />
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit">Change Password</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Updating..." : "Change Password"}
+                </Button>
               </CardFooter>
             </form>
           </Card>
         </TabsContent>
-
-        {/* <TabsContent value="api">
-          <Card>
-            <CardHeader>
-              <CardTitle>API Access</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="apiKey">Your API Key</Label>
-                <div className="flex">
-                  <Input id="apiKey" value={apiKey} readOnly />
-                  <Button
-                    variant="outline"
-                    className="ml-2"
-                    onClick={() => navigator.clipboard.writeText(apiKey)}
-                  >
-                    <CopyIcon className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              <Button onClick={regenerateApiKey}>Regenerate API Key</Button>
-            </CardContent>
-          </Card>
-        </TabsContent> */}
       </Tabs>
     </div>
   );
