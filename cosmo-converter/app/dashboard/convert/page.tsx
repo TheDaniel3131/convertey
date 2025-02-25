@@ -35,11 +35,7 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { downloadFile } from "@/lib/utils/utils";
-import {
-  CONVERSION_MAP,
-  MIME_TYPES,
-  FORMAT_DESCRIPTIONS,
-} from "@/lib/config/fileConversions";
+import { CONVERSION_MAP, MIME_TYPES } from "@/lib/config/fileConversions";
 import type { ConversionFormat } from "@/types/FileConversionFormats";
 
 export default function ConvertPage() {
@@ -49,7 +45,7 @@ export default function ConvertPage() {
   const [preserveMetadata, setPreserveMetadata] = useState(true);
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState<string>("");
-  const [conversionProgress, setConversionProgress] = useState(0);
+  const [, setConversionProgress] = useState(0);
 
   const getFileType = (file: File): string => {
     const extension = file.name.split(".").pop()?.toLowerCase();
