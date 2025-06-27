@@ -33,3 +33,22 @@ Ensure you have the following installed:
 git clone https://github.com/minxfy/minxfy.git
 cd minxfy
 npm install
+
+```
+
+### Running the Project
+
+bash
+Copy
+Edit
+npm run dev
+The app will be available at http://localhost:3000
+
+🛠️ Contributing
+We welcome contributions! Please follow these steps:
+
+Fork the repository
+Create a new branch (feature/your-feature)
+Commit your changes (git commit -m "Add new feature")
+Push to your branch (git push origin feature/your-feature)
+Open a Pull Request
