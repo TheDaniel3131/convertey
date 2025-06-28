@@ -1,6 +1,6 @@
 # 🌌 Convertey
 
-**Minxfy** is a modern, powerful, and user-friendly online file conversion tool built with **Next.js**. It allows users to convert files between multiple formats with speed, security, and ease.
+**Convertey** is a modern, powerful, and user-friendly online file conversion tool built with **Next.js**. It allows users to convert files between multiple formats with speed, security, and ease.
 
 🚀 Developed by **Minxfy**, this tool is designed to handle a variety of file types, including **documents, images, and more**.
 
