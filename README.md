@@ -30,8 +30,8 @@ Ensure you have the following installed:
 ### Installation
 
 ```bash
-git clone https://github.com/minxfy/minxfy.git
-cd minxfy
+git clone https://github.com/Minxfy/convertey.git
+cd convertey
 npm install
 
 ```
