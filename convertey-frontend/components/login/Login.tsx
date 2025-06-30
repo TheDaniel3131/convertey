@@ -15,7 +15,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FaRocket, FaGithub, FaGoogle } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { createSupabaseClient } from "@/lib/utils/supabase/client";
 
 export default function LoginPage() {
@@ -81,7 +82,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleOAuthLogin = async (provider: "google" | "github") => {
+  const handleOAuthLogin = async (provider: "google") => {
     setError(null);
     setIsLoading(true);
 
@@ -115,32 +116,39 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="stars"></div>
-      <Card className="w-full max-w-md space-y-8 bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
-        <CardHeader>
-          <div className="text-center">
-            <Image
+        <Card className="w-full max-w-md bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl border border-slate-200 dark:border-slate-800/30">
+        <CardHeader className="text-center pb-6">
+          <div className="mx-auto mb-6 h-16 w-16 rounded-full bg-white shadow-md flex items-center justify-center border-slate-100 border">
+              <Image
               src="/placeholder.svg"
-              alt="Cosmo Converter Logo"
-              width={64}
-              height={64}
-              className="mx-auto h-16 w-16"
-            />
-            <CardTitle className="mt-6 text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-              Sign in to Cosmo Converter
-            </CardTitle>
-          </div>
+              alt="Convertey Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+              />
+            </div>
+          <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Welcome to Convertey
+          </CardTitle>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Sign in to your account to continue
+          </p>
         </CardHeader>
-        <CardContent>
+        
+        <CardContent className="space-y-6">
           {error && (
-            <div className="text-red-500 text-center mb-4">{error}</div>
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
           )}
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-4 rounded-md shadow-sm">
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4">
               <div>
-                <Label htmlFor="email-address" className="sr-only">
-                  Email address
+                <Label htmlFor="email-address" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                  Email Address
                 </Label>
                 <Input
                   id="email-address"
@@ -148,14 +156,14 @@ export default function LoginPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="bg-white/5"
-                  placeholder="Email address"
+                  className="h-11 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:border-emerald-500 focus:ring-emerald-500 dark:focus:border-emerald-400"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div>
-                <Label htmlFor="password" className="sr-only">
+                <Label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                   Password
                 </Label>
                 <Input
@@ -164,8 +172,8 @@ export default function LoginPage() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="bg-white/5"
-                  placeholder="Password"
+                  className="h-11 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:border-emerald-500 focus:ring-emerald-500 dark:focus:border-emerald-400"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -178,79 +186,66 @@ export default function LoginPage() {
                   id="remember-me"
                   checked={rememberMe}
                   onCheckedChange={(checked) => setRememberMe(!!checked)}
-                  className="mr-2"
+                  className="border-gray-300 text-emerald-600 focus:ring-emerald-500"
                 />
-                <Label htmlFor="remember-me" className="text-sm">
+                <Label htmlFor="remember-me" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                   Remember me
                 </Label>
               </div>
-              <div className="text-sm">
-                <Link
-                  href="/forgot-password"
-                  className="font-medium text-purple-400 hover:text-purple-300"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
+              <Link
+                href="/forgot-password"
+                className="text-sm font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+              >
+                Forgot password?
+              </Link>
             </div>
 
-            <div>
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="group relative flex w-full justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white py-2 px-4 text-sm font-medium"
-              >
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <FaRocket
-                    className="h-5 w-5 text-purple-300 group-hover:text-purple-200"
-                    aria-hidden="true"
-                  />
-                </span>
-                {isLoading ? "Signing in..." : "Sign in"}
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full h-11 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-medium rounded-lg transition-all duration-200 flex items-center justify-center"
+            >
+              {isLoading ? (
+                "Signing in..."
+              ) : (
+                <>
+                  Sign in
+                  <FaArrowRight className="ml-2 h-4 w-4" />
+                </>
+              )}
+            </Button>
           </form>
 
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white/10 dark:bg-gray-800/30 text-gray-500 dark:text-gray-400">
-                  Or continue with
-                </span>
-              </div>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <Button
-                onClick={() => handleOAuthLogin("google")}
-                disabled={isLoading}
-                className="w-full flex items-center justify-center bg-white/10 hover:bg-white/20 text-gray-900 dark:text-gray-100"
-              >
-                <FaGoogle className="h-5 w-5 mr-2" />
-                Google
-              </Button>
-              <Button
-                onClick={() => handleOAuthLogin("github")}
-                disabled={isLoading}
-                className="w-full flex items-center justify-center bg-white/10 hover:bg-white/20 text-gray-900 dark:text-gray-100"
-              >
-                <FaGithub className="h-5 w-5 mr-2" />
-                GitHub
-              </Button>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                Or continue with
+              </span>
             </div>
           </div>
+
+          <Button
+            onClick={() => handleOAuthLogin("google")}
+            disabled={isLoading}
+            variant="outline"
+            className="w-full h-11 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center"
+          >
+            <FcGoogle className="h-5 w-5 mr-3" />
+            Continue with Google
+          </Button>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-2 text-sm text-center">
-          <p>
+        
+        <CardFooter className="text-center">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Don&apos;t have an account?{" "}
             <Link
               href="/signup"
-              className="font-medium text-purple-400 hover:text-purple-300"
+              className="font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
             >
-              Sign up
+              Create account
             </Link>
           </p>
         </CardFooter>
