@@ -9,7 +9,7 @@ export default function NavLink({
   return (
     <Link
       href={href}
-      className={`text-gray-700 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400 ${className}`}
+      className={`text-gray-700 dark:text-gray-300 hover:text-emerald-500 dark:hover:text-purple-400 ${className}`}
     >
       {children}
     </Link>

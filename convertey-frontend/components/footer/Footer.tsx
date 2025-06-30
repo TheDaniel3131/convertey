@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container mx-auto px-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-purple-600 dark:text-purple-400">
+            <h3 className="text-lg font-semibold mb-4 text-emerald-600 dark:text-emerald-400">
               About Us
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -17,14 +17,14 @@ export default function Footer() {
             </p>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-purple-600 dark:text-purple-400">
+            <h3 className="text-lg font-semibold mb-4 text-emerald-600 dark:text-emerald-400">
               Quick Links
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/login"
-                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
                 >
                   Features
                 </Link>
@@ -32,7 +32,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/signup"
-                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
                 >
                   Try It
                 </Link>
@@ -40,7 +40,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/about"
-                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
                 >
                   About
                 </Link>
@@ -48,7 +48,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
                 >
                   Contact
                 </Link>
@@ -56,7 +56,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/faq"
-                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
                 >
                   FAQ
                 </Link>
@@ -64,14 +64,14 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-purple-600 dark:text-purple-400">
+            <h3 className="text-lg font-semibold mb-4 text-emerald-600 dark:text-emerald-400">
               Legal
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/terms-of-service"
-                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
                 >
                   Terms of Service
                 </Link>
@@ -79,7 +79,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/privacy"
-                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
                 >
                   Privacy Policy
                 </Link>
@@ -87,7 +87,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/cookies"
-                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
                 >
                   Cookies
                 </Link>
@@ -95,13 +95,13 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-purple-600 dark:text-purple-400">
+            <h3 className="text-lg font-semibold mb-4 text-emerald-600 dark:text-emerald-400">
               Connect With Us
             </h3>
             <div className="flex space-x-4">
               <a
                 href="https://facebook.com/CosmoCrafters"
-                className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
               >
                 <svg
                   className="h-6 w-6"
@@ -118,7 +118,7 @@ export default function Footer() {
               </a>
               <a
                 href="https://x.com/_CosmoCrafters_"
-                className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
               >
                 <svg
                   className="h-6 w-6"
@@ -131,7 +131,7 @@ export default function Footer() {
               </a>
               <a
                 href="https://github.com/CosmoCrafters"
-                className="text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400"
+                className="text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
               >
                 <svg
                   className="h-6 w-6"

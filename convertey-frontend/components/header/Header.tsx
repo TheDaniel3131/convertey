@@ -148,7 +148,7 @@ export default function Header() {
             size="icon"
             onClick={() => setDarkMode(!darkMode)}
             aria-label="Toggle theme"
-            className="rounded-full bg-transparent border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400"
+            className="rounded-full bg-transparent border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
           >
             {darkMode ? (
               <Sun className="h-5 w-5" />
@@ -163,7 +163,7 @@ export default function Header() {
                 size="icon"
                 aria-label="Notifications"
                 onClick={() => router.push("/notifications")}
-                className="rounded-full bg-transparent border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400"
+                className="rounded-full bg-transparent border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
               >
                 <Bell className="h-5 w-5" />
               </Button> */}
@@ -173,14 +173,14 @@ export default function Header() {
                 size="icon"
                 aria-label="Settings"
                 onClick={() => router.push("/dashboard/profile/settings")}
-                className="rounded-full bg-transparent border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400"
+                className="rounded-full bg-transparent border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
               >
                 <User className="h-5 w-5" />
               </Button>
               <Button
                 variant="outline"
                 onClick={handleSignOut}
-                className="rounded-full border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400"
+                className="rounded-full border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
               >
                 Sign Out
               </Button>
@@ -190,14 +190,14 @@ export default function Header() {
               <Button
                 variant="outline"
                 onClick={() => router.push("/login")}
-                className="rounded-full border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400 px-7 py-3"
+                className="rounded-full border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400 px-7 py-3"
               >
                 Login
               </Button>
               <Button
                 variant="default"
                 onClick={() => router.push("/signup")}
-                className="rounded-full bg-purple-600 text-white hover:bg-purple-700 px-6 py-3"
+                className="rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-6 py-3"
               >
                 Sign Up
               </Button>
@@ -210,7 +210,7 @@ export default function Header() {
             size="icon"
             onClick={() => setDarkMode(!darkMode)}
             aria-label="Toggle theme"
-            className="rounded-full mr-2 bg-transparent border-purple-400 dark:border-purple-600 text-purple-600 dark:text-purple-400"
+            className="rounded-full mr-2 bg-transparent border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
           >
             {darkMode ? (
               <Sun className="h-5 w-5" />
@@ -226,7 +226,7 @@ export default function Header() {
               setMobileMenuOpen(!mobileMenuOpen);
             }}
             aria-label="Toggle menu"
-            className="rounded-full text-purple-600 dark:text-purple-400"
+            className="rounded-full text-emerald-600 dark:text-emerald-400"
           >
             <Menu className="h-6 w-6" />
           </Button>
