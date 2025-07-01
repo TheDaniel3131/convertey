@@ -18,9 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Online File Converter | CosmoConverter",
+  title: "Convert FileS Online | Convertey ",
   description:
-    "Effortlessly convert with any file formats including documents, images, presentations, archives, audio, and video files with CosmoConverter. Experience seamless and provided free file conversion from us.",
+    "Effortlessly convert with any file formats including documents, images, presentations, archives, audio, and video files with Convertey. Experience seamless and provided free file conversion from us.",
 };
 
 export default function RootLayout({
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="apple-mobile-web-app-title" content="CosmoConverter" />
+        <meta name="apple-mobile-web-app-title" content="Convertey" />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
