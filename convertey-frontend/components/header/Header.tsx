@@ -121,15 +121,14 @@ export default function Header() {
       <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center ml-2 mt-1">
           <Image
-            src={
-              darkMode
-                ? "/cosmoconverter-home-light.png"
-                : "/cosmoconverter-home-dark.png"
-            }
-            alt="CosmoConverter Logo"
-            width={250}
-            height={48.44}
+            src="/convertey-logo-transparent.png"
+            alt="Convertey Logo"
+            width={50}
+            height={39}
           />
+          <span className="ml-3 text-4xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight" style={{ fontFamily: 'Ebrima' }}>
+            Convertey
+          </span>
         </Link>
         <div className="hidden md:flex space-x-5 items-center font-semibold">
           {user && (
