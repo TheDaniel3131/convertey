@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Convert FileS Online | Convertey ",
+  title: "Convert Your Files Online | Convertey ",
   description:
     "Effortlessly convert with any file formats including documents, images, presentations, archives, audio, and video files with Convertey. Experience seamless and provided free file conversion from us.",
 };
