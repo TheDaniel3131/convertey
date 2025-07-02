@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -24,10 +24,57 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createSupabaseClient();
+
+  useEffect(() => {
+    const handleAuthRedirects = async () => {
+      // Check for password reset tokens and redirect immediately
+      const type = searchParams?.get("type");
+      if (type === "recovery") {
+        console.log("Detected recovery type in URL. Redirecting to reset-password.");
+        // Ensure any existing session (from recovery link) is cleared before redirecting
+        // This is good practice but might not always be strictly necessary if reset-password handles it.
+        await supabase.auth.signOut();
+        router.replace(`/reset-password?${searchParams.toString()}`);
+        return; // Prevent further execution of useEffect
+      }
+
+      // Check for verification success
+      const verified = searchParams?.get("verified");
+      if (verified === "true") {
+        console.log("Detected email verification success.");
+        setSuccessMessage(
+          "Your email has been verified! Please log in with your credentials."
+        );
+        // **IMPORTANT:** Sign out after successful email verification.
+        // The user is automatically logged in by clicking the verification link.
+        // We want them to explicitly log in.
+        await supabase.auth.signOut();
+        // Clear the 'verified' param from the URL after processing
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete("verified");
+        router.replace(newUrl.pathname + newUrl.search); // Replace URL without verified param
+      }
+
+      // Check for password reset success message from reset-password page
+      const resetMessage = searchParams?.get("message");
+      if (resetMessage) {
+        console.log("Detected password reset success message.");
+        setSuccessMessage(resetMessage);
+        // Clear the 'message' param from the URL after processing
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete("message");
+        router.replace(newUrl.pathname + newUrl.search);
+      }
+    };
+
+    handleAuthRedirects();
+  }, [searchParams, supabase, router]); // Dependency array includes router now
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +98,10 @@ export default function LoginPage() {
         console.error("Login error:", error);
         if (error.message === "Invalid login credentials") {
           setError("Invalid email or password. Please try again.");
+        } else if (error.message === "Email not confirmed") {
+          setError(
+            "Your email is not verified. Please check your inbox for the verification link."
+          );
         } else {
           setError(error.message);
         }
@@ -61,16 +112,7 @@ export default function LoginPage() {
       if (data.user) {
         console.log("Login successful, redirecting...");
         localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
-
-        try {
-          await router.push("/dashboard");
-          setTimeout(() => {
-            window.location.href = "/dashboard";
-          }, 1000);
-        } catch (navigationError) {
-          console.error("Navigation error:", navigationError);
-          window.location.href = "/dashboard";
-        }
+        router.push("/dashboard");
       } else {
         console.log("No user data returned");
         setError("Login successful but no user data returned");
@@ -106,6 +148,7 @@ export default function LoginPage() {
       }
 
       if (data.url) {
+        // Redirect to the OAuth provider's login page
         window.location.href = data.url;
       }
     } catch (err) {
@@ -123,17 +166,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="stars"></div>
-        <Card className="w-full max-w-md bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl border border-slate-200 dark:border-slate-800/30">
+      <Card className="w-full max-w-md bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl border border-slate-200 dark:border-slate-800/30">
         <CardHeader className="text-center pb-6">
           <div className="mx-auto mb-6 h-16 w-16 rounded-full bg-white shadow-md flex items-center justify-center border-slate-100 border">
-              <Image
+            <Image
               src="/placeholder.svg"
               alt="Convertey Logo"
               width={32}
               height={32}
               className="h-8 w-8"
-              />
-            </div>
+            />
+          </div>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Welcome to Convertey
           </CardTitle>
@@ -141,18 +184,27 @@ export default function LoginPage() {
             Sign in to your account to continue
           </p>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           {error && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}
-          
+
+          {successMessage && (
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg text-sm">
+              {successMessage}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="email-address" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                <Label
+                  htmlFor="email-address"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block"
+                >
                   Email Address
                 </Label>
                 <Input
@@ -168,7 +220,10 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -207,7 +262,10 @@ export default function LoginPage() {
                   onCheckedChange={(checked) => setRememberMe(!!checked)}
                   className="border-gray-300 text-emerald-600 focus:ring-emerald-500"
                 />
-                <Label htmlFor="remember-me" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                <Label
+                  htmlFor="remember-me"
+                  className="ml-2 text-sm text-gray-700 dark:text-gray-300"
+                >
                   Remember me
                 </Label>
               </div>
@@ -256,7 +314,7 @@ export default function LoginPage() {
             Continue with Google
           </Button>
         </CardContent>
-        
+
         <CardFooter className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Don&apos;t have an account?{" "}

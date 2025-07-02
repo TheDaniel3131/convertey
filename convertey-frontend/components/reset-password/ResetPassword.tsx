@@ -34,14 +34,19 @@ export default function ResetPasswordPage({
   const supabase = createSupabaseClient();
 
   useEffect(() => {
-    // ✅ Check if user is already signed in via Supabase recovery
-    supabase.auth.getSession().then(({ data, error }) => {
-      if (!data.session) {
-        setError("Your session has expired. Please request a new reset link.");
-        console.error("Session error:", error);
+    let isMounted = true;
+
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (isMounted && !data.session) {
+        router.replace("/login");
       }
-    });
-  }, [supabase]);
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [supabase, router]);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,29 +64,23 @@ export default function ResetPasswordPage({
 
       if (error) {
         setError(error.message);
+        setIsLoading(false);
         return;
       }
 
       setSuccess(true);
       setIsSuccess(true);
 
-      setTimeout(() => {
-        router.push("/login");
-      }, 0);
+      setTimeout(async () => {
+        await supabase.auth.signOut();
+        router.replace("/login");
+      }, 1000);
     } catch (err) {
       console.error(err);
       setError("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -107,7 +106,7 @@ export default function ResetPasswordPage({
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {error && (
+          {!success && error && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
@@ -136,14 +135,10 @@ export default function ResetPasswordPage({
                   <button
                     type="button"
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                    onClick={togglePasswordVisibility}
+                    onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
-                    {showPassword ? (
-                      <FaEyeSlash className="h-4 w-4" />
-                    ) : (
-                      <FaEye className="h-4 w-4" />
-                    )}
+                    {showPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
@@ -165,14 +160,10 @@ export default function ResetPasswordPage({
                   <button
                     type="button"
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                    onClick={toggleConfirmPasswordVisibility}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     disabled={isLoading}
                   >
-                    {showConfirmPassword ? (
-                      <FaEyeSlash className="h-4 w-4" />
-                    ) : (
-                      <FaEye className="h-4 w-4" />
-                    )}
+                    {showConfirmPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
@@ -182,14 +173,7 @@ export default function ResetPasswordPage({
                 disabled={isLoading}
                 className="w-full h-11 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-medium rounded-lg transition-all duration-200 flex items-center justify-center"
               >
-                {isLoading ? (
-                  "Resetting..."
-                ) : (
-                  <>
-                    Reset Password
-                    <FaArrowRight className="ml-2 h-4 w-4" />
-                  </>
-                )}
+                {isLoading ? "Resetting..." : (<><span>Reset Password</span><FaArrowRight className="ml-2 h-4 w-4" /></>)}
               </Button>
             </form>
           )}
@@ -197,7 +181,7 @@ export default function ResetPasswordPage({
 
         <CardFooter className="text-center flex justify-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Back to{" "}
+            Back to {" "}
             <Link
               href="/login"
               className="font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"

@@ -23,13 +23,11 @@ interface SignUpProps {
   setShowVerification: (value: boolean) => void;
 }
 
-
 export default function SignUpPage({showVerification, setShowVerification}: SignUpProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  // const [showVerification, setShowVerification] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -58,7 +56,8 @@ export default function SignUpPage({showVerification, setShowVerification}: Sign
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          // Redirect to login page with verification success parameter
+          emailRedirectTo: `${window.location.origin}/login?verified=true`,
           data: {
             full_name: name,
           },
@@ -83,10 +82,9 @@ export default function SignUpPage({showVerification, setShowVerification}: Sign
         setIsLoading(false);
         return;
       }
+      
+      // Show verification message
       setShowVerification(true);
-      setTimeout(() => {
-        router.push("/login");
-      }, 300000); // 5 minutes = 300,000 milliseconds
     } catch (err) {
       console.error("Unexpected error during signup:", err);
       setError("An unexpected error occurred during signup");

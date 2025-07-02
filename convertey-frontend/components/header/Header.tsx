@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sun,
@@ -20,7 +20,7 @@ import {
 import Link from "next/link";
 import NavLink from "@/components/elements/header/NavLinks";
 import { createSupabaseClient } from "@/lib/utils/supabase/client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import NotificationsPopover from "@/components/notification/NotificationsPopover";
 
 export default function Header() {
@@ -36,7 +36,17 @@ export default function Header() {
     return client;
   });
   const router = useRouter();
-  const searchParams = useSearchParams();
+
+  // Check user authentication status
+  const checkUser = useCallback(async () => {
+    if (!supabase) return;
+    const { data, error } = await supabase.auth.getSession();
+    if (error || !data.session?.user) {
+      setUser(null);
+    } else {
+      setUser({ id: data.session.user.id, email: data.session.user.email ?? "" });
+    }
+  }, [supabase]);
 
   useEffect(() => {
     console.log("User state:", user);
@@ -53,50 +63,12 @@ export default function Header() {
     // Only proceed if Supabase client is available
     if (!supabase) return;
 
-    // Check if this is a verification callback
-    const handleEmailVerification = async () => {
-      // Check for email verification parameters
-      const isVerification = searchParams?.get("type") === "email_confirmation";
-
-      if (isVerification) {
-        // Get current user
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-
-        if (user) {
-          // Sign out the user
-          await supabase.auth.signOut();
-          // Redirect to login
-          router.push("/login");
-        }
-      }
-    };
-
-    // Check user authentication status
-    const checkUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user ? { id: user.id, email: user.email ?? "" } : null);
-    };
-
-    handleEmailVerification();
     checkUser();
 
     // Listen for auth changes
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log("Auth state change:", event, session);
-        // Handle email verification event
-        if (event === "SIGNED_IN") {
-          setUser(
-            session?.user
-              ? { id: session.user.id, email: session.user.email ?? "" }
-              : null
-          );
-        }
-
         setUser(
           session?.user
             ? { id: session.user.id, email: session.user.email ?? "" }
@@ -108,13 +80,15 @@ export default function Header() {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [darkMode, supabase, router, searchParams]);
+  }, [darkMode, supabase, checkUser]);
 
   const handleSignOut = async () => {
     if (!supabase) return;
     await supabase.auth.signOut();
+    await checkUser(); // force refresh
     router.push("/");
   };
+
 
   return (
     <header className="bg-transparent backdrop-blur-md dark:bg-opacity-33 shadow-md z-20 sticky top-0">
@@ -156,15 +130,6 @@ export default function Header() {
           </Button>
           {user ? (
             <>
-              {/* <Button
-                variant="outline"
-                size="icon"
-                aria-label="Notifications"
-                onClick={() => router.push("/notifications")}
-                className="rounded-full bg-transparent border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
-              >
-                <Bell className="h-5 w-5" />
-              </Button> */}
               <NotificationsPopover />
               <Button
                 variant="outline"
@@ -232,12 +197,9 @@ export default function Header() {
       </nav>
       {mobileMenuOpen && (
         <div className="md:hidden font-semibold text-center items-center justify-center bg-opacity-90 dark:bg-opacity-90 backdrop-blur-md py-2">
-          {/* <NavLink href="/" className="block py-2 px-4">
-            Home
-          </NavLink> */}
           <NavLink
             href="/about"
-            className="py-2 px-4 flex items-center text-center justify-center my-2"
+            className="py-2 px极-4 flex items-center text-center justify-center my-2"
           >
             <Info className="mr-2" /> About
           </NavLink>
