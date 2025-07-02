@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function Cookies() {
   return (
     <main className="container mx-auto px-4 py-16 relative z-10">
-      <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+      <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-600 pb-2">
         Cookies Policy
       </h1>
       <div className="max-w-3xl mx-auto space-y-8">
@@ -11,43 +11,39 @@ export default function Cookies() {
           <CardContent className="p-6">
             <h2 className="text-2xl font-semibold mb-4">What are Cookies?</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Cookies are small text files that are placed on your computer or
-              mobile device when you visit a website. They are widely used to
-              make websites work more efficiently and provide information to the
-              owners of the site. They can store information about your browsing
-              activity on a particular website, such as your preferences, login
-              details, or items in your shopping cart. There are different types
-              of cookies, each serving a specific purpose. For example,
-              &quot;session cookies&quot; are temporary and expire when you
-              close your browser, while &quot;persistent cookies&quot; remain on
-              your device for a specified period.
+              Cookies are small text files stored on your device when you visit our website. 
+              They enable us to provide enhanced functionality and analyze website performance. 
+              Cookies contain information about your browsing preferences, session data, and 
+              site interactions. Session cookies are temporary and deleted when you close your 
+              browser, while persistent cookies remain on your device for a predetermined period 
+              to remember your preferences across visits.
             </p>
           </CardContent>
         </Card>
 
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">How We Use Cookies</h2>
+            <h2 className="text-2xl font-semibold mb-4">How Convertey Uses Cookies</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Cosmo Converter uses cookies to enhance your experience on our
-              website. We use different types of cookies for various purposes:
+              Convertey employs cookies to optimize your user experience and maintain 
+              platform functionality. Our cookie implementation includes:
             </p>
             <ul className="list-disc pl-6 text-gray-600 dark:text-gray-300 mb-4">
               <li>
-                Essential cookies: These are necessary for the website to
-                function properly.
+                <strong>Essential Cookies:</strong> Required for core website functionality 
+                and security features.
               </li>
               <li>
-                Analytical/performance cookies: These help us to improve how our
-                website works.
+                <strong>Performance Cookies:</strong> Collect anonymous data to analyze 
+                website performance and user interactions.
               </li>
               <li>
-                Functionality cookies: These allow us to remember your
-                preferences.
+                <strong>Functional Cookies:</strong> Store your preferences and settings 
+                to personalize your experience.
               </li>
               <li>
-                Targeting cookies: These record your visit to our website, the
-                pages you have visited and the links you have followed.
+                <strong>Analytics Cookies:</strong> Help us understand user behavior 
+                to improve our services and features.
               </li>
             </ul>
           </CardContent>
@@ -55,46 +51,46 @@ export default function Cookies() {
 
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Managing Cookies</h2>
+            <h2 className="text-2xl font-semibold mb-4">Cookie Management</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              You can control and/or delete cookies as you wish. You can delete
-              all cookies that are already on your computer and you can set most
-              browsers to prevent them from being placed. However, if you do
-              this, you may have to manually adjust some preferences every time
-              you visit a site and some services and functionalities may not
-              work.
+              You maintain full control over cookie preferences through your browser settings. 
+              Most browsers allow you to view, delete, and block cookies. Please note that 
+              disabling certain cookies may impact website functionality and require manual 
+              reconfiguration of preferences during each visit. We recommend reviewing your 
+              browser&apos;s help documentation for specific cookie management instructions.
             </p>
           </CardContent>
         </Card>
 
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">More Information</h2>
+            <h2 className="text-2xl font-semibold mb-4">Additional Resources</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              For more information about cookies and how to manage them, visit{" "}
+              For comprehensive information about cookies and privacy management, 
+              we recommend visiting{" "}
               <a
                 href="https://www.aboutcookies.org/"
-                className="text-purple-500 hover:text-purple-600"
+                className="text-emerald-500 hover:text-emerald-600"
               >
                 aboutcookies.org
               </a>{" "}
               or{" "}
               <a
                 href="https://www.allaboutcookies.org/"
-                className="text-purple-500 hover:text-purple-600"
+                className="text-emerald-500 hover:text-emerald-600"
               >
                 allaboutcookies.org
               </a>
               .
             </p>
             <p className="text-gray-600 dark:text-gray-300">
-              If you have any questions about our use of cookies, please contact
-              us at{" "}
+              For questions regarding our cookie policy or privacy practices, 
+              please contact our team at{" "}
               <a
-                href="mailto:privacy@cosmocrafters.com"
-                className="text-purple-500 hover:text-purple-600"
+                href="mailto:official.convertey@outlook.com"
+                className="text-emerald-500 hover:text-emerald-600"
               >
-                privacy@cosmocrafters.com
+                official.convertey@outlook.com
               </a>
               .
             </p>

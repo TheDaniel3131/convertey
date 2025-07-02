@@ -5,8 +5,8 @@ import FAQ from "@/components/faq/FAQ";
 import React, { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "FAQ | Cosmo Converter",
-  description: "Frequently Asked Questions about Cosmo Converter.",
+  title: "FAQ | Convertey",
+  description: "Frequently Asked Questions about Convertey - Online File Converter.",
 };
 
 export default function FAQPage() {

@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function PrivacyPolicy() {
   return (
     <main className="container mx-auto px-4 py-16 relative z-10">
-      <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+      <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-600 pb-2">
         Privacy Policy
       </h1>
       <div className="max-w-3xl mx-auto space-y-8">
@@ -11,10 +11,7 @@ export default function PrivacyPolicy() {
           <CardContent className="p-6">
             <h2 className="text-2xl font-semibold mb-4">Introduction</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              At Cosmo Converter, we take your privacy seriously. This Privacy
-              Policy explains how we collect, use, disclose, and safeguard your
-              information when you visit our website or use our file conversion
-              services.
+              At Convertey, we are committed to protecting your privacy and maintaining the confidentiality of your personal information. This Privacy Policy outlines how we collect, use, process, and safeguard your data when you access our website and utilize our file conversion services.
             </p>
           </CardContent>
         </Card>
@@ -25,15 +22,14 @@ export default function PrivacyPolicy() {
               Information We Collect
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              We collect information that you provide directly to us, such as
-              when you create an account, use our services, or contact us for
-              support. This may include:
+              We collect information that you voluntarily provide to us through various interactions with our platform. This information may include:
             </p>
             <ul className="list-disc pl-6 text-gray-600 dark:text-gray-300 mb-4">
-              <li>Personal information (e.g., name, email address)</li>
-              <li>Payment information</li>
-              <li>File data that you upload for conversion</li>
-              <li>Usage data and analytics</li>
+              <li>Personal identification information (name, email address, contact details)</li>
+              <li>Account credentials and profile information</li>
+              <li>Payment and billing information for premium services</li>
+              <li>Files and documents uploaded for conversion purposes</li>
+              <li>Usage analytics and service interaction data</li>
             </ul>
           </CardContent>
         </Card>
@@ -44,48 +40,40 @@ export default function PrivacyPolicy() {
               How We Use Your Information
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              We use the information we collect to:
+              We utilize the collected information for the following purposes:
             </p>
             <ul className="list-disc pl-6 text-gray-600 dark:text-gray-300 mb-4">
-              <li>Provide, maintain, and improve our services</li>
-              <li>Process transactions and send related information</li>
-              <li>Send you technical notices, updates, and support messages</li>
-              <li>Respond to your comments and questions</li>
-              <li>Analyze usage patterns and improve user experience</li>
+              <li>Deliver, maintain, and enhance our conversion services</li>
+              <li>Process payments and manage subscription services</li>
+              <li>Provide customer support and technical assistance</li>
+              <li>Communicate service updates, security alerts, and important notices</li>
+              <li>Analyze service performance and optimize user experience</li>
+              <li>Ensure compliance with legal obligations and platform security</li>
             </ul>
           </CardContent>
         </Card>
 
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Data Security</h2>
+            <h2 className="text-2xl font-semibold mb-4">Data Security & Protection</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              We implement appropriate technical and organizational measures to
-              protect the security of your personal information. However, please
-              note that no method of transmission over the Internet or
-              electronic storage is 100% secure.
+              We employ industry-standard security measures and encryption protocols to protect your personal information from unauthorized access, disclosure, or misuse. While we maintain robust security practices, we acknowledge that no digital transmission or storage method can guarantee absolute security.
             </p>
           </CardContent>
         </Card>
 
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Your Rights</h2>
+            <h2 className="text-2xl font-semibold mb-4">Your Privacy Rights</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Depending on your location, you may have certain rights regarding
-              your personal information, including:
+              Subject to applicable privacy laws and regulations, you may exercise the following rights regarding your personal information:
             </p>
             <ul className="list-disc pl-6 text-gray-600 dark:text-gray-300 mb-4">
-              <li>
-                The right to access and receive a copy of your personal
-                information
-              </li>
-              <li>The right to rectify or update your personal information</li>
-              <li>The right to delete your personal information</li>
-              <li>
-                The right to restrict or object to our processing of your
-                personal information
-              </li>
+              <li>Access and obtain copies of your personal data</li>
+              <li>Request correction or updating of inaccurate information</li>
+              <li>Request deletion of your personal information</li>
+              <li>Object to or restrict certain processing activities</li>
+              <li>Data portability for information you have provided</li>
             </ul>
           </CardContent>
         </Card>
@@ -93,33 +81,28 @@ export default function PrivacyPolicy() {
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
           <CardContent className="p-6">
             <h2 className="text-2xl font-semibold mb-4">
-              Changes to This Policy
+              Policy Updates
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              We may update this Privacy Policy from time to time. We will
-              notify you of any changes by posting the new Privacy Policy on
-              this page and updating the &quot;Last updated&quot; date.
+              We reserve the right to modify this Privacy Policy as necessary to reflect changes in our practices, legal requirements, or service offerings. Material changes will be communicated through our platform, and the updated policy will include a revised effective date.
             </p>
           </CardContent>
         </Card>
 
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
           <CardContent className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
+            <h2 className="text-2xl font-semibold mb-4">Contact Information</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              If you have any questions about this Privacy Policy, please
-              contact us at:
+              For questions, concerns, or requests regarding this Privacy Policy or your personal information, please contact us at:
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               Email:{" "}
               <a
-                href="mailto:privacy@cosmocrafters.com"
-                className="text-purple-500 hover:text-purple-600"
+                href="mailto:official.convertey@outlook.com"
+                className="text-emerald-500 hover:text-emerald-600"
               >
-                privacy@cosmocrafters.com
+                official.convertey@outlook.com
               </a>
-              <br />
-              Address: 123 Starship Avenue, Nebula City, CC 90210
             </p>
           </CardContent>
         </Card>

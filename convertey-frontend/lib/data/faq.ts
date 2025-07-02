@@ -1,47 +1,47 @@
 export const faqData = [
   {
-    question: "Why use CosmoConverter?",
+    question: "Why choose Convertey?",
     answer:
-      "We want to offer users a user-friendly, fast and reliable file conversion services. Speed and quality are our top priorities, and we strive to provide the best possible experience for our users. Whether you need to convert documents, images, audio, video, or other file types, CosmoConverter has you covered.",
+      "Convertey delivers fast, reliable, and secure file conversion services with an intuitive user experience. We prioritize speed, quality, and simplicity to ensure seamless conversions across documents, images, audio, video, and other file formats.",
   },
   {
-    question: "What file formats does CosmoConverter support?",
+    question: "What file formats does Convertey support?",
     answer:
-      "CosmoConverter supports a wide range of file formats, including documents (PDF, DOCX, TXT), images (JPG, PNG, GIF), audio (MP3, WAV), video (MP4, AVI), and many more. Check out our conversion options for a full list of supported formats.",
+      "Convertey supports an extensive range of file formats including documents (PDF, DOCX, TXT, XLSX, PPT), images (JPG, PNG, GIF, SVG, WEBP), audio (MP3, WAV, FLAC, AAC), video (MP4, AVI, MOV, MKV), and many others. Visit our conversion tools to explore all supported formats.",
   },
   {
-    question: "Is CosmoConverter free to use?",
+    question: "Is Convertey free to use?",
     answer:
-      "Yes, CosmoConverter offers a free tier with basic conversion features. We also offer premium plans for users who need advanced features, higher file size limits, or bulk conversions.",
+      "Yes, Convertey offers a comprehensive free tier with essential conversion features. Premium plans are available for users requiring advanced functionality, higher file size limits, and batch processing capabilities.",
   },
   {
-    question: "How secure are my files during the conversion process?",
+    question: "How secure are my files during conversion?",
     answer:
-      "We take your privacy and security seriously. All file transfers are encrypted, and we do not store your files after conversion. Files are automatically deleted from our servers after the conversion is complete.",
+      "Security and privacy are fundamental to Convertey. All file transfers use end-to-end encryption, files are processed in secure environments, and data is automatically purged from our servers immediately after conversion completion.",
   },
   {
-    question: "What is the maximum file size I can convert?",
+    question: "What are the file size limits?",
     answer:
-      "For free users, the maximum file size is 100MB per conversion. Premium users can convert files up to 1GB. If you need to convert larger files, please contact our support team for custom solutions.",
+      "Free users can convert files up to 100MB per conversion. Premium subscribers enjoy increased limits up to 1GB per file. For enterprise-level requirements, custom solutions are available upon request.",
   },
   {
-    question: "How long does the conversion process take?",
+    question: "How fast is the conversion process?",
     answer:
-      "Conversion time depends on the file size and type, but most conversions are completed within seconds. Larger files or more complex conversions may take a few minutes.",
+      "Most conversions complete within seconds thanks to our optimized infrastructure. Processing time varies based on file size, format complexity, and current server load, with larger files typically requiring 1-3 minutes.",
   },
   {
-    question: "Can I convert multiple files at once?",
+    question: "Does Convertey support batch conversions?",
     answer:
-      "Yes, CosmoConverter supports batch conversions. Free users can only convert up to 3 files simultaneously, while premium users have higher or unlimited batch conversion limits depending on their plan.",
+      "Yes, Convertey supports efficient batch processing. Free users can convert up to 3 files simultaneously, while premium users enjoy higher concurrent conversion limits based on their subscription tier.",
   },
   {
-    question: "Is there a limit to how many files I can convert?",
+    question: "Are there daily conversion limits?",
     answer:
-      "Free users can perform up to 5 conversions per day. Premium users have higher or unlimited daily conversion limits based on their subscription plan.",
+      "Free accounts include 5 conversions per day. Premium subscribers receive significantly higher or unlimited daily conversion quotas depending on their selected plan.",
   },
   {
-    question: "If I have any issues or questions, how can I contact support?",
+    question: "How can I get support?",
     answer:
-      "If you have any questions or need assistance, please reach us out through our social handlers, use the contact form on our website, or send an email to us at official.cosmoconverters@gmail.com",
+      "Our support team is available through multiple channels: contact form on our website, email us at support@convertey.com, or connect with us on our social media platforms for quick assistance.",
   },
 ];

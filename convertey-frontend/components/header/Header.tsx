@@ -118,7 +118,7 @@ export default function Header() {
 
   return (
     <header className="bg-transparent backdrop-blur-md dark:bg-opacity-33 shadow-md z-20 sticky top-0">
-      <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <nav className="container mx-auto px-4 py-2 flex justify-between items-center">
         <Link href="/" className="flex items-center ml-2 mt-1">
           <Image
             src="/convertey-logo-transparent.png"
@@ -138,7 +138,6 @@ export default function Header() {
           )}
           <NavLink href="/about">About Us</NavLink>
           <NavLink href="/pricing">Pricing</NavLink>
-          <NavLink href="/tools">Tools</NavLink>
           <NavLink href="/contact">Contact Us</NavLink>
           <NavLink href="/donate">Donate</NavLink>
           {user && <>{/* <NavLink href="/profile">Profile</NavLink> */}</>}

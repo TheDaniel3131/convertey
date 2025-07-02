@@ -10,7 +10,7 @@ export default function FAQ() {
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
-        <h2 className="py-4 text-4xl font-bold mb-8 text-center">
+        <h2 className="py-4 text-4xl font-bold mb-8 text-center text-emerald-500 dark:text-emerald-600">
           Frequently Asked Questions
         </h2>
         <Accordion
