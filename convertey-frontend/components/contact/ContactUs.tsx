@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-// import { useCallback } from "react";
-// import { useDropzone } from "react-dropzone";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@/components/ui/button";
@@ -13,7 +11,6 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import ContactInfo from "@/components/elements/contact/ContactInfo";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-// import { UploadCloud } from "lucide-react";
 
 export default function ContactUs() {
   const [name, setName] = useState("");
@@ -70,27 +67,15 @@ export default function ContactUs() {
     }
   };
 
-  // const onDrop = useCallback((acceptedFiles: File[]) => {
-  //   setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
-  // }, []);
-
-  // const { getRootProps, getInputProps } = useDropzone({
-  //   onDrop,
-  //   accept: {
-  //     "image/*": [],
-  //     "video/*": [],
-  //   },
-  // });
-
   return (
     <main className="container mx-auto px-4 py-16 relative z-10 overflow-y">
-      <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+      <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-600">
         Contact Us
       </h1>
       <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
         <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
           <CardHeader>
-            <CardTitle>Send Us a Message</CardTitle>
+            <CardTitle className="text-lg">Send Us a Message</CardTitle>
           </CardHeader>
           <CardContent>
             <form className="space-y-4" onSubmit={handleSubmit}>
@@ -144,34 +129,10 @@ export default function ContactUs() {
                   required
                 />
               </div>
-              {/* <div>
-                <div
-                  {...getRootProps({
-                    className:
-                      "border-2 border-dashed border-gray-400 rounded-lg p-4 text-center cursor-pointer",
-                  })}
-                >
-                  <input {...getInputProps()} />
-                  <div className="flex flex-col items-center">
-                    <UploadCloud className="mb-2 h-6 w-6" />
-                    <p className="text-sm text-muted-foreground">
-                      Drag &apos;n&apos; drop files here, or click to select
-                      files
-                      <br />
-                      (Images and videos only)
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-2 text-sm">
-                  {files.map((file) => (
-                    <div key={file.name}>{file.name}</div>
-                  ))}
-                </div>
-              </div> */}
               <Button
                 type="submit"
                 disabled={status === "loading"}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-full"
+                className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-full"
               >
                 {status === "loading" ? "Sending..." : "Send Message"}
               </Button>
@@ -192,35 +153,37 @@ export default function ContactUs() {
         </Card>
 
         <div className="space-y-6">
-          <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
+          <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg py-2">
             <CardHeader>
-              <CardTitle>Contact Information</CardTitle>
+              <CardTitle className="text-2xl">Contact Information</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <ContactInfo
-                  icon={<Mail />}
-                  text="official.cosmocrafters@gmail.com"
+                  icon={<Mail className="text-emerald-500"/>}
+                  text="official.convertey@outlook.com"
                 />
-                <ContactInfo icon={<Phone />} text="+1 (888) COSMOS-00" />
+                <ContactInfo icon={<Phone className="text-emerald-500"/>} text="+60 3-1234 5678" />
                 <ContactInfo
-                  icon={<MapPin />}
-                  text="123 Starship Avenue, Nebula City, CC 90210"
+                  icon={<MapPin className="text-emerald-500"/>}
+                  text="Kuala Lumpur, Malaysia"
                 />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
+          <Card className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg h-fit py-4">
             <CardHeader>
-              <CardTitle>Office Hours</CardTitle>
+              <CardTitle className="text-2xl">Office Hours</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 dark:text-gray-300">
-                Monday - Friday: 9AM - 6PM (Galactic Standard Time)
-                <br />
-                Saturday: 10AM - 2PM (GST)
-              </p>
+              <div className="space-y-4">
+                <p className="text-gray-600 dark:text-gray-300">
+                  Monday - Friday: 9AM - 5PM (MYT)
+                  <br />
+                  Saturday: 10AM - 2PM (MYT)
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
