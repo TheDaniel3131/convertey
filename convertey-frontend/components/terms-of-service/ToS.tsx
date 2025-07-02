@@ -192,8 +192,8 @@ export default function ToS() {
               >
                 official.convertey@outlook.com
               </a>
-              <br />
-              Business Address: 123 Innovation Drive, Tech Valley, CV 90210
+              {/* <br />
+              Business Address: None */}
             </p>
           </CardContent>
         </Card>
