@@ -8,7 +8,7 @@ import type { FileUploadProps } from "@/types/FileUploadProps";
 export default function FileUpload({
   onConvert,
   maxSizeMB = 25,
-  allowedGroups = Object.keys(FORMAT_GROUPS) as Array<
+  allowedGroups = Object.keys(FORMAT_GROUPS).filter(group => group !== 'video') as Array<
     keyof typeof FORMAT_GROUPS
   >,
 }: FileUploadProps) {
@@ -105,14 +105,14 @@ export default function FileUpload({
         className={`
           bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg p-8 rounded-lg 
           transition-all duration-300 hover:shadow-xl 
-          ${dragActive ? "border-2 border-purple-500 bg-purple-50/10" : ""}
+          ${dragActive ? "border-2 border-emerald-500 bg-emerald-50/10" : ""}
         `}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
       >
         <div className="mb-6 transform transition-transform duration-300 hover:scale-110">
-          <FileUp className="h-12 w-12 text-purple-500 mx-auto" />
+          <FileUp className="h-12 w-12 text-emerald-500 mx-auto" />
         </div>
 
         <div className="space-y-4">
@@ -153,7 +153,7 @@ export default function FileUpload({
               </div>
               <Button
                 onClick={handleConvert}
-                className="bg-purple-500 hover:bg-purple-600 text-white"
+                className="bg-emerald-500 hover:bg-emerald-600 text-white"
               >
                 Convert
               </Button>

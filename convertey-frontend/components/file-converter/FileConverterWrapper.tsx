@@ -19,8 +19,8 @@ import {
  * initiate the conversion process. The component handles file type detection, displays available
  * conversion formats, and manages the conversion state and progress.
  *
- * Free users can try the file conversion feature three times. If they need to convert more than
- * three files, they are required to subscribe to one of our plans from the pricing page.
+ * Free users can try the file conversion feature five times. If they need to convert more than
+ * five files, they are required to subscribe to one of our plans from the pricing page.
  *
  * @component
  * @example
@@ -187,36 +187,37 @@ export default function FileConverterWrapper() {
   };
 
   return (
-    <section className="py-16 bg-transparent rounded-lg overflow-hidden relative">
-      <div className="absolute inset-0 opacity-50 bg-gray-200 dark:bg-gray-800"></div>
-      <div className="max-w-3xl mx-auto px-4 relative">
-        <h2 className="py-4 text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600">
-          Try Converting Files with CosmoConverter
-        </h2>
-        <p className="text-lg text-center text-gray-700 dark:text-gray-300 mb-8">
-          We provide the platform for converting files from one format to
-          another. It allows users to upload a file, select a target format, and
-          initiate the conversion process.
-        </p>
-        <p className="text-lg text-center text-gray-700 dark:text-gray-300 mb-8">
-          Free users can try the file conversion feature three times. If they
-          need to convert more than three files, they are required to subscribe
-          to one of our plans from the pricing page.
-        </p>
+    <section className="py-20 bg-gradient-to-br from-slate-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center">
+      <div className="max-w-4xl mx-auto px-6 w-full">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
+            Try Converting Files with Convertey
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-4 max-w-2xl mx-auto leading-relaxed">
+            Transform your files seamlessly with our powerful conversion platform. 
+            Upload, select your target format, and convert with enterprise-grade reliability.
+          </p>
+          <p className="text-lg text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
+            Free users can convert up to <span className="font-semibold text-emerald-600">five files</span>. 
+            For unlimited conversions, explore our premium plans.
+          </p>
+        </div>
 
-        <div className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-lg p-8 rounded-lg transition-all duration-300 hover:shadow-xl">
+        {/* Converter Section */}
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-8 md:p-12">
           <FileUpload onConvert={handleFileUpload} maxSizeMB={25} />
 
           {selectedFile && availableFormats.length > 0 && (
-            <div className="mt-6 space-y-4">
-              <div className="flex flex-col sm:flex-row justify-center gap-2">
+            <div className="mt-8 space-y-6">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <div className="relative group">
                   <select
                     value={targetFormat}
                     onChange={(e) =>
                       setTargetFormat(e.target.value as ConversionFormat)
                     }
-                    className="px-3 py-2 rounded-lg bg-white/10 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700"
+                    className="px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-gray-700 dark:text-gray-200 font-medium min-w-[200px]"
                   >
                     {availableFormats.map((format) => (
                       <option key={format} value={format}>
@@ -224,14 +225,14 @@ export default function FileConverterWrapper() {
                       </option>
                     ))}
                   </select>
-                  <div className="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap">
+                  <div className="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap z-10">
                     {FORMAT_DESCRIPTIONS[targetFormat]}
                   </div>
                 </div>
 
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-full transition-all duration-300"
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
                   onClick={handleFileConvert}
                   disabled={isConverting}
                 >
@@ -248,14 +249,16 @@ export default function FileConverterWrapper() {
                 </Button>
               </div>
 
-              <p className="text-center text-sm text-gray-700 dark:text-gray-300">
-                Converting: {selectedFile.name}
-              </p>
+              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-center">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                  Converting: <span className="text-emerald-600 dark:text-emerald-400">{selectedFile.name}</span>
+                </p>
+              </div>
 
               {conversionProgress > 0 && conversionProgress < 100 && (
-                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                <div className="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700 overflow-hidden">
                   <div
-                    className="bg-purple-600 h-2.5 rounded-full transition-all duration-300"
+                    className="bg-gradient-to-r from-emerald-500 to-teal-500 h-3 rounded-full transition-all duration-500 ease-out"
                     style={{ width: `${conversionProgress}%` }}
                   ></div>
                 </div>
@@ -264,16 +267,18 @@ export default function FileConverterWrapper() {
           )}
 
           {error && (
-            <Alert variant="destructive" className="mt-4">
+            <Alert variant="destructive" className="mt-6 border-red-200 bg-red-50 dark:bg-red-900/20">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription className="text-red-700 dark:text-red-300">{error}</AlertDescription>
             </Alert>
           )}
         </div>
 
         {selectedFile && (
-          <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-            <p>Need a different format? Let us know!</p>
+          <div className="mt-8 text-center">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Need a different format? <span className="text-emerald-600 hover:text-emerald-700 cursor-pointer font-medium">Contact us</span> for custom conversions!
+            </p>
           </div>
         )}
       </div>

@@ -5,11 +5,11 @@ import PricingCard from "../elements/pricing/PricingCard";
 export default function Pricing() {
   return (
     <main className="container mx-auto px-4 py-16 relative z-10">
-      <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-        Choose Your Cosmic Plan
+      <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-600">
+        Choose Your Plan
       </h1>
       <p className="text-xl mb-12 text-center text-gray-600 dark:text-gray-400">
-        Unlock the full potential of Cosmo Converter with our flexible pricing
+        Unlock the full potential of Convertey with our flexible pricing
         options
       </p>
       <div className="grid md:grid-cols-3 gap-8">
@@ -65,13 +65,13 @@ export default function Pricing() {
         </p>
         <ul className="text-left max-w-md mx-auto mb-8">
           <li className="flex items-center mb-2">
-            <Check className="mr-2 text-green-500" /> $0.05 per conversion
+            <Check className="mr-2 text-emerald-500" /> $0.05 per conversion
           </li>
           <li className="flex items-center mb-2">
-            <Check className="mr-2 text-green-500" /> No monthly commitment
+            <Check className="mr-2 text-emerald-500" /> No monthly commitment
           </li>
           <li className="flex items-center">
-            <Check className="mr-2 text-green-500" /> Access to all file formats
+            <Check className="mr-2 text-emerald-500" /> Access to all file formats
           </li>
         </ul>
         <Button variant="outline">Start Converting</Button>
