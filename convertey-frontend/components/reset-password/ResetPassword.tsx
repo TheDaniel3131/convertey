@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -31,22 +31,56 @@ export default function ResetPasswordPage({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createSupabaseClient();
 
   useEffect(() => {
     let isMounted = true;
 
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (isMounted && !data.session) {
-        router.replace("/login");
+    const validateSession = async () => {
+      try {
+        // Check if we have reset tokens in the URL
+        const accessToken = searchParams.get('access_token');
+        const refreshToken = searchParams.get('refresh_token');
+        const type = searchParams.get('type');
+
+        if (accessToken && refreshToken && type === 'recovery') {
+          // This is a password reset from email link
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (error) {
+            console.error('Error setting session:', error);
+            setError("Invalid or expired reset link");
+            return;
+          }
+        } else {
+          // No tokens in URL, check if we have an existing session
+          const { data } = await supabase.auth.getSession();
+          if (!data.session) {
+            // No session and no tokens = redirect to login
+            if (isMounted) {
+              router.replace("/login");
+              return;
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Session validation error:', err);
+        if (isMounted) {
+          setError("An error occurred while validating your session");
+        }
       }
-    })();
+    };
+
+    validateSession();
 
     return () => {
       isMounted = false;
     };
-  }, [supabase, router]);
+  }, [supabase, router, searchParams]);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
