@@ -31,5 +31,8 @@ export interface PricingCardProps {
   features: string[];
   buttonText: string;
   buttonVariant: "outline" | "default";
+  buttonLink?: string;
+  icon?: string | React.ReactNode;
+  badge?: string;
   highlighted?: boolean;
 }

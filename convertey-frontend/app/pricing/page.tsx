@@ -4,6 +4,9 @@ import type { Metadata } from "next";
 import { pricingMetadata } from "@/app/metadata/pricing";
 import dynamic from "next/dynamic";
 import React, { Suspense } from "react";
+import FeaturesComparison from "@/components/features/FeaturesComparison";
+import AboutPricing from "@/components/faq/AboutPricing";
+import PayPerUseSection from "@/components/features/PayPerUseSection";
 
 const Pricing = dynamic(() => import("@/components/pricing/Pricing"));
 
@@ -17,6 +20,9 @@ export default function PricingPage() {
         <Header />
       </Suspense>
       <Pricing />
+      <FeaturesComparison />
+      <PayPerUseSection />
+      <AboutPricing />
       <Footer />
     </div>
   );
