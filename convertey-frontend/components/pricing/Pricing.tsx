@@ -32,7 +32,7 @@ export default function Pricing() {
   };
 
   return (
-    <main className="container mx-auto px-4 py-10 relative z-10">
+    <main className="container mx-auto px-4 py-16 relative z-10">
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-600">
           Choose Your Perfect Plan

@@ -54,17 +54,17 @@ export default function FileConverterWrapper() {
         return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
       case "xlsx":
         return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-      
+
       // New presentation formats
       case "ppt":
         return "application/vnd.ms-powerpoint";
       case "pptx":
         return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
-      
+
       // New ebook format
       case "epub":
         return "application/epub+zip";
-      
+
       // Existing media formats
       case "csv":
         return "text/csv";
@@ -90,7 +90,7 @@ export default function FileConverterWrapper() {
         return file.type;
     }
   };
-  
+
   const handleFileUpload = (file: File) => {
     console.log("Uploaded file type:", file.type); // Debug log
     console.log("Uploaded file name:", file.name); // Debug log
@@ -191,15 +191,17 @@ export default function FileConverterWrapper() {
       <div className="max-w-4xl mx-auto px-6 w-full">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 bg-clip-text text-transparent pb-2">
             Try Converting Files with Convertey
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-4 max-w-2xl mx-auto leading-relaxed">
-            Transform your files seamlessly with our powerful conversion platform. 
-            Upload, select your target format, and convert with enterprise-grade reliability.
+            Transform your files seamlessly with our powerful conversion
+            platform. Upload, select your target format, and convert with
+            enterprise-grade reliability.
           </p>
           <p className="text-lg text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
-            Free users can convert up to <span className="font-semibold text-emerald-600">five files</span>. 
+            Free users can convert up to{" "}
+            <span className="font-semibold text-emerald-600">five files</span>.
             For unlimited conversions, explore our premium plans.
           </p>
         </div>
@@ -251,7 +253,10 @@ export default function FileConverterWrapper() {
 
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-center">
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                  Converting: <span className="text-emerald-600 dark:text-emerald-400">{selectedFile.name}</span>
+                  Converting:{" "}
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    {selectedFile.name}
+                  </span>
                 </p>
               </div>
 
@@ -267,9 +272,14 @@ export default function FileConverterWrapper() {
           )}
 
           {error && (
-            <Alert variant="destructive" className="mt-6 border-red-200 bg-red-50 dark:bg-red-900/20">
+            <Alert
+              variant="destructive"
+              className="mt-6 border-red-200 bg-red-50 dark:bg-red-900/20"
+            >
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription className="text-red-700 dark:text-red-300">{error}</AlertDescription>
+              <AlertDescription className="text-red-700 dark:text-red-300">
+                {error}
+              </AlertDescription>
             </Alert>
           )}
         </div>
@@ -277,7 +287,11 @@ export default function FileConverterWrapper() {
         {selectedFile && (
           <div className="mt-8 text-center">
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Need a different format? <span className="text-emerald-600 hover:text-emerald-700 cursor-pointer font-medium">Contact us</span> for custom conversions!
+              Need a different format?{" "}
+              <span className="text-emerald-600 hover:text-emerald-700 cursor-pointer font-medium">
+                Contact us
+              </span>{" "}
+              for custom conversions!
             </p>
           </div>
         )}

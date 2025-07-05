@@ -44,7 +44,10 @@ export default function Header() {
     if (error || !data.session?.user) {
       setUser(null);
     } else {
-      setUser({ id: data.session.user.id, email: data.session.user.email ?? "" });
+      setUser({
+        id: data.session.user.id,
+        email: data.session.user.email ?? "",
+      });
     }
   }, [supabase]);
 
@@ -89,7 +92,6 @@ export default function Header() {
     router.push("/");
   };
 
-
   return (
     <header className="bg-transparent backdrop-blur-md dark:bg-opacity-33 shadow-md z-20 sticky top-0">
       <nav className="container mx-auto px-4 py-2 flex justify-between items-center">
@@ -97,10 +99,13 @@ export default function Header() {
           <Image
             src="/convertey-logo-transparent.png"
             alt="Convertey Logo"
-            width={50}
-            height={39}
+            width={35}
+            height={35}
           />
-          <span className="ml-3 text-4xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight" style={{ fontFamily: 'Ebrima' }}>
+          <span
+            className="ml-3 text-3xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight"
+            style={{ fontFamily: "Ebrima" }}
+          >
             Convertey
           </span>
         </Link>
