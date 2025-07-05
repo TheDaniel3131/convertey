@@ -3,35 +3,34 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Rocket, Home } from "lucide-react";
+import { FileX, Home, RefreshCw } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-80px)] bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md mx-auto bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg">
         <CardHeader>
           <div className="text-center">
-            <Rocket className="h-16 w-16 text-purple-400 mx-auto" />
-            <CardTitle className="mt-6 text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-              404 - Lost in Space
+            <FileX className="h-16 w-16 text-emerald-400 mx-auto" />
+            <CardTitle className="mt-6 text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-600 pb-2">
+              404 - Page Not Found
             </CardTitle>
           </div>
         </CardHeader>
         <CardContent className="p-6 text-center">
           <p className="text-xl mb-6 text-gray-600 dark:text-gray-400">
-            Oops! It seems you&apos;ve ventured into uncharted space.
+            The page you&apos;re looking for doesn&apos;t exist.
           </p>
           <div className="mb-6">
-            <Rocket className="inline-block h-24 w-24 text-purple-500 animate-bounce" />
+            <RefreshCw className="inline-block h-24 w-24 text-emerald-500 animate-spin" />
           </div>
           <p className="mb-8 text-gray-600 dark:text-gray-400">
-            Don&apos;t worry, even the best space explorers get lost sometimes.
-            Let&apos;s get you back on course.
+            Let&apos;s get you back to converting your files with Convertey.
           </p>
           <div className="flex justify-center space-x-4">
             <Button
               asChild
-              className="bg-purple-500 hover:bg-purple-600 text-white"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white"
             >
               <Link href="/">
                 <Home className="mr-2 h-4 w-4" />
