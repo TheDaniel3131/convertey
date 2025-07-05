@@ -25,7 +25,7 @@ export interface TeamMemberProps {
 // PricingCardProps: Props for the Pricing component
 export interface PricingCardProps {
   title: string;
-  price: string;
+  price: string | React.ReactNode; // Allow both string and React element
   period?: string;
   description: string;
   features: string[];

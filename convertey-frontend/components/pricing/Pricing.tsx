@@ -1,7 +1,36 @@
+"use client";
+
 import { Star, Zap, Building, Users } from "lucide-react";
 import PricingCard from "../elements/pricing/PricingCard";
+import { useState } from "react";
 
 export default function Pricing() {
+  const [isYearly, setIsYearly] = useState(false);
+
+  const getPrice = (monthlyPrice: number) => {
+    if (isYearly) {
+      const yearlyPrice = monthlyPrice * 12 * 0.83; // 17% discount
+      return Math.round(yearlyPrice);
+    }
+    return monthlyPrice;
+  };
+
+  const getPriceDisplay = (monthlyPrice: number) => {
+    if (isYearly) {
+      const originalYearlyPrice = monthlyPrice * 12;
+      const discountedPrice = getPrice(monthlyPrice);
+      return (
+        <>
+          <span className="line-through text-teal-600">
+            ${originalYearlyPrice}
+          </span>{" "}
+          <span className="text-emerald-400 font-bold">${discountedPrice}</span>
+        </>
+      );
+    }
+    return `$${monthlyPrice}`;
+  };
+
   return (
     <main className="container mx-auto px-4 py-10 relative z-10">
       <div className="text-center mb-16">
@@ -15,7 +44,12 @@ export default function Pricing() {
         <div className="flex justify-center items-center gap-4 mb-8">
           <span className="text-gray-600 dark:text-gray-400">Monthly</span>
           <label className="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" className="sr-only peer" />
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={isYearly}
+              onChange={(e) => setIsYearly(e.target.checked)}
+            />
             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 dark:peer-focus:ring-emerald-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600"></div>
           </label>
           <span className="text-gray-600 dark:text-gray-400">
@@ -30,7 +64,7 @@ export default function Pricing() {
         <PricingCard
           title="Basic"
           price="Free"
-          period=""
+          period={`/${isYearly ? "year" : "month"}`}
           description="Perfect for trying out Convertey"
           features={[
             "5 conversions per day",
@@ -48,8 +82,8 @@ export default function Pricing() {
         {/* Standard Tier */}
         <PricingCard
           title="Standard"
-          price="$4.99"
-          period="/month"
+          price={getPriceDisplay(4.99)}
+          period={`/${isYearly ? "year" : "month"}`}
           description="Ideal for personal use"
           features={[
             "50 conversions per day",
@@ -69,8 +103,8 @@ export default function Pricing() {
         {/* Pro Tier - Most Popular */}
         <PricingCard
           title="Pro"
-          price="$9.99"
-          period="/month"
+          price={getPriceDisplay(9.99)}
+          period={`/${isYearly ? "year" : "month"}`}
           description="For professionals and power users"
           features={[
             "Unlimited conversions",
@@ -87,7 +121,7 @@ export default function Pricing() {
           buttonVariant="default"
           buttonLink="/signup?plan=pro"
           highlighted={true}
-          icon={<Zap className="h-6 w-6 text-white" />}
+          icon={<Zap className="h-6 w-6 text-emerald-500" />}
           badge="Most Popular"
         />
 
