@@ -11,19 +11,30 @@ import {
   Info,
   DollarSign,
   Mail,
-  LayoutDashboard,
+  // LayoutDashboard,
   LogOut,
   LogIn,
   UserPlus,
-  Bell,
+  // Bell,
+  History,
 } from "lucide-react";
 import Link from "next/link";
 import NavLink from "@/components/elements/header/NavLinks";
 import { createSupabaseClient } from "@/lib/utils/supabase/client";
-import { useRouter } from "next/navigation";
-import NotificationsPopover from "@/components/notification/NotificationsPopover";
+import { useRouter, usePathname } from "next/navigation";
+// import NotificationsPopover from "@/components/notification/NotificationsPopover";
 
-export default function Header() {
+/**
+ * Added `forceUnauthenticated` prop so pages such as the password–reset flow
+ * can *pretend* the user is logged‐out even though Supabase holds a temporary
+ * recovery session.  This keeps the Header UI consistent with expectations.
+ */
+export default function Header({
+  forceUnauthenticated = false,
+}: {
+  /**  If `true`, the header will *never* show the signed‑in state  */
+  forceUnauthenticated?: boolean;
+}) {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
@@ -36,8 +47,11 @@ export default function Header() {
     return client;
   });
   const router = useRouter();
+  const pathname = usePathname();
 
-  // Check user authentication status
+  // ---------------------------------------------------------------------------
+  // 1️⃣  Detect the real Supabase session
+  // ---------------------------------------------------------------------------
   const checkUser = useCallback(async () => {
     if (!supabase) return;
     const { data, error } = await supabase.auth.getSession();
@@ -52,38 +66,42 @@ export default function Header() {
   }, [supabase]);
 
   useEffect(() => {
-    console.log("User state:", user);
-  }, [user]);
-
-  useEffect(() => {
-    // Dark mode toggle
+    // Theme -----------------------------------------------------------
     if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
 
-    // Only proceed if Supabase client is available
+    // Auth ------------------------------------------------------------
     if (!supabase) return;
 
     checkUser();
 
-    // Listen for auth changes
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log("Auth state change:", event, session);
-        setUser(
-          session?.user
-            ? { id: session.user.id, email: session.user.email ?? "" }
-            : null
-        );
-      }
-    );
+    // Listen for auth changes so header reacts instantly
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(
+        session?.user
+          ? { id: session.user.id, email: session.user.email ?? "" }
+          : null
+      );
+    });
 
     return () => {
-      authListener.subscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, [darkMode, supabase, checkUser]);
+
+  // ---------------------------------------------------------------------------
+  // 2️⃣  Treat user as *logged‑out* in specific situations
+  //     – For example when we are on a recovery link ("/reset-password"), sign-up
+  // ---------------------------------------------------------------------------
+  const effectiveUser =
+    forceUnauthenticated || pathname.startsWith("/reset-password")
+      ? null
+      : user;
 
   const handleSignOut = async () => {
     if (!supabase) return;
@@ -109,17 +127,14 @@ export default function Header() {
             Convertey
           </span>
         </Link>
+
+        {/* -------------------- Desktop Navigation -------------------- */}
         <div className="hidden md:flex space-x-5 items-center font-semibold">
-          {user && (
-            <>
-              <NavLink href="/dashboard">Dashboard</NavLink>
-            </>
-          )}
+          {/* {effectiveUser && <NavLink href="/dashboard">Dashboard</NavLink>} */}
           <NavLink href="/about">About Us</NavLink>
           <NavLink href="/pricing">Pricing</NavLink>
           <NavLink href="/contact">Contact Us</NavLink>
           <NavLink href="/donate">Donate</NavLink>
-          {user && <>{/* <NavLink href="/profile">Profile</NavLink> */}</>}
           <Button
             variant="outline"
             size="icon"
@@ -133,9 +148,19 @@ export default function Header() {
               <Moon className="h-5 w-5" />
             )}
           </Button>
-          {user ? (
+
+          {/* ---------- Auth controls (hidden if forceUnauthenticated) ---------- */}
+          {effectiveUser ? (
             <>
-              <NotificationsPopover />
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label="History"
+                onClick={() => router.push("/history")}
+                className="rounded-full bg-transparent border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
+              >
+                <History className="h-5 w-5" />
+              </Button>
               <Button
                 variant="outline"
                 size="icon"
@@ -172,6 +197,8 @@ export default function Header() {
             </>
           )}
         </div>
+
+        {/* -------------------- Mobile buttons -------------------- */}
         <div className="md:hidden flex items-center">
           <Button
             variant="outline"
@@ -189,10 +216,7 @@ export default function Header() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => {
-              console.log("Mobile menu open:", !mobileMenuOpen);
-              setMobileMenuOpen(!mobileMenuOpen);
-            }}
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-label="Toggle menu"
             className="rounded-full text-emerald-600 dark:text-emerald-400"
           >
@@ -200,49 +224,52 @@ export default function Header() {
           </Button>
         </div>
       </nav>
+
+      {/* -------------------- Mobile Navigation -------------------- */}
       {mobileMenuOpen && (
         <div className="md:hidden font-semibold text-center items-center justify-center bg-opacity-90 dark:bg-opacity-90 backdrop-blur-md py-2">
           <NavLink
             href="/about"
-            className="py-2 px极-4 flex items-center text-center justify-center my-2"
+            className="py-2 px-4 flex items-center justify-center my-2"
           >
             <Info className="mr-2" /> About
           </NavLink>
           <NavLink
             href="/pricing"
-            className="py-2 px-4 flex items-center text-center justify-center my-2"
+            className="py-2 px-4 flex items-center justify-center my-2"
           >
             <DollarSign className="mr-2" /> Pricing
           </NavLink>
           <NavLink
             href="/contact"
-            className="py-2 px-4 flex items-center text-center justify-center my-2"
+            className="py-2 px-4 flex items-center justify-center my-2"
           >
             <Mail className="mr-2" /> Contact
           </NavLink>
-          {user ? (
+
+          {effectiveUser ? (
             <>
-              <NavLink
+              {/* <NavLink
                 href="/dashboard"
-                className="py-2 px-4 flex items-center text-center justify-center my-2"
+                className="py-2 px-4 flex items-center justify-center my-2"
               >
                 <LayoutDashboard className="mr-2" /> Dashboard
-              </NavLink>
+              </NavLink> */}
               <NavLink
-                href="/profile"
-                className="py-2 px-4 flex items-center text-center justify-center my-2"
+                href="/dashboard/profile/settings"
+                className="py-2 px-4 flex items-center justify-center my-2"
               >
                 <User className="mr-2" /> Profile
               </NavLink>
               <NavLink
-                href="/notifications"
-                className="py-2 px-4 flex items-center text-center justify-center my-2"
+                href="/history"
+                className="py-2 px-4 flex items-center justify-center my-2"
               >
-                <Bell className="mr-2" /> Notifications
+                <History className="mr-2" /> History
               </NavLink>
               <button
                 onClick={handleSignOut}
-                className="py-2 px-4 w-full hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center text-center justify-center my-2"
+                className="py-2 px-4 w-full hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center my-2"
               >
                 <LogOut className="mr-2" /> Sign Out
               </button>
@@ -251,13 +278,13 @@ export default function Header() {
             <>
               <NavLink
                 href="/login"
-                className="py-2 px-4 flex items-center text-center justify-center my-2"
+                className="py-2 px-4 flex items-center justify-center my-2"
               >
                 <LogIn className="mr-2" /> Login
               </NavLink>
               <NavLink
                 href="/signup"
-                className="py-2 px-4 flex items-center text-center justify-center my-2"
+                className="py-2 px-4 flex items-center justify-center my-2"
               >
                 <UserPlus className="mr-2" /> Sign Up
               </NavLink>

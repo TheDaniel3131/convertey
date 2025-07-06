@@ -2,23 +2,24 @@
 
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-// import ResetPasswordPage from "@/components/reset-password/ResetPassword";
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
 
 export default function ResetPasswordRoute() {
   const [isSuccess, setIsSuccess] = useState(false);
-  const ResetPasswordPage = dynamic(() => import("@/components/reset-password/ResetPassword"), {
-  ssr: false,
-  loading: () => <p></p>,
-});
+
+  // Dynamically import to avoid RSC‑to‑client mismatch warnings
+  const ResetPasswordPage = dynamic(
+    () => import("@/components/reset-password/ResetPassword"),
+    {
+      ssr: false,
+      loading: () => <p className="text-center py-10">Loading…</p>,
+    }
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
-      <div className="stars"></div>
-      {/* <Suspense fallback={<p>Loading header...</p>}> */}
-        <Header />
-      {/* </Suspense> */}
+      <Header forceUnauthenticated />
       <ResetPasswordPage setIsSuccess={setIsSuccess} />
       {!isSuccess && <Footer />}
     </div>

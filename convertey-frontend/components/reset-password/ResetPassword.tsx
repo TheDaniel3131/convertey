@@ -40,11 +40,11 @@ export default function ResetPasswordPage({
     const validateSession = async () => {
       try {
         // Check if we have reset tokens in the URL
-        const accessToken = searchParams.get('access_token');
-        const refreshToken = searchParams.get('refresh_token');
-        const type = searchParams.get('type');
+        const accessToken = searchParams.get("access_token");
+        const refreshToken = searchParams.get("refresh_token");
+        const type = searchParams.get("type");
 
-        if (accessToken && refreshToken && type === 'recovery') {
+        if (accessToken && refreshToken && type === "recovery") {
           // This is a password reset from email link
           const { error } = await supabase.auth.setSession({
             access_token: accessToken,
@@ -52,7 +52,7 @@ export default function ResetPasswordPage({
           });
 
           if (error) {
-            console.error('Error setting session:', error);
+            console.error("Error setting session:", error);
             setError("Invalid or expired reset link");
             return;
           }
@@ -68,7 +68,7 @@ export default function ResetPasswordPage({
           }
         }
       } catch (err) {
-        console.error('Session validation error:', err);
+        console.error("Session validation error:", err);
         if (isMounted) {
           setError("An error occurred while validating your session");
         }
@@ -153,7 +153,10 @@ export default function ResetPasswordPage({
           ) : (
             <form onSubmit={handleReset} className="space-y-4">
               <div>
-                <Label htmlFor="new-password" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                <Label
+                  htmlFor="new-password"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block"
+                >
                   New Password
                 </Label>
                 <div className="relative">
@@ -172,13 +175,20 @@ export default function ResetPasswordPage({
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
-                    {showPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <FaEyeSlash className="h-4 w-4" />
+                    ) : (
+                      <FaEye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="confirm-password" className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                <Label
+                  htmlFor="confirm-password"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block"
+                >
                   Confirm Password
                 </Label>
                 <div className="relative">
@@ -197,7 +207,11 @@ export default function ResetPasswordPage({
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     disabled={isLoading}
                   >
-                    {showConfirmPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
+                    {showConfirmPassword ? (
+                      <FaEyeSlash className="h-4 w-4" />
+                    ) : (
+                      <FaEye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -207,7 +221,14 @@ export default function ResetPasswordPage({
                 disabled={isLoading}
                 className="w-full h-11 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-medium rounded-lg transition-all duration-200 flex items-center justify-center"
               >
-                {isLoading ? "Resetting..." : (<><span>Reset Password</span><FaArrowRight className="ml-2 h-4 w-4" /></>)}
+                {isLoading ? (
+                  "Resetting..."
+                ) : (
+                  <>
+                    <span>Reset Password</span>
+                    <FaArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </form>
           )}
@@ -215,7 +236,7 @@ export default function ResetPasswordPage({
 
         <CardFooter className="text-center flex justify-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Back to {" "}
+            Back to{" "}
             <Link
               href="/login"
               className="font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"

@@ -36,7 +36,9 @@ export default function LoginPage() {
       // Check for password reset tokens and redirect immediately
       const type = searchParams?.get("type");
       if (type === "recovery") {
-        console.log("Detected recovery type in URL. Redirecting to reset-password.");
+        console.log(
+          "Detected recovery type in URL. Redirecting to reset-password."
+        );
         // Ensure any existing session (from recovery link) is cleared before redirecting
         // This is good practice but might not always be strictly necessary if reset-password handles it.
         await supabase.auth.signOut();
@@ -112,7 +114,7 @@ export default function LoginPage() {
       if (data.user) {
         console.log("Login successful, redirecting...");
         localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
-        router.push("/dashboard");
+        router.push("/");
       } else {
         console.log("No user data returned");
         setError("Login successful but no user data returned");
