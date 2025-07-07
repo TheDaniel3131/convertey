@@ -8,9 +8,9 @@ import type { FileUploadProps } from "@/types/FileUploadProps";
 export default function FileUpload({
   onConvert,
   maxSizeMB = 25,
-  allowedGroups = Object.keys(FORMAT_GROUPS).filter(group => group !== 'video') as Array<
-    keyof typeof FORMAT_GROUPS
-  >,
+  allowedGroups = Object.keys(FORMAT_GROUPS).filter(
+    (group) => group !== "video"
+  ) as Array<keyof typeof FORMAT_GROUPS>,
 }: FileUploadProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string>("");
@@ -104,7 +104,7 @@ export default function FileUpload({
       <div
         className={`
           bg-white/10 dark:bg-gray-800/30 backdrop-blur-lg p-8 rounded-lg 
-          transition-all duration-300 hover:shadow-xl 
+          transition-all duration-300
           ${dragActive ? "border-2 border-emerald-500 bg-emerald-50/10" : ""}
         `}
         onDrop={handleDrop}
@@ -118,8 +118,9 @@ export default function FileUpload({
         <div className="space-y-4">
           {!selectedFile ? (
             <>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                Drag and drop your file here or click to browse
+              <p className="text-gray-600 font-semibold dark:text-gray-300 leading-relaxed">
+                Drag & Drop your file
+                <span className="text-emerald-500 font-medium"> here</span>
               </p>
               <input
                 type="file"
@@ -129,9 +130,8 @@ export default function FileUpload({
                 accept={getAllowedExtensions()}
               />
               <Button
-                variant="outline"
                 onClick={() => document.getElementById("file-upload")?.click()}
-                className="w-full max-w-xs"
+                className="w-full max-w-xs bg-emerald-500 hover:bg-emerald-600 text-white transition-colors duration-200"
               >
                 Choose File
               </Button>

@@ -191,25 +191,24 @@ export default function FileConverterWrapper() {
       <div className="max-w-4xl mx-auto px-6 w-full">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 bg-clip-text text-transparent pb-2">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 bg-clip-text text-transparent pb-2">
             Try Converting Files with Convertey
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-4 max-w-2xl mx-auto leading-relaxed">
-            Transform your files seamlessly with our powerful conversion
-            platform. Upload, select your target format, and convert with
-            enterprise-grade reliability.
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-4 max-w-2xl mx-auto leading-tight">
+            Transform files seamlessly with our powerful conversion platform.
+            Upload, select your target format, and convert with enterprise-grade
+            reliability.
           </p>
-          <p className="text-lg text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
+          <p className="text-base text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
             Free users can convert up to{" "}
-            <span className="font-semibold text-emerald-600">five files</span>.
-            For unlimited conversions, explore our premium plans.
+            <span className="font-semibold text-emerald-600">5 FILES</span>. For
+            more conversions, explore our plans.
           </p>
         </div>
 
         {/* Converter Section */}
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-8 md:p-12">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-2xl p-8 md:p-12 border-dashed border-2 border-emerald-400 dark:border-emerald-400 transition-all duration-300 hover:shadow-lg hover:border-emerald-300 dark:hover:border-emerald-300">
           <FileUpload onConvert={handleFileUpload} maxSizeMB={25} />
-
           {selectedFile && availableFormats.length > 0 && (
             <div className="mt-8 space-y-6">
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
