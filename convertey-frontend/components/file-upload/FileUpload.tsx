@@ -131,7 +131,7 @@ export default function FileUpload({
               />
               <Button
                 onClick={() => document.getElementById("file-upload")?.click()}
-                className="w-full max-w-xs bg-emerald-500 hover:bg-emerald-600 text-white transition-colors duration-200"
+                className="w-full max-w-xs bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-500 text-white transition-all duration-200  font-semibold text-lg py-6 rounded-lg"
               >
                 Choose File
               </Button>
