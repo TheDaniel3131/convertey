@@ -164,8 +164,8 @@ export default function Header({
               <Button
                 variant="outline"
                 size="icon"
-                aria-label="Settings"
-                onClick={() => router.push("/dashboard/profile/settings")}
+                aria-label="Profile"
+                onClick={() => router.push("/profile")}
                 className="rounded-full bg-transparent border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
               >
                 <User className="h-5 w-5" />
@@ -256,7 +256,7 @@ export default function Header({
                 <LayoutDashboard className="mr-2" /> Dashboard
               </NavLink> */}
               <NavLink
-                href="/dashboard/profile/settings"
+                href="/profile"
                 className="py-2 px-4 flex items-center justify-center my-2"
               >
                 <User className="mr-2" /> Profile
