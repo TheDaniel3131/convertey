@@ -24,3 +24,4 @@ declare module 'officegen' {
     const officegen: OfficeGen;
     export default officegen;
   }
+

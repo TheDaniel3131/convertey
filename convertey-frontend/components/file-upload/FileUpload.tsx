@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { FORMAT_GROUPS } from "@/lib/config/fileUpload";
 import type { FileUploadProps } from "@/types/FileUploadProps";
+// import {
+//   DropdownMenu,
+//   DropdownMenuTrigger,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+// } from "@/components/ui/dropdown-menu";
 
 export default function FileUpload({
   onConvert,
@@ -99,6 +105,82 @@ export default function FileUpload({
     setError("");
   };
 
+  // const handleGoogleDrivePicker = () => {
+  //   window.gapi.load("picker", () => {
+  //     const oauthToken = "YOUR_OAUTH_TOKEN"; // You must obtain this via Google OAuth2
+
+  //     const view = new window.google.picker.View(
+  //       window.google.picker.ViewId.DOCS
+  //     );
+  //     const picker = new window.google.picker.PickerBuilder()
+  //       .setOAuthToken(oauthToken)
+  //       .addView(view)
+  //       .setCallback(async (data: any) => {
+  //         if (data.action === window.google.picker.Action.PICKED) {
+  //           const fileId = data.docs[0].id;
+  //           const fileName = data.docs[0].name;
+
+  //           // You need to fetch the file from Google Drive using Drive API
+  //           const response = await fetch(
+  //             `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+  //             {
+  //               headers: { Authorization: `Bearer ${oauthToken}` },
+  //             }
+  //           );
+  //           const blob = await response.blob();
+  //           const file = new File([blob], fileName, { type: blob.type });
+
+  //           if (validateFile(file)) setSelectedFile(file);
+  //         }
+  //       })
+  //       .build();
+
+  //     picker.setVisible(true);
+  //   });
+  // };
+
+  // const handleDropboxChooser = () => {
+  //   window.Dropbox.choose({
+  //     success: async (files: any[]) => {
+  //       const fileData = files[0];
+  //       const response = await fetch(fileData.link);
+  //       const blob = await response.blob();
+  //       const file = new File([blob], fileData.name, { type: blob.type });
+
+  //       if (validateFile(file)) setSelectedFile(file);
+  //     },
+  //     linkType: "direct",
+  //     multiselect: false,
+  //     extensions: getAllowedExtensions()
+  //       .split(",")
+  //       .map((e) => e.trim()),
+  //   });
+  // };
+
+  // const handleOneDrivePicker = () => {
+  //   const odOptions = {
+  //     clientId: "YOUR_ONEDRIVE_CLIENT_ID",
+  //     action: "download",
+  //     multiSelect: false,
+  //     advanced: {
+  //       filter: getAllowedExtensions(),
+  //     },
+  //     success: async (files: any) => {
+  //       const fileData = files.value[0];
+  //       const response = await fetch(fileData["@microsoft.graph.downloadUrl"]);
+  //       const blob = await response.blob();
+  //       const file = new File([blob], fileData.name, { type: blob.type });
+
+  //       if (validateFile(file)) setSelectedFile(file);
+  //     },
+  //     cancel: () => {},
+  //     error: (e: any) => {
+  //       setError("OneDrive error: " + JSON.stringify(e));
+  //     },
+  //   };
+  //   window.OneDrive.open(odOptions);
+  // };
+
   return (
     <div className="py-8 text-center">
       <div
@@ -131,10 +213,45 @@ export default function FileUpload({
               />
               <Button
                 onClick={() => document.getElementById("file-upload")?.click()}
-                className="w-full max-w-xs bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-500 text-white transition-all duration-200  font-semibold text-lg py-6 rounded-lg"
+                className="w-full max-w-xs bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-500 text-white transition-all duration-200 font-semibold text-lg py-6 rounded-lg"
               >
                 Choose File
               </Button>
+
+              {/* <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="w-full max-w-xs bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-500 text-white transition-all duration-200 font-semibold text-lg py-6 rounded-lg items-center justify-center gap-2">
+                    Choose File <ChevronDown className="w-5 h-5 " />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-full max-w-xs mx-auto">
+                  <DropdownMenuItem
+                    onClick={() =>
+                      document.getElementById("file-upload")?.click()
+                    }
+                  >
+                    Upload from Device
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleGoogleDrivePicker}>
+                    Upload from Google Drive
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDropboxChooser}>
+                    Upload from Dropbox
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleOneDrivePicker}>
+                    Upload from OneDrive
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu> */}
+
+              {/* Hidden file input for "Upload from Device" */}
+              <input
+                type="file"
+                onChange={handleFileChange}
+                className="hidden"
+                id="file-upload"
+                accept={getAllowedExtensions()}
+              />
             </>
           ) : (
             <div className="space-y-4">

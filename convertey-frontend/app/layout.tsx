@@ -3,8 +3,9 @@ import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NotificationsProvider } from "@/components/contexts/NotificationsContext";
-import { Toaster } from 'sonner';
+import { Toaster } from "sonner";
 // import LoadingTransition from "@/components/Transitioning";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,6 +32,25 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* External Scripts */}
+        <Script
+          src="https://apis.google.com/js/api.js"
+          strategy="beforeInteractive"
+        />
+        <Script
+          src="https://www.dropbox.com/static/api/2/dropins.js"
+          strategy="beforeInteractive"
+          id="dropboxjs"
+          data-app-key="YOUR_DROPBOX_APP_KEY"
+        />
+        <Script
+          src="https://js.live.net/v7.2/OneDrive.js"
+          strategy="beforeInteractive"
+        />
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="beforeInteractive"
+        />
         <meta name="apple-mobile-web-app-title" content="Convertey" />
         <meta
           name="viewport"
