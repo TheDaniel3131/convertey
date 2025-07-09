@@ -6,7 +6,7 @@ import { NotificationsProvider } from "@/components/contexts/NotificationsContex
 import { Toaster } from "sonner";
 // import LoadingTransition from "@/components/Transitioning";
 import Script from "next/script";
-import "./globals.css";
+import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
