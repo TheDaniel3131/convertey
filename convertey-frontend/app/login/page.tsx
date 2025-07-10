@@ -16,9 +16,9 @@ export default function LoginPage() {
       <div className="stars"></div>
       <Suspense fallback={<p></p>}>
         <Header />
+        <Login />
+        <Footer />
       </Suspense>
-      <Login />
-      <Footer />
     </div>
   );
 }
