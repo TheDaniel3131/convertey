@@ -14,14 +14,6 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import Image from "next/image";
 import { createSupabaseClient } from "@/lib/utils/supabase/client";
 import { toast } from "sonner";
 import Header from "@/components/header/Header";
@@ -35,17 +27,15 @@ export default function ProfilePage() {
     email: "",
   });
 
+  // const [newPassword, setNewPassword] = useState({
+  //   current: "",
+  //   new: "",
+  //   confirm: "",
+  // });
+
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  // 2FA States
-  const [twoFAEnabled, setTwoFAEnabled] = useState(false);
-  const [qrCodeData, setQrCodeData] = useState<string>("");
-  const [secret, setSecret] = useState<string>("");
-  const [verificationCode, setVerificationCode] = useState<string>("");
-  const [showQRDialog, setShowQRDialog] = useState(false);
-  const [twoFALoading, setTwoFALoading] = useState(false);
 
   // Email validation function
   const isValidEmail = (email: string) => {
@@ -71,9 +61,6 @@ export default function ProfilePage() {
             setAvatarUrl(user.user_metadata.avatar_url);
             setPreviewAvatar(user.user_metadata.avatar_url);
           }
-
-          // Check if 2FA is enabled
-          setTwoFAEnabled(user.user_metadata?.two_factor_enabled || false);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -88,6 +75,10 @@ export default function ProfilePage() {
     const { name, value } = e.target;
     setPersonalInfo({ ...personalInfo, [name]: value });
   };
+
+  // const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setNewPassword({ ...newPassword, [e.target.name]: e.target.value });
+  // };
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -212,101 +203,85 @@ export default function ProfilePage() {
     }
   };
 
-  // Generate QR Code for 2FA setup
-  const generateQRCode = async () => {
-    try {
-      setTwoFALoading(true);
-      const response = await fetch("/api/auth/2fa/qrcode");
-      const data = await response.json();
+  // const handlePasswordSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
 
-      if (response.ok) {
-        setQrCodeData(data.data);
-        setSecret(data.secret);
-        setShowQRDialog(true);
-      } else {
-        throw new Error(data.error || "Failed to generate QR code");
-      }
-    } catch (error) {
-      console.error("Error generating QR code:", error);
-      toast.error("Failed to generate QR code");
-    } finally {
-      setTwoFALoading(false);
-    }
-  };
+  //   if (!newPassword.current || !newPassword.new || !newPassword.confirm) {
+  //     toast.error("Please fill in all password fields");
+  //     return;
+  //   }
 
-  // Verify 2FA code and enable 2FA
-  const verifyAndEnable2FA = async () => {
-    if (!verificationCode || verificationCode.length !== 6) {
-      toast.error("Please enter a 6-digit verification code");
-      return;
-    }
+  //   if (newPassword.new.length < 6) {
+  //     toast.error("New password must be at least 6 characters long");
+  //     return;
+  //   }
 
-    try {
-      setTwoFALoading(true);
+  //   if (newPassword.new !== newPassword.confirm) {
+  //     toast.error("New passwords do not match");
+  //     return;
+  //   }
 
-      // Verify the code with your backend
-      const response = await fetch("/api/auth/2fa/verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: verificationCode,
-          secret: secret,
-        }),
-      });
+  //   // Add check for new password being same as current password
+  //   if (newPassword.new === newPassword.current) {
+  //     toast.error("New password must be different from your current password");
+  //     return;
+  //   }
 
-      const data = await response.json();
+  //   try {
+  //     setLoading(true);
 
-      if (response.ok && data.verified) {
-        // Update user metadata to enable 2FA
-        const { error } = await supabase.auth.updateUser({
-          data: {
-            two_factor_enabled: true,
-            two_factor_secret: secret, // Store the secret securely
-          },
-        });
+  //     // Get the user's email
+  //     const { data: { user } } = await supabase.auth.getUser();
+  //     if (!user?.email) {
+  //       throw new Error('User email not found');
+  //     }
 
-        if (error) throw error;
+  //     // Reauthenticate with current password
+  //     const { error: signInError } = await supabase.auth.signInWithPassword({
+  //       email: user.email,
+  //       password: newPassword.current
+  //     });
 
-        setTwoFAEnabled(true);
-        setShowQRDialog(false);
-        setVerificationCode("");
-        toast.success("Two-factor authentication enabled successfully!");
-      } else {
-        toast.error("Invalid verification code. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error verifying 2FA:", error);
-      toast.error("Failed to verify code");
-    } finally {
-      setTwoFALoading(false);
-    }
-  };
+  //     if (signInError) {
+  //       if (signInError.message.includes("Invalid login credentials")) {
+  //         toast.error("Current password is incorrect");
+  //       } else {
+  //         toast.error(signInError.message);
+  //       }
+  //       return;
+  //     }
 
-  // Disable 2FA
-  const disable2FA = async () => {
-    try {
-      setTwoFALoading(true);
+  //     // Now update the password
+  //     const { error: updateError } = await supabase.auth.updateUser({
+  //       password: newPassword.new
+  //     });
 
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          two_factor_enabled: false,
-          two_factor_secret: null,
-        },
-      });
+  //     if (updateError) {
+  //       if (updateError.message.includes("different from the old password")) {
+  //         toast.error("New password must be different from your current password");
+  //       } else {
+  //         throw updateError;
+  //       }
+  //       return;
+  //     }
 
-      if (error) throw error;
-
-      setTwoFAEnabled(false);
-      toast.success("Two-factor authentication disabled successfully!");
-    } catch (error) {
-      console.error("Error disabling 2FA:", error);
-      toast.error("Failed to disable 2FA");
-    } finally {
-      setTwoFALoading(false);
-    }
-  };
+  //     setNewPassword({ current: "", new: "", confirm: "" });
+  //     toast.success("Password updated successfully");
+  //   } catch (error) {
+  //     console.error('Error updating password:', error);
+  //     if (error instanceof Error) {
+  //       if (error.message.includes("reauthentication")) {
+  //         toast.error("Please try again with your current password");
+  //       } else {
+  //         toast.error(error.message);
+  //       }
+  //     } else {
+  //       toast.error("Failed to update password");
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -441,23 +416,23 @@ export default function ProfilePage() {
                 <Card className="shadow-lg">
                   <CardHeader>
                     <CardTitle className="text-xl text-gray-800 dark:text-white">
-                      Change Your Password
+                      Change Password
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <Button
                       type="button"
                       variant="outline"
-                      className="px-6 py-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900"
+                      className="w-full border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900"
                       onClick={() => {
                         router.push("/profile/change-password");
                       }}
                     >
                       Change Password
                     </Button>
-                    {/* <p className="text-sm text-gray-500 mt-2 text-center">
+                    <p className="text-sm text-gray-500 mt-2 text-center">
                       Click to update your account password
-                    </p> */}
+                    </p>
                   </CardContent>
                 </Card>
 
@@ -475,42 +450,24 @@ export default function ProfilePage() {
                           Authenticator App
                         </h3>
                         <p className="text-sm text-gray-500">
-                          {twoFAEnabled
-                            ? "Two-factor authentication is currently enabled"
-                            : "Use an authenticator app to generate secure codes"}
+                          Use an authenticator app to generate secure codes
                         </p>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        {twoFAEnabled && (
-                          <div className="flex items-center space-x-2">
-                            <div className="h-2 w-2 bg-green-500 rounded-full"></div>
-                            <span className="text-sm text-green-600 font-medium">
-                              Enabled
-                            </span>
-                          </div>
-                        )}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          disabled={twoFALoading}
-                          className={`${
-                            twoFAEnabled
-                              ? "border-red-600 text-red-600 hover:bg-red-50"
-                              : "border-emerald-600 text-emerald-600 hover:bg-emerald-50"
-                          } dark:hover:bg-emerald-900`}
-                          onClick={twoFAEnabled ? disable2FA : generateQRCode}
-                        >
-                          {twoFALoading
-                            ? "Processing..."
-                            : twoFAEnabled
-                            ? "Disable"
-                            : "Enable"}
-                        </Button>
-                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900"
+                        onClick={() => {
+                          // Handle 2FA setup logic here
+                          toast.info("2FA setup functionality coming soon");
+                        }}
+                      >
+                        Enable
+                      </Button>
                     </div>
 
-                    {/* <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex-1">
                         <h3 className="font-medium text-gray-900 dark:text-white">
                           SMS Authentication
@@ -525,12 +482,13 @@ export default function ProfilePage() {
                         size="sm"
                         className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900"
                         onClick={() => {
+                          // Handle SMS 2FA setup logic here
                           toast.info("SMS 2FA setup functionality coming soon");
                         }}
                       >
                         Enable
                       </Button>
-                    </div> */}
+                    </div>
 
                     <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                       <div className="flex items-start">
@@ -565,65 +523,72 @@ export default function ProfilePage() {
                 </Card>
               </div>
             </TabsContent>
+            {/* <form onSubmit={handlePasswordSubmit}>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="currentPassword" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Current Password
+                    </Label>
+                    <Input
+                      id="currentPassword"
+                      name="current"
+                      type="password"
+                      value={newPassword.current}
+                      onChange={handlePasswordChange}
+                      disabled={loading}
+                      className="mt-1"
+                      placeholder="Enter your current password"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="newPassword" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      New Password
+                    </Label>
+                    <Input
+                      id="newPassword"
+                      name="new"
+                      type="password"
+                      value={newPassword.new}
+                      onChange={handlePasswordChange}
+                      disabled={loading}
+                      className="mt-1"
+                      placeholder="Enter your new password"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Password must be at least 6 characters long</p>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Confirm New Password
+                    </Label>
+                    <Input
+                      id="confirmPassword"
+                      name="confirm"
+                      type="password"
+                      value={newPassword.confirm}
+                      onChange={handlePasswordChange}
+                      disabled={loading}
+                      className="mt-1"
+                      placeholder="Confirm your new password"
+                    />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button 
+                    type="submit" 
+                    disabled={loading}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                  >
+                    {loading ? "Updating..." : "Change Password"}
+                  </Button>
+                </CardFooter>
+              </form> */}
+            {/* </Card>
+            </TabsContent> */}
           </Tabs>
         </div>
       </div>
-
-      {/* 2FA Setup Dialog */}
-      <Dialog open={showQRDialog} onOpenChange={setShowQRDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Set up Two-Factor Authentication</DialogTitle>
-            <DialogDescription>
-              Scan the QR code below with your authenticator app, then enter the
-              6-digit code to verify.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col items-center space-y-4">
-            {qrCodeData && (
-              <div className="flex justify-center p-4 bg-white rounded-lg">
-                <Image
-                  src={qrCodeData}
-                  alt="QR Code"
-                  width={192}
-                  height={192}
-                  className="w-48 h-48"
-                />
-              </div>
-            )}
-            <div className="w-full space-y-2">
-              <Label htmlFor="verification-code">Verification Code</Label>
-              <Input
-                id="verification-code"
-                placeholder="Enter 6-digit code"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                maxLength={6}
-                className="text-center text-lg tracking-widest"
-              />
-            </div>
-            <div className="flex space-x-3 w-full">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowQRDialog(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="button"
-                onClick={verifyAndEnable2FA}
-                disabled={twoFALoading || verificationCode.length !== 6}
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
-              >
-                {twoFALoading ? "Verifying..." : "Verify & Enable"}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       <Footer />
     </div>
   );
