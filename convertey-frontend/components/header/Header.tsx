@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sun,
@@ -17,6 +17,8 @@ import {
   UserPlus,
   // Bell,
   History,
+  Settings,
+  ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
 import NavLink from "@/components/elements/header/NavLinks";
@@ -37,6 +39,7 @@ export default function Header({
 }) {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [supabase] = useState(() => {
     const client = createSupabaseClient();
@@ -48,6 +51,7 @@ export default function Header({
   });
   const router = useRouter();
   const pathname = usePathname();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // ---------------------------------------------------------------------------
   // 1️⃣  Detect the real Supabase session
@@ -64,6 +68,20 @@ export default function Header({
       });
     }
   }, [supabase]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     // Theme -----------------------------------------------------------
@@ -107,7 +125,17 @@ export default function Header({
     if (!supabase) return;
     await supabase.auth.signOut();
     await checkUser(); // force refresh
+    setProfileDropdownOpen(false); // Close dropdown
     router.push("/");
+  };
+
+  const handleProfileDropdownToggle = () => {
+    setProfileDropdownOpen(!profileDropdownOpen);
+  };
+
+  const handleDropdownItemClick = (path: string) => {
+    setProfileDropdownOpen(false);
+    router.push(path);
   };
 
   return (
@@ -152,31 +180,56 @@ export default function Header({
           {/* ---------- Auth controls (hidden if forceUnauthenticated) ---------- */}
           {effectiveUser ? (
             <>
-              <Button
-                variant="outline"
-                size="icon"
-                aria-label="History"
-                onClick={() => router.push("/history")}
-                className="rounded-full bg-transparent border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
-              >
-                <History className="h-5 w-5" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                aria-label="Profile"
-                onClick={() => router.push("/profile")}
-                className="rounded-full bg-transparent border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
-              >
-                <User className="h-5 w-5" />
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleSignOut}
-                className="rounded-full border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400"
-              >
-                Sign Out
-              </Button>
+              {/* Profile Dropdown */}
+              <div className="relative" ref={dropdownRef}>
+                <Button
+                  variant="outline"
+                  onClick={handleProfileDropdownToggle}
+                  className="rounded-full border-emerald-400 dark:border-emerald-600 text-emerald-600 dark:text-emerald-400 flex items-center space-x-2"
+                >
+                  <User className="h-4 w-4" />
+                  <ChevronDown className={`h-4 w-4 transition-transform ${profileDropdownOpen ? 'rotate-180' : ''}`} />
+                </Button>
+                
+                {profileDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700">
+                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {effectiveUser.email}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleDropdownItemClick("/profile")}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                    >
+                      <User className="h-4 w-4" />
+                      <span>Profile</span>
+                    </button>
+                    <button
+                      onClick={() => handleDropdownItemClick("/history")}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                    >
+                      <History className="h-4 w-4" />
+                      <span>History</span>
+                    </button>
+                    <button
+                      onClick={() => handleDropdownItemClick("/settings")}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                    >
+                      <Settings className="h-4 w-4" />
+                      <span>Settings</span>
+                    </button>
+                    <hr className="border-gray-200 dark:border-gray-700 my-1" />
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <>
@@ -266,6 +319,12 @@ export default function Header({
                 className="py-2 px-4 flex items-center justify-center my-2"
               >
                 <History className="mr-2" /> History
+              </NavLink>
+              <NavLink
+                href="/settings"
+                className="py-2 px-4 flex items-center justify-center my-2"
+              >
+                <Settings className="mr-2" /> Settings
               </NavLink>
               <button
                 onClick={handleSignOut}
