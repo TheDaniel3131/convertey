@@ -68,8 +68,8 @@ export default function Pricing() {
           description="Perfect for trying out Convertey"
           features={[
             "5 conversions per day",
-            "Max file size: 10MB",
-            "20+ basic file formats",
+            "Max file size: 4MB",
+            "10+ basic file formats",
             "Standard conversion speed",
             "Community support",
           ]}

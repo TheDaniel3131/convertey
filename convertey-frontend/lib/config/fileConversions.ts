@@ -2,10 +2,14 @@ import type { ConversionFormat } from "@/types/FileConversionFormats";
 
 export const CONVERSION_MAP: Record<string, ConversionFormat[]> = {
   // Image formats
-  "image/jpeg": ["png", "webp", "pdf"],
-  "image/png": ["jpg", "webp", "pdf"],
-  "image/gif": ["png", "jpg", "webp"],
-  "image/webp": ["png", "jpg", "pdf"],
+  "image/jpeg": ["png", "webp"],
+  "image/png": ["jpg", "webp"],
+  // "image/gif": ["png", "jpg"],
+  "image/webp": ["png", "jpg"],
+  // "image/bmp": ["png", "jpg", "webp"],
+  // "image/tiff": ["png", "jpg", "webp"],
+  // "image/svg+xml": ["png", "jpg", "webp"],
+  // "image/heic": ["png", "jpg", "webp"],
 
   // Document formats
   "application/pdf": ["docx", "txt", "png", "jpg"],
@@ -35,11 +39,11 @@ export const CONVERSION_MAP: Record<string, ConversionFormat[]> = {
   "application/epub+zip": ["pdf", "txt"],
 
   // Video formats
-  "video/mp4": ["webm", "mov", "avi", "flv", "mp3"], // Extract audio to mp3
-  "video/webm": ["mp4", "mov", "avi", "flv", "mp3"],
-  "video/quicktime": ["mp4", "mov", "avi", "flv", "mp3"],
-  "video/x-msvideo": ["mp4", "mov", "avi", "flv", "mp3"],
-  "video/x-flv": ["mp4", "mov", "avi", "flv", "mp3"],
+  // "video/mp4": ["webm", "mov", "avi", "flv", "mp3"], // Extract audio to mp3
+  // "video/webm": ["mp4", "mov", "avi", "flv", "mp3"],
+  // "video/quicktime": ["mp4", "mov", "avi", "flv", "mp3"],
+  // "video/x-msvideo": ["mp4", "mov", "avi", "flv", "mp3"],
+  // "video/x-flv": ["mp4", "mov", "avi", "flv", "mp3"],
 
   // Audio formats
   "audio/mpeg": ["wav", "ogg", "flac"],
@@ -70,11 +74,11 @@ export const MIME_TYPES: Record<ConversionFormat, string> = {
   epub: "application/epub+zip",
 
   // Video MIME types
-  mp4: "video/mp4",
-  webm: "video/webm",
-  mov: "video/quicktime",
-  avi: "video/x-msvideo",
-  flv: "video/x-flv",
+  // mp4: "video/mp4",
+  // webm: "video/webm",
+  // mov: "video/quicktime",
+  // avi: "video/x-msvideo",
+  // flv: "video/x-flv",
 
   // Audio MIME types
   mp3: "audio/mpeg",
@@ -104,11 +108,11 @@ export const FORMAT_DESCRIPTIONS: Record<ConversionFormat, string> = {
   epub: "Electronic publication format for e-books",
 
   // Video format descriptions
-  mp4: "Most widely supported video format",
-  webm: "Open-source video format with good compression",
-  mov: "Apple QuickTime video format",
-  avi: "Microsoft Audio Video Interleave format",
-  flv: "Flash Video format",
+  // mp4: "Most widely supported video format",
+  // webm: "Open-source video format with good compression",
+  // mov: "Apple QuickTime video format",
+  // avi: "Microsoft Audio Video Interleave format",
+  // flv: "Flash Video format",
 
   // Audio format descriptions
   mp3: "Popular compressed audio format",
