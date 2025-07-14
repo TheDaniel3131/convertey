@@ -192,9 +192,9 @@ export default function FileConverterWrapper() {
             reliability.
           </p>
           <p className="text-base text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
-            Free users can convert up to{" "}
-            <span className="font-semibold text-emerald-600">5 FILES</span>. For
-            more conversions, explore our plans.
+            Free users can convert{" "}
+            <span className="font-semibold text-emerald-600">5 FILES </span>
+            daily. For more conversions, explore our plans.
           </p>
         </div>
 
