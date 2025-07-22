@@ -1,0 +1,322 @@
+"use client";
+
+import React, { useState, ReactElement } from 'react';
+import { 
+  BarChart3, 
+  TrendingUp, 
+  FileText, 
+  Users, 
+  Download, 
+  Clock, 
+  Filter,
+  Calendar,
+  ArrowUp,
+  ArrowDown,
+  FileImage,
+  FileVideo,
+  Music,
+  Archive,
+  Zap
+} from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+
+const AnalyticsPage = () => {
+  const [timeRange, setTimeRange] = useState('7d');
+  const [selectedMetric, setSelectedMetric] = useState('conversions');
+
+  // Sample data - replace with real data from your backend
+  const summaryStats = {
+    totalConversions: 12847,
+    totalUsers: 2341,
+    avgConversionTime: 2.4,
+    successRate: 98.5,
+    totalStorage: 145.6,
+    peakHour: '2:00 PM'
+  };
+
+  const dailyConversions = [
+    { date: '2024-01-01', conversions: 145, users: 89, failed: 3 },
+    { date: '2024-01-02', conversions: 234, users: 134, failed: 5 },
+    { date: '2024-01-03', conversions: 189, users: 112, failed: 2 },
+    { date: '2024-01-04', conversions: 298, users: 178, failed: 8 },
+    { date: '2024-01-05', conversions: 267, users: 156, failed: 4 },
+    { date: '2024-01-06', conversions: 345, users: 201, failed: 7 },
+    { date: '2024-01-07', conversions: 378, users: 223, failed: 6 }
+  ];
+
+  const fileTypeData = [
+    { type: 'PDF', count: 3245, percentage: 25.2, color: '#ef4444' },
+    { type: 'Images', count: 2876, percentage: 22.4, color: '#3b82f6' },
+    { type: 'Documents', count: 2234, percentage: 17.4, color: '#10b981' },
+    { type: 'Videos', count: 1987, percentage: 15.5, color: '#f59e0b' },
+    { type: 'Audio', count: 1456, percentage: 11.3, color: '#8b5cf6' },
+    { type: 'Archives', count: 1049, percentage: 8.2, color: '#06b6d4' }
+  ];
+
+  const conversionPaths = [
+    { from: 'DOCX', to: 'PDF', count: 1234 },
+    { from: 'JPG', to: 'PNG', count: 987 },
+    { from: 'MP4', to: 'AVI', count: 765 },
+    { from: 'XLSX', to: 'CSV', count: 654 },
+    { from: 'PNG', to: 'JPG', count: 543 }
+  ];
+
+  const hourlyData = [
+    { hour: '00:00', conversions: 23 },
+    { hour: '02:00', conversions: 18 },
+    { hour: '04:00', conversions: 12 },
+    { hour: '06:00', conversions: 45 },
+    { hour: '08:00', conversions: 87 },
+    { hour: '10:00', conversions: 123 },
+    { hour: '12:00', conversions: 156 },
+    { hour: '14:00', conversions: 189 },
+    { hour: '16:00', conversions: 167 },
+    { hour: '18:00', conversions: 134 },
+    { hour: '20:00', conversions: 98 },
+    { hour: '22:00', conversions: 67 }
+  ];
+
+interface FileIconProps {
+    type: 'Images' | 'Videos' | 'Audio' | 'Archives' | string;
+}
+
+const getFileIcon = (type: FileIconProps['type']): ReactElement => {
+    switch(type) {
+        case 'Images': return <FileImage className="h-5 w-5" />;
+        case 'Videos': return <FileVideo className="h-5 w-5" />;
+        case 'Audio': return <Music className="h-5 w-5" />;
+        case 'Archives': return <Archive className="h-5 w-5" />;
+        default: return <FileText className="h-5 w-5" />;
+    }
+};
+
+  interface StatCardProps {
+    title: string;
+    value: string;
+    change?: number;
+    icon: React.ComponentType<{ className?: string }>;
+    color?: string;
+  }
+
+  const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon: Icon, color = "emerald" }) => (
+    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{value}</p>
+          {change && (
+            <div className={`flex items-center mt-2 text-sm ${change > 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {change > 0 ? <ArrowUp className="h-4 w-4 mr-1" /> : <ArrowDown className="h-4 w-4 mr-1" />}
+              {Math.abs(change)}% from last week
+            </div>
+          )}
+        </div>
+        <div className={`p-3 rounded-full bg-${color}-100 dark:bg-${color}-900/20`}>
+          <Icon className={`h-6 w-6 text-${color}-600 dark:text-${color}-400`} />
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Analytics Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-400">Track your file conversion performance and user engagement</p>
+        </div>
+
+        {/* Time Range Selector */}
+        <div className="mb-6 flex flex-wrap gap-4 items-center">
+          <div className="flex items-center space-x-2">
+            <Calendar className="h-5 w-5 text-gray-500" />
+            <select 
+              value={timeRange} 
+              onChange={(e) => setTimeRange(e.target.value)}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            >
+              <option value="24h">Last 24 Hours</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="30d">Last 30 Days</option>
+              <option value="90d">Last 90 Days</option>
+            </select>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Filter className="h-5 w-5 text-gray-500" />
+            <select 
+              value={selectedMetric} 
+              onChange={(e) => setSelectedMetric(e.target.value)}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            >
+              <option value="conversions">Conversions</option>
+              <option value="users">Users</option>
+              <option value="success_rate">Success Rate</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Summary Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
+          <StatCard 
+            title="Total Conversions" 
+            value={summaryStats.totalConversions.toLocaleString()} 
+            change={12.5} 
+            icon={Zap}
+            color="emerald"
+          />
+          <StatCard 
+            title="Active Users" 
+            value={summaryStats.totalUsers.toLocaleString()} 
+            change={8.3} 
+            icon={Users}
+            color="blue"
+          />
+          <StatCard 
+            title="Avg. Processing Time" 
+            value={`${summaryStats.avgConversionTime}s`} 
+            change={-5.2} 
+            icon={Clock}
+            color="purple"
+          />
+          <StatCard 
+            title="Success Rate" 
+            value={`${summaryStats.successRate}%`} 
+            change={2.1} 
+            icon={TrendingUp}
+            color="green"
+          />
+          <StatCard 
+            title="Storage Used" 
+            value={`${summaryStats.totalStorage}GB`} 
+            change={15.7} 
+            icon={Download}
+            color="orange"
+          />
+          <StatCard 
+            title="Peak Hour" 
+            value={summaryStats.peakHour} 
+            icon={BarChart3}
+            color="pink"
+          />
+        </div>
+
+        {/* Main Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Conversion Trends */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Conversion Trends</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={dailyConversions}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="date" stroke="#6b7280" />
+                <YAxis stroke="#6b7280" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1f2937', 
+                    border: '1px solid #374151',
+                    borderRadius: '8px'
+                  }} 
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="conversions" 
+                  stroke="#10b981" 
+                  fill="#10b981" 
+                  fillOpacity={0.3}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* File Type Distribution */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">File Type Distribution</h3>
+            <div className="flex flex-col lg:flex-row items-center">
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={fileTypeData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="count"
+                  >
+                    {fileTypeData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {fileTypeData.map((item, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
+                  <div className="flex items-center space-x-1">
+                    {getFileIcon(item.type)}
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{item.type}</span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">{item.percentage}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Additional Analytics */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Hourly Activity */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Hourly Activity</h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={hourlyData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="hour" stroke="#6b7280" />
+                <YAxis stroke="#6b7280" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1f2937', 
+                    border: '1px solid #374151',
+                    borderRadius: '8px'
+                  }} 
+                />
+                <Bar dataKey="conversions" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Popular Conversion Paths */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Popular Conversion Paths</h3>
+            <div className="space-y-4">
+              {conversionPaths.map((path, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">{path.from}</span>
+                    <span className="text-emerald-600 dark:text-emerald-400">→</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">{path.to}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{path.count.toLocaleString()}</span>
+                    <div className="w-16 h-2 bg-gray-200 dark:bg-gray-600 rounded-full">
+                      <div 
+                        className="h-2 bg-emerald-500 rounded-full"
+                        style={{ width: `${(path.count / conversionPaths[0].count) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AnalyticsPage;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Search, 
   Filter, 
@@ -10,12 +10,10 @@ import {
   Video, 
   Music, 
   Archive, 
-  Calendar,
   Clock,
   CheckCircle,
   XCircle,
   AlertCircle,
-  MoreHorizontal,
   Trash2,
   RefreshCw
 } from 'lucide-react';
@@ -120,9 +118,6 @@ interface Conversion {
     progress?: number;
 }
 
-interface FileIconProps {
-    format: string;
-}
 
 const getFileIcon = (format: string): React.JSX.Element => {
     const iconClass = "w-5 h-5";

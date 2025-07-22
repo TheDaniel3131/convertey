@@ -19,6 +19,7 @@ import {
   History,
   Settings,
   ChevronDown,
+  BarChart3,
 } from "lucide-react";
 import Link from "next/link";
 import NavLink from "@/components/elements/header/NavLinks";
@@ -206,6 +207,13 @@ export default function Header({
                       <span>Profile</span>
                     </button>
                     <button
+                      onClick={() => handleDropdownItemClick("/analytics")}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                    >
+                      <BarChart3 className="h-4 w-4" />
+                      <span>Analytics</span>
+                    </button>
+                    <button
                       onClick={() => handleDropdownItemClick("/history")}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
                     >
@@ -313,6 +321,12 @@ export default function Header({
                 className="py-2 px-4 flex items-center justify-center my-2"
               >
                 <User className="mr-2" /> Profile
+              </NavLink>
+              <NavLink
+                href="/analytics"
+                className="py-2 px-4 flex items-center justify-center my-2"
+              >
+                <BarChart3 className="mr-2" /> Analytics
               </NavLink>
               <NavLink
                 href="/history"

@@ -56,8 +56,8 @@ export async function middleware(request: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession();
   
   // Define protected routes
-  // '/dashboard', '/profile',
-  const protectedRoutes = ['/settings'];
+  // '/dashboard', '/profile', '/settings'
+  const protectedRoutes = ['/dashboard'];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
   
   if (isProtectedRoute && !session) {

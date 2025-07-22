@@ -314,7 +314,7 @@ export default function ProfilePage() {
       <div className="py-8">
         <div className="max-w-2xl mx-auto px-4">
           <h1 className="text-3xl font-bold mb-6 text-emerald-400 dark:text-white">
-            My Profile
+            Settings
           </h1>
 
           <Tabs defaultValue="personal" className="w-full">
