@@ -1,0 +1,15 @@
+name: Cron Job for Supabase Database
+
+on:
+  schedule:
+    - cron: '0 */12 * * *' 
+  workflow_dispatch:
+
+jobs:
+  ping-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Cron Job
+        run: |
+          curl -X GET "https://phjbpeezvmyvqwhqjpxi.supabase.co/" \
+          -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoamJwZWV6dm15dnF3aHFqcHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMjQwMTMsImV4cCI6MjA2NjcwMDAxM30.nTQLYYWyPi4opOXmNdi1Ygciiu7sBJY_jekintiuQ_c"
