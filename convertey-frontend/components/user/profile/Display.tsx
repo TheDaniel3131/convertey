@@ -7,8 +7,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createSupabaseClient } from "@/lib/utils/supabase/client";
 import { toast } from "sonner";
 import {
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -17,8 +15,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
   AreaChart,
   Area,
 } from "recharts";
@@ -31,8 +27,6 @@ import {
   Mail,
   User,
   Activity,
-  TrendingUp,
-  Clock,
 } from "lucide-react";
 
 interface UserInfo {
