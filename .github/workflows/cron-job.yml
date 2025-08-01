@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: Setup Cron Job
         run: |
-          curl -X GET "https://phjbpeezvmyvqwhqjpxi.supabase.co/" \
+          curl -X GET "https://phjbpeezvmyvqwhqjpxi.supabase.co/rest/v1/" \
           -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoamJwZWV6dm15dnF3aHFqcHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMjQwMTMsImV4cCI6MjA2NjcwMDAxM30.nTQLYYWyPi4opOXmNdi1Ygciiu7sBJY_jekintiuQ_c"
